@@ -20,13 +20,13 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.constants.Constants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.utils.logger.Logger;
 
 public class PhotonBridge {
   private final AprilTagFieldLayout fieldLayout;
   private final Transform3d robotToCam = new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0));
-  private final PhotonCamera cam = new PhotonCamera(Constants.vision.PHOTON_CAMERA_NAME);
+  private final PhotonCamera cam = new PhotonCamera(VisionConstants.PHOTON_CAMERA_NAME);
   private final PhotonPoseEstimator poseEstimator;
 
   // Simulation
@@ -49,7 +49,7 @@ public class PhotonBridge {
     poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
     if (RobotBase.isSimulation()) {
-      visionSim = new VisionSystemSim(Constants.vision.PHOTON_CAMERA_NAME);
+      visionSim = new VisionSystemSim(VisionConstants.PHOTON_CAMERA_NAME);
       visionSim.addAprilTags(fieldLayout);
 
       camProps = new SimCameraProperties();

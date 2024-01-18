@@ -20,7 +20,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
-import frc.robot.constants.Constants;
+import frc.robot.constants.DriveConstants;
 
 public class MAXSwerveModule {
   private final CANSparkMax m_drivingSparkMax;
@@ -61,52 +61,52 @@ public class MAXSwerveModule {
     // Apply position and velocity conversion factors for the driving encoder. The
     // native units for position and velocity are rotations and RPM, respectively,
     // but we want meters and meters per second to use with WPILib's swerve APIs.
-    m_drivingEncoder.setPositionConversionFactor(Constants.drive.kDrivingEncoderPositionFactor);
-    m_drivingEncoder.setVelocityConversionFactor(Constants.drive.kDrivingEncoderVelocityFactor);
+    m_drivingEncoder.setPositionConversionFactor(DriveConstants.DRIVING_ENCODER_POSITION_FACTOR);
+    m_drivingEncoder.setVelocityConversionFactor(DriveConstants.DRIVING_ENCODER_VELOCITY_FACTOR);
 
     // Apply position and velocity conversion factors for the turning encoder. We
     // want these in radians and radians per second to use with WPILib's swerve
     // APIs.
-    m_turningEncoder.setPositionConversionFactor(Constants.drive.kTurningEncoderPositionFactor);
-    m_turningEncoder.setVelocityConversionFactor(Constants.drive.kTurningEncoderVelocityFactor);
+    m_turningEncoder.setPositionConversionFactor(DriveConstants.TURNING_ENCODER_POSITION_FACTOR);
+    m_turningEncoder.setVelocityConversionFactor(DriveConstants.TURNING_ENCODER_VELOCITY_FACTOR);
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
     // direction of
     // the steering motor in the MAXSwerve Module.
-    m_turningEncoder.setInverted(Constants.drive.kTurningEncoderInverted);
+    m_turningEncoder.setInverted(DriveConstants.TURNING_ENCODER_INVERTED);
 
     // Enable PID wrap around for the turning motor. This will allow the PID
     // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
     // to 10 degrees will go through 0 rather than the other direction which is a
     // longer route.
     m_turningPIDController.setPositionPIDWrappingEnabled(true);
-    m_turningPIDController.setPositionPIDWrappingMinInput(Constants.drive.kTurningEncoderPositionPIDMinInput);
-    m_turningPIDController.setPositionPIDWrappingMaxInput(Constants.drive.kTurningEncoderPositionPIDMaxInput);
+    m_turningPIDController.setPositionPIDWrappingMinInput(DriveConstants.TURNING_ENCODER_POSITION_PID_MIN_INPUT);
+    m_turningPIDController.setPositionPIDWrappingMaxInput(DriveConstants.TURNING_ENCODER_POSITION_PID_MAX_INPUT);
 
     // Set the PID gains for the driving motor. Note these are example gains, and
     // you
     // may need to tune them for your own robot!
-    m_drivingPIDController.setP(Constants.drive.kDrivingP);
-    m_drivingPIDController.setI(Constants.drive.kDrivingI);
-    m_drivingPIDController.setD(Constants.drive.kDrivingD);
-    m_drivingPIDController.setFF(Constants.drive.kDrivingFF);
-    m_drivingPIDController.setOutputRange(Constants.drive.kDrivingMinOutput,
-        Constants.drive.kDrivingMaxOutput);
+    m_drivingPIDController.setP(DriveConstants.DRIVING_P);
+    m_drivingPIDController.setI(DriveConstants.DRIVING_I);
+    m_drivingPIDController.setD(DriveConstants.DRIVING_D);
+    m_drivingPIDController.setFF(DriveConstants.DRIVING_FF);
+    m_drivingPIDController.setOutputRange(DriveConstants.DRIVING_MIN_OUTPUT,
+        DriveConstants.DRIVING_MAX_OUTPUT);
 
     // Set the PID gains for the turning motor. Note these are example gains, and
     // you
     // may need to tune them for your own robot!
-    m_turningPIDController.setP(Constants.drive.kTurningP);
-    m_turningPIDController.setI(Constants.drive.kTurningI);
-    m_turningPIDController.setD(Constants.drive.kTurningD);
-    m_turningPIDController.setFF(Constants.drive.kTurningFF);
-    m_turningPIDController.setOutputRange(Constants.drive.kTurningMinOutput,
-        Constants.drive.kTurningMaxOutput);
+    m_turningPIDController.setP(DriveConstants.TURNING_P);
+    m_turningPIDController.setI(DriveConstants.TURNING_I);
+    m_turningPIDController.setD(DriveConstants.TURNING_D);
+    m_turningPIDController.setFF(DriveConstants.TURNING_FF);
+    m_turningPIDController.setOutputRange(DriveConstants.TURNING_MIN_OUTPUT,
+        DriveConstants.TURNING_MAX_OUTPUT);
 
-    m_drivingSparkMax.setIdleMode(Constants.drive.kDrivingMotorIdleMode);
-    m_turningSparkMax.setIdleMode(Constants.drive.kTurningMotorIdleMode);
-    m_drivingSparkMax.setSmartCurrentLimit(Constants.drive.kDrivingMotorCurrentLimit);
-    m_turningSparkMax.setSmartCurrentLimit(Constants.drive.kTurningMotorCurrentLimit);
+    m_drivingSparkMax.setIdleMode(DriveConstants.DRIVING_MOTOR_IDLE_MODE);
+    m_turningSparkMax.setIdleMode(DriveConstants.TURNING_MOTOR_IDLE_MODE);
+    m_drivingSparkMax.setSmartCurrentLimit(DriveConstants.DRIVING_MOTOR_CURRENT_LIMIT);
+    m_turningSparkMax.setSmartCurrentLimit(DriveConstants.TURNING_MOTOR_CURRENT_LIMIT);
 
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.

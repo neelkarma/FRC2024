@@ -16,7 +16,7 @@ public class AutoProvider {
   private final SendableChooser<Command> chooser = new SendableChooser<>();
 
   private AutoProvider() {
-    chooser.addOption("PathWeaver Test", new PathWeaverCommand("paths/Sample.wpilib.json"));
+    chooser.addOption("PathWeaver Test", SwerveTrajectoryCommand.fromPathWeaver("paths/Sample.wpilib.json"));
     chooser.setDefaultOption("Disable Auto", new InstantCommand());
 
     SmartDashboard.putData("Auto Chooser", chooser);

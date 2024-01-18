@@ -11,7 +11,8 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
-import frc.robot.constants.Constants;
+import frc.robot.constants.FileConstants;
+import frc.robot.constants.LoggerConstants;
 
 public class Logger {
   private static Optional<Logger> inst = Optional.empty();
@@ -77,7 +78,7 @@ public class Logger {
     }
 
     try {
-      for (String tmpPath : Constants.file.PATH_USB) {
+      for (String tmpPath : FileConstants.PATH_USB) {
         if (new File(tmpPath).exists()) {
           filePath = tmpPath;
           System.out.println("Logger : File Path Found : " + filePath);
@@ -102,7 +103,7 @@ public class Logger {
 
     try {
       for (int i = 0; !file.createNewFile(); i++) {
-        if (i > Constants.logger.REPEAT_LIMIT_LOGGER_CREATION) {
+        if (i > LoggerConstants.REPEAT_LIMIT_LOGGER_CREATION) {
           fileCreationFailed = true;
           System.out.println("Logger : File Creation Failed : Timed Out : Logger printing to console");
           return;
@@ -186,7 +187,7 @@ public class Logger {
       try {
         while (!stopped) {
           save();
-          Thread.sleep(1000 / Constants.logger.SAVE_RATE);
+          Thread.sleep(1000 / LoggerConstants.SAVE_RATE);
         }
       } catch (InterruptedException e) {
         System.out.println("Logger : Save Thread Interrupted : " + e);
