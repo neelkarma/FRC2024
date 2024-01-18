@@ -6,6 +6,8 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.REVPhysicsSim;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -83,7 +85,7 @@ public class DriveSub extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     poseEstimator.update(
-        Rotation2d.fromDegrees(imu.getAngle(IMUAxis.kZ)),
+        getHeading(),
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -118,7 +120,7 @@ public class DriveSub extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     poseEstimator.resetPosition(
-        Rotation2d.fromDegrees(imu.getAngle(IMUAxis.kZ)),
+        getHeading(),
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -249,8 +251,8 @@ public class DriveSub extends SubsystemBase {
    *
    * @return the robot's heading in degrees, from -180 to 180
    */
-  public double getHeading() {
-    return Rotation2d.fromDegrees(imu.getAngle(IMUAxis.kZ)).getDegrees();
+  public Rotation2d getHeading() {
+    return Rotation2d.fromDegrees(imu.getAngle(IMUAxis.kZ));
   }
 
   /**
@@ -265,11 +267,21 @@ public class DriveSub extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // TODO: make swerve sim work
-    // two options
-    // 1: do it legit -
-    // https://www.chiefdelphi.com/t/frc-6328-mechanical-advantage-2022-build-thread
-    // 2: do it not legit -
-    // https://www.chiefdelphi.com/t/what-is-the-go-to-way-to-simulate-swerve/419490/2
+    REVPhysicsSim.getInstance().run();
+
+    var chassisSpeedsSim = DriveConstants.DRIVE_KINEMATICS.toChassisSpeeds(
+        frontLeft.getState(),
+        frontRight.getState(),
+        rearLeft.getState(),
+        rearRight.getState());
+    imuSim.setGyroRateZ(Rotation2d.fromRadians(chassisSpeedsSim.omegaRadiansPerSecond).getDegrees());
+    poseEstimator.update(getHeading(), new SwerveModulePosition[] {
+        frontLeft.getPosition(),
+        frontRight.getPosition(),
+        rearLeft.getPosition(),
+        rearRight.getPosition()
+    });
     photon.simulationPeriodic(getPose());
+    System.out.println(getPose());
   }
 }

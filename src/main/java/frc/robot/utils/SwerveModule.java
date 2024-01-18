@@ -9,9 +9,12 @@ package frc.robot.utils;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.RobotBase;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -20,6 +23,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import frc.robot.constants.DriveConstants;
 
 public class SwerveModule {
@@ -111,6 +115,10 @@ public class SwerveModule {
     this.angularOffset = angularOffset;
     desiredState.angle = new Rotation2d(turnEncoder.getPosition());
     driveMotor.setPosition(0);
+
+    if (RobotBase.isSimulation()) {
+      REVPhysicsSim.getInstance().addSparkMax(turnMotor, DCMotor.getNeo550(1));
+    }
   }
 
   /**
