@@ -8,8 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
-public class SwerveDriveConstants {
-  protected SwerveDriveConstants() {
+public class DriveConstants {
+  protected DriveConstants() {
   }
 
   // NEO Motor Constants

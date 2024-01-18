@@ -6,7 +6,7 @@ import frc.robot.Subsystems;
 
 public class TeleopDriveSwerve extends Command {
   public TeleopDriveSwerve() {
-    addRequirements(Subsystems.swerveDrive);
+    addRequirements(Subsystems.drive);
   }
 
   @Override
@@ -15,7 +15,7 @@ public class TeleopDriveSwerve extends Command {
     var translateY = -OI.applyAxisDeadband(OI.pilot.getLeftX());
     var rotate = -OI.applyAxisDeadband(OI.pilot.getRightX());
 
-    Subsystems.swerveDrive.drive(translateX, translateY, rotate, true, true);
+    Subsystems.drive.drive(translateX, translateY, rotate, true, true);
   }
 
   @Override
