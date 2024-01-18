@@ -28,7 +28,7 @@ public class SwerveTrajectoryCommand extends SequentialCommandGroup {
     var swerveControllerCommand = new SwerveControllerCommand(
         trajectory,
         Subsystems.drive::getPose,
-        DriveConstants.kDriveKinematics,
+        DriveConstants.DRIVE_KINEMATICS,
         xController,
         yController,
         thetaController,

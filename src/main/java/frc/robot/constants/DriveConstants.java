@@ -2,7 +2,7 @@
 
 package frc.robot.constants;
 
-import com.revrobotics.CANSparkBase.IdleMode;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -17,20 +17,22 @@ public class DriveConstants {
 
   // Driving Parameters - Note that these are not the maximum capable speeds of
   // the robot, rather the allowed maximum speeds
-  public static final double MAX_SPEED_METERS_PER_SECOND = 4.8;
+  public static final double MAX_SPEED = 4.8;
   public static final double MAX_ANGULAR_SPEED = 2 * Math.PI; // radians per second
-  public static final double MAX_ANGULAR_ACCELERATION = Math.PI / 4; // radians per second squared
+  public static final double MAX_ANGULAR_ACCELERATION = MAX_ANGULAR_SPEED / 60; // radians per second squared
 
   public static final double DIRECTION_SLEW_RATE = 1.2; // radians per second
   public static final double MAGNITUDE_SLEW_RATE = 1.8; // percent per second (1 = 100%)
   public static final double ROTATIONAL_SLEW_RATE = 2.0; // percent per second (1 = 100%)
+
+  public static final double DRIVE_GEAR_RATIO = 4.71;
 
   // Chassis configuration
   public static final double TRACK_WIDTH = Units.inchesToMeters(26.5);
   // Distance between centers of right and left wheels on robot
   public static final double WHEEL_BASE = Units.inchesToMeters(26.5);
   // Distance between front and back wheels on robot
-  public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+  public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
       new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
       new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),
       new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),
@@ -67,6 +69,7 @@ public class DriveConstants {
   // Invert the turning encoder, since the output shaft rotates in the opposite
   // direction of
   // the steering motor in the MAXSwerve Module.
+  public static final InvertedValue DRIVE_MOTOR_INVERTED = InvertedValue.Clockwise_Positive;
   public static final boolean TURNING_ENCODER_INVERTED = true;
 
   // Calculations required for driving motor conversion factors and feed forward
@@ -76,7 +79,8 @@ public class DriveConstants {
   // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
   // teeth on the bevel pinion
   public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
-  public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METERS)
+  public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS
+      * WHEEL_CIRCUMFERENCE_METERS)
       / DRIVING_MOTOR_REDUCTION;
 
   public static final double DRIVING_ENCODER_POSITION_FACTOR = (WHEEL_DIAMETER_METERS * Math.PI)
@@ -90,25 +94,15 @@ public class DriveConstants {
   public static final double TURNING_ENCODER_POSITION_PID_MIN_INPUT = 0; // radians
   public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
-  public static final double DRIVING_P = 0.04;
-  public static final double DRIVING_I = 0;
-  public static final double DRIVING_D = 0;
+  public static final double DRIVE_P = 0.04;
+  public static final double DRIVE_I = 0;
+  public static final double DRIVE_D = 0;
   public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
-  public static final double DRIVING_MIN_OUTPUT = -1;
-  public static final double DRIVING_MAX_OUTPUT = 1;
 
   public static final double TURNING_P = 1;
   public static final double TURNING_I = 0;
   public static final double TURNING_D = 0;
   public static final double TURNING_FF = 0;
-  public static final double TURNING_MIN_OUTPUT = -1;
-  public static final double TURNING_MAX_OUTPUT = 1;
-
-  public static final IdleMode DRIVING_MOTOR_IDLE_MODE = IdleMode.kBrake;
-  public static final IdleMode TURNING_MOTOR_IDLE_MODE = IdleMode.kBrake;
-
-  public static final int DRIVING_MOTOR_CURRENT_LIMIT = 50; // amps
-  public static final int TURNING_MOTOR_CURRENT_LIMIT = 20; // amps
 
   // Auto Constants
   public static final double AUTO_X_P = 0;

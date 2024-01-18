@@ -19,29 +19,29 @@ import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.simulation.ADIS16470_IMUSim;
 import frc.robot.constants.DriveConstants;
-import frc.robot.utils.MAXSwerveModule;
+import frc.robot.utils.SwerveModule;
 import frc.robot.utils.PhotonBridge;
 import frc.robot.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSub extends SubsystemBase {
-  // Create MAXSwerveModules
-  private final MAXSwerveModule frontLeft = new MAXSwerveModule(
+  // Create SwerveModules
+  private final SwerveModule frontLeft = new SwerveModule(
       DriveConstants.FRONT_LEFT_DRIVING_CAN_ID,
       DriveConstants.FRONT_LEFT_TURNING_CAN_ID,
       DriveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET);
 
-  private final MAXSwerveModule frontRight = new MAXSwerveModule(
+  private final SwerveModule frontRight = new SwerveModule(
       DriveConstants.FRONT_RIGHT_DRIVING_CAN_ID,
       DriveConstants.FRONT_RIGHT_TURNING_CAN_ID,
       DriveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET);
 
-  private final MAXSwerveModule rearLeft = new MAXSwerveModule(
+  private final SwerveModule rearLeft = new SwerveModule(
       DriveConstants.REAR_LEFT_DRIVING_CAN_ID,
       DriveConstants.REAR_LEFT_TURNING_CAN_ID,
       DriveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET);
 
-  private final MAXSwerveModule rearRight = new MAXSwerveModule(
+  private final SwerveModule rearRight = new SwerveModule(
       DriveConstants.REAR_RIGHT_DRIVING_CAN_ID,
       DriveConstants.REAR_RIGHT_TURNING_CAN_ID,
       DriveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET);
@@ -63,7 +63,7 @@ public class DriveSub extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-      DriveConstants.kDriveKinematics,
+      DriveConstants.DRIVE_KINEMATICS,
       Rotation2d.fromDegrees(imu.getAngle(IMUAxis.kZ)),
       new SwerveModulePosition[] {
           frontLeft.getPosition(),
@@ -190,17 +190,17 @@ public class DriveSub extends SubsystemBase {
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded * DriveConstants.MAX_SPEED_METERS_PER_SECOND;
-    double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED_METERS_PER_SECOND;
+    double xSpeedDelivered = xSpeedCommanded * DriveConstants.MAX_SPEED;
+    double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED;
     double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED;
 
-    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+    var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
                 Rotation2d.fromDegrees(imu.getAngle(IMUAxis.kZ)))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, DriveConstants.MAX_SPEED_METERS_PER_SECOND);
+        swerveModuleStates, DriveConstants.MAX_SPEED);
     frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
     rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -224,7 +224,7 @@ public class DriveSub extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, DriveConstants.MAX_SPEED_METERS_PER_SECOND);
+        desiredStates, DriveConstants.MAX_SPEED);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
     rearLeft.setDesiredState(desiredStates[2]);
