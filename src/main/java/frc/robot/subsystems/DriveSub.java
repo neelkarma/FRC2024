@@ -20,6 +20,8 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.simulation.ADIS16470_IMUSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.DriveConstants;
 import frc.robot.utils.SwerveModule;
 import frc.robot.utils.PhotonBridge;
@@ -54,6 +56,8 @@ public class DriveSub extends SubsystemBase {
   // Photon Bridge
   private final PhotonBridge photon = new PhotonBridge();
 
+  private final Field2d field = new Field2d();
+
   // Slew rate filter variables for controlling lateral acceleration
   private double currentRotation = 0.0;
   private double currentTranslationDir = 0.0;
@@ -79,19 +83,13 @@ public class DriveSub extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSub() {
+    SmartDashboard.putData(field);
   }
 
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    poseEstimator.update(
-        getHeading(),
-        new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            rearLeft.getPosition(),
-            rearRight.getPosition()
-        });
+    updateOdometry();
   }
 
   /**
@@ -264,10 +262,45 @@ public class DriveSub extends SubsystemBase {
     return imu.getRate(IMUAxis.kZ) * (DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
   }
 
+  public void updateOdometry() {
+    poseEstimator.update(
+        getHeading(),
+        new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            rearLeft.getPosition(),
+            rearRight.getPosition()
+        });
+
+    frontLeft.setPose(
+        new Pose2d(
+            DriveConstants.FRONT_LEFT_MODULE_TRANSLATION.rotateBy(getHeading()).plus(getPose().getTranslation()),
+            frontLeft.getRotation2d().plus(getHeading())));
+    frontRight.setPose(
+        new Pose2d(
+            DriveConstants.FRONT_RIGHT_MODULE_TRANSLATION.rotateBy(getHeading()).plus(getPose().getTranslation()),
+            frontRight.getRotation2d().plus(getHeading())));
+    rearLeft.setPose(
+        new Pose2d(
+            DriveConstants.REAR_LEFT_MODULE_TRANSLATION.rotateBy(getHeading()).plus(getPose().getTranslation()),
+            rearLeft.getRotation2d().plus(getHeading())));
+    rearRight.setPose(
+        new Pose2d(
+            DriveConstants.REAR_RIGHT_MODULE_TRANSLATION.rotateBy(getHeading()).plus(getPose().getTranslation()),
+            rearRight.getRotation2d().plus(getHeading())));
+    field.setRobotPose(getPose());
+  }
+
   @Override
   public void simulationPeriodic() {
     // TODO: make swerve sim work
+
     REVPhysicsSim.getInstance().run();
+
+    frontLeft.simulationPeriodic();
+    frontRight.simulationPeriodic();
+    rearLeft.simulationPeriodic();
+    rearRight.simulationPeriodic();
 
     var chassisSpeedsSim = DriveConstants.DRIVE_KINEMATICS.toChassisSpeeds(
         frontLeft.getState(),

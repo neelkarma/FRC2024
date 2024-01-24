@@ -31,6 +31,16 @@ public class DriveConstants {
   public static final double TRACK_WIDTH = Units.inchesToMeters(26.5);
   // Distance between centers of right and left wheels on robot
   public static final double WHEEL_BASE = Units.inchesToMeters(26.5);
+
+  public static final Translation2d FRONT_LEFT_MODULE_TRANSLATION = new Translation2d(-TRACK_WIDTH / 2,
+      WHEEL_BASE / 2);
+  public static final Translation2d FRONT_RIGHT_MODULE_TRANSLATION = new Translation2d(TRACK_WIDTH / 2,
+      WHEEL_BASE / 2);
+  public static final Translation2d REAR_LEFT_MODULE_TRANSLATION = new Translation2d(-TRACK_WIDTH / 2,
+      -WHEEL_BASE / 2);
+  public static final Translation2d REAR_RIGHT_MODULE_TRANSLATION = new Translation2d(TRACK_WIDTH / 2,
+      -WHEEL_BASE / 2);
+
   // Distance between front and back wheels on robot
   public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
       new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
@@ -76,6 +86,8 @@ public class DriveConstants {
   public static final double DRIVING_MOTOR_FREE_SPEED_RPS = FREE_SPEED_RPM / 60;
   public static final double WHEEL_DIAMETER_METERS = 0.0762;
   public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
+  public static final double DRIVE_DISTANCE_PER_MOTOR_REVOLUTION = WHEEL_CIRCUMFERENCE_METERS
+      / (2048 * DRIVE_GEAR_RATIO);
   // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
   // teeth on the bevel pinion
   public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
@@ -94,12 +106,12 @@ public class DriveConstants {
   public static final double TURNING_ENCODER_POSITION_PID_MIN_INPUT = 0; // radians
   public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
-  public static final double DRIVE_P = 0.04;
+  public static final double DRIVE_P = 0.01;
   public static final double DRIVE_I = 0;
   public static final double DRIVE_D = 0;
   public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
 
-  public static final double TURNING_P = 1;
+  public static final double TURNING_P = 0.01;
   public static final double TURNING_I = 0;
   public static final double TURNING_D = 0;
   public static final double TURNING_FF = 0;
