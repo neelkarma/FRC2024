@@ -7,4 +7,5 @@ public class OIConstants {
   public static final int COPILOT_XBOX_CONTROLLER_PORT = 1; // TEST
   /** deadband for controller axies either side of 0 */
   public static final double CONTROLLER_AXIS_DEADZONE = 0.1;
+  public static final int INTAKE_BUTTON_ID = 2;
 }
