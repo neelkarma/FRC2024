@@ -1,39 +1,27 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.IntakeConstants;
 
 public class IntakeSub extends SubsystemBase {
-    private TalonSRX motor1 = new TalonSRX(IntakeConstants.MOTOR_1_ID);
-    private TalonSRX motor2 = new TalonSRX(IntakeConstants.MOTOR_2_ID);
+  private final WPI_TalonSRX masterMotor = IntakeConstants.MOTOR_1_ID.build();
+  private final WPI_TalonSRX slaveMotor = IntakeConstants.MOTOR_2_ID.build();
 
-    private double speed = 0.5;
+  public IntakeSub() {
+    masterMotor.configFactoryDefault();
+    slaveMotor.configFactoryDefault();
 
-    public IntakeSub() {
-      motor1.configFactoryDefault();
-      motor2.configFactoryDefault();
-    }
+    slaveMotor.follow(masterMotor);
+  }
 
-    public void startIntake() {
-      motor1.set(ControlMode.PercentOutput, speed);
-      motor2.set(ControlMode.PercentOutput, -speed);
-    }
+  public void set(double newSpeed) {
+    masterMotor.set(newSpeed);
+  }
 
-    public void startOuttake() {
-      motor1.set(ControlMode.PercentOutput, -speed);
-      motor2.set(ControlMode.PercentOutput, speed);
-    }
-
-    public void setSpeed(double newSpeed) {
-      speed = newSpeed;
-    }
-
-    public void end() {
-      motor1.set(ControlMode.PercentOutput, 0);
-      motor2.set(ControlMode.PercentOutput, 0);
-    }
+  public void stop() {
+    masterMotor.stopMotor();
+  }
 }

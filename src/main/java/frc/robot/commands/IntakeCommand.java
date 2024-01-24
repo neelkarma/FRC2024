@@ -14,7 +14,7 @@ import frc.robot.Variables;
 public class IntakeCommand extends InstantCommand {
   public IntakeCommand() {
     // Use addRequirements() here to declare subsystem dependencies.\
-      addRequirements(Subsystems.intake);
+    addRequirements(Subsystems.intake);
   }
 
   // Called when the command is initially scheduled.
@@ -22,9 +22,9 @@ public class IntakeCommand extends InstantCommand {
   public void initialize() {
     Variables.intakeIsIntaking = !Variables.intakeIsIntaking;
     if (Variables.intakeIsIntaking) {
-      Subsystems.intake.startIntake();
+      Subsystems.intake.set(0.5);
     } else {
-      Subsystems.intake.end();
+      Subsystems.intake.stop();
     }
   }
 }
