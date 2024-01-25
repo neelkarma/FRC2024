@@ -65,7 +65,6 @@ public class PhotonBridge {
       camProps.setAvgLatencyMs(35);
       camProps.setLatencyStdDevMs(5);
 
-      // TODO: Find out why instantiating PhotonCameraSim crashes the robot
       camSim = new PhotonCameraSim(cam, camProps);
       camSim.enableProcessedStream(true);
 
@@ -81,7 +80,6 @@ public class PhotonBridge {
       // Add this camera to the vision system simulation with the given
       // robot-to-camera transform.
       visionSim.addCamera(camSim, robotToCamera);
-
     }
   }
 
