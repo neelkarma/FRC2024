@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.auto.AutoProvider;
 import frc.robot.teleop.TeleopProvider;
 import frc.robot.commands.IntakeCommand;
@@ -50,7 +51,22 @@ public class RobotContainer {
     }));
 
     OI.pilot.rightBumper().onTrue(new IntakeCommand());
+ 
 
+    // climber up
+    OI.pilot.povUp().whileTrue(
+        new StartEndCommand(
+            () -> Subsystems.climber.set(0.5),
+            Subsystems.climber::stop,
+            Subsystems.climber));
+    
+    // climber down
+    OI.pilot.povDown().whileTrue(
+        new StartEndCommand(
+            () -> Subsystems.climber.set(-0.5),
+            Subsystems.climber::stop,
+            Subsystems.climber));
+    
     // Example of another intake command
     // OI.pilot.rightTrigger()
     // .whileTrue(

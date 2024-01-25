@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.LEDSub;
+import frc.robot.subsystems.ClimberSub;
 import frc.robot.subsystems.DriveSub;
 import frc.robot.subsystems.IntakeSub;
 
@@ -11,4 +12,5 @@ public class Subsystems {
   public static final DriveSub drive = new DriveSub();
   public static final LEDSub led = new LEDSub();
   public static final IntakeSub intake = new IntakeSub();
+  public static final ClimberSub climber = new ClimberSub();
 }
