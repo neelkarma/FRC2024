@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -26,13 +27,22 @@ public class IntakeSub extends SubsystemBase {
     locked = robotContainsNote;
   }
 
-  public void set(double newSpeed) {
-    if (locked) return;
-    masterMotor.set(newSpeed);
+  /**
+   * Set the speed of the intake
+   * 
+   * @param speed Speed from -1 to 1
+   */
+  public void set(double speed) {
+    if (locked)
+      return;
+    speed = MathUtil.clamp(speed, -1, 1);
+    masterMotor.set(speed);
   }
 
+  /** Stops the intake motor */
   public void stop() {
-    if (locked) return;
+    if (locked)
+      return;
     masterMotor.stopMotor();
   }
 }

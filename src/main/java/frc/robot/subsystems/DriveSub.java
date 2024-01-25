@@ -29,7 +29,7 @@ import frc.robot.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSub extends SubsystemBase {
-  // Create SwerveModules
+  // Swerve Modules
   private final SwerveModule frontLeft = new SwerveModule(
       DriveConstants.FRONT_LEFT_DRIVING_CAN_ID,
       DriveConstants.FRONT_LEFT_TURNING_CAN_ID,
@@ -56,6 +56,7 @@ public class DriveSub extends SubsystemBase {
   // Photon Bridge
   private final PhotonBridge photon = new PhotonBridge();
 
+  // Field for robot viz
   private final Field2d field = new Field2d();
 
   // Slew rate filter variables for controlling lateral acceleration
@@ -67,7 +68,7 @@ public class DriveSub extends SubsystemBase {
   private SlewRateLimiter rotLimiter = new SlewRateLimiter(DriveConstants.ROTATIONAL_SLEW_RATE);
   private double prevTime = WPIUtilJNI.now() * 1e-6;
 
-  // Odometry class for tracking robot pose
+  // Pose estimation class for tracking robot pose
   SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.DRIVE_KINEMATICS,
       Rotation2d.fromDegrees(imu.getAngle(IMUAxis.kZ)),
@@ -276,6 +277,11 @@ public class DriveSub extends SubsystemBase {
     return imu.getRate(IMUAxis.kZ) * (DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
   }
 
+  /**
+   * Updates the robot's odometry.
+   * 
+   * This should be called every robot tick, in the periodic function.
+   */
   public void updateOdometry() {
     poseEstimator.update(
         getHeading(),

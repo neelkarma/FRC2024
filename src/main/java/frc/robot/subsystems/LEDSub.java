@@ -6,6 +6,13 @@ import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.LEDConstants;
 
+/**
+ * This subsystem controls the robot's LEDs.
+ * 
+ * To use, instantiate, and then in a command you can modify the sub's public
+ * `buffer` field (an instance of {@link AddressableLEDBuffer}), and then call
+ * `apply`.
+ */
 public class LEDSub extends SubsystemBase {
   public final AddressableLEDBuffer buffer = new AddressableLEDBuffer(LEDConstants.STRING_LENGTH);
 
@@ -19,6 +26,7 @@ public class LEDSub extends SubsystemBase {
     ledSim.setInitialized(true);
   }
 
+  /** Applies the data in the buffer to the LEDs */
   public void apply() {
     led.setData(buffer);
   }
