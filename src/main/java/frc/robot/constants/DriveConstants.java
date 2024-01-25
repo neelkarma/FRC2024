@@ -11,59 +11,83 @@ import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
   // NEO Motor Constants
-  public static final double FREE_SPEED_RPM = 5676;
-
-  // Drive Constants
+  /** Free speed of the driving motor in rpm */
+  public static final double FREE_SPEED_RPM = 5676; // TODO: Change this - we're using falcons, not neos
 
   // Driving Parameters - Note that these are not the maximum capable speeds of
   // the robot, rather the allowed maximum speeds
+  /** Max speed of robot in meters per second */
   public static final double MAX_SPEED = 4.8;
-  public static final double MAX_ANGULAR_SPEED = 2 * Math.PI; // radians per second
-  public static final double MAX_ANGULAR_ACCELERATION = MAX_ANGULAR_SPEED / 60; // radians per second squared
+  /** Max angular speed of robot in radians per second */
+  public static final double MAX_ANGULAR_SPEED = 2 * Math.PI;
+  /** Max angular acceleration of robot in radians per second squared */
+  public static final double MAX_ANGULAR_ACCELERATION = MAX_ANGULAR_SPEED / 60;
 
   public static final double DIRECTION_SLEW_RATE = 1.2; // radians per second
   public static final double MAGNITUDE_SLEW_RATE = 1.8; // percent per second (1 = 100%)
   public static final double ROTATIONAL_SLEW_RATE = 2.0; // percent per second (1 = 100%)
 
+  /** Gear ratio of the MAX Swerve Module driving motor */
   public static final double DRIVE_GEAR_RATIO = 4.71;
 
   // Chassis configuration
+  /** Distance between front and back wheel on robot in meters */
   public static final double TRACK_WIDTH = Units.inchesToMeters(26.5);
-  // Distance between centers of right and left wheels on robot
+  /** Distance between centers of left and right wheels on robot in meters */
   public static final double WHEEL_BASE = Units.inchesToMeters(26.5);
 
+  /**
+   * Position of front left swerve module relative to robot center. Mainly for sim
+   * purposes.
+   */
   public static final Translation2d FRONT_LEFT_MODULE_TRANSLATION = new Translation2d(-TRACK_WIDTH / 2,
       WHEEL_BASE / 2);
+  /**
+   * Position of front right swerve module relative to robot center. Mainly for
+   * sim purposes.
+   */
   public static final Translation2d FRONT_RIGHT_MODULE_TRANSLATION = new Translation2d(TRACK_WIDTH / 2,
       WHEEL_BASE / 2);
-  public static final Translation2d REAR_LEFT_MODULE_TRANSLATION = new Translation2d(-TRACK_WIDTH / 2,
+  /**
+   * Position of back left swerve module relative to robot center. Mainly for sim
+   * purposes.
+   */
+  public static final Translation2d BACK_LEFT_MODULE_TRANSLATION = new Translation2d(-TRACK_WIDTH / 2,
       -WHEEL_BASE / 2);
-  public static final Translation2d REAR_RIGHT_MODULE_TRANSLATION = new Translation2d(TRACK_WIDTH / 2,
+  /**
+   * Position of back right swerve module relative to robot center. Mainly for sim
+   * purposes.
+   */
+  public static final Translation2d BACK_RIGHT_MODULE_TRANSLATION = new Translation2d(TRACK_WIDTH / 2,
       -WHEEL_BASE / 2);
 
-  // Distance between front and back wheels on robot
+  /** Swerve Kinematics */
   public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-      new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
-      new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),
-      new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),
-      new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2));
+      FRONT_LEFT_MODULE_TRANSLATION,
+      FRONT_RIGHT_MODULE_TRANSLATION,
+      BACK_LEFT_MODULE_TRANSLATION,
+      BACK_RIGHT_MODULE_TRANSLATION);
 
   // Angular offsets of the modules relative to the chassis in radians
+  /** Angular offset of front left module relative to chassis */
   public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
+  /** Angular offset of front right module relative to chassis */
   public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0;
+  /** Angular offset of back left module relative to chassis */
   public static final double BACK_LEFT_CHASSIS_ANGULAR_OFFSET = Math.PI;
+  /** Angular offset of back right module relative to chassis */
   public static final double BACK_RIGHT_CHASSIS_ANGULAR_OFFSET = Math.PI / 2;
 
   // SPARK MAX CAN IDs
   public static final int FRONT_LEFT_DRIVING_CAN_ID = 11;
-  public static final int REAR_LEFT_DRIVING_CAN_ID = 13;
+  public static final int BACK_LEFT_DRIVING_CAN_ID = 13;
   public static final int FRONT_RIGHT_DRIVING_CAN_ID = 15;
-  public static final int REAR_RIGHT_DRIVING_CAN_ID = 17;
+  public static final int BACK_RIGHT_DRIVING_CAN_ID = 17;
 
   public static final int FRONT_LEFT_TURNING_CAN_ID = 10;
-  public static final int REAR_LEFT_TURNING_CAN_ID = 12;
+  public static final int BACK_LEFT_TURNING_CAN_ID = 12;
   public static final int FRONT_RIGHT_TURNING_CAN_ID = 14;
-  public static final int REAR_RIGHT_TURNING_CAN_ID = 16;
+  public static final int BACK_RIGHT_TURNING_CAN_ID = 16;
 
   public static final boolean GYRO_REVERSED = false;
 

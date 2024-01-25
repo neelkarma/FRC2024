@@ -6,20 +6,14 @@
 
 package frc.robot.utils;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
@@ -42,18 +36,13 @@ public class SwerveModule {
   private double angularOffset = 0;
   private SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
-  private Pose2d pose;
-
-  private double driveMotorSimDistance = 0;
-  private final FlywheelSim driveMotorSim = new FlywheelSim(
-      LinearSystemId.identifyVelocitySystem(4, 1.24),
-      DCMotor.getFalcon500(1), DriveConstants.DRIVE_GEAR_RATIO);
-
   /**
-   * Constructs a MAXSwerveModule and configures the driving and turning motor,
-   * encoder, and PID controller. This configuration is specific to the REV
-   * MAXSwerve Module built with NEOs, SPARKS MAX, and a Through Bore
-   * Encoder.
+   * Constructs a new SwerveModule for a MAX Swerve Module housing a Falcon
+   * driving motor and a Neo 550 Turning Motor.
+   * 
+   * @param drivingCANId  CAN ID for the driving motor
+   * @param turningCANId  CAN ID for the turning motor
+   * @param angularOffset Angular offset of the module in radians.
    */
   public SwerveModule(int drivingCANId, int turningCANId, double angularOffset) {
     driveMotor = new TalonFX(drivingCANId);
@@ -127,10 +116,6 @@ public class SwerveModule {
 
     desiredState.angle = new Rotation2d(turnEncoder.getPosition());
     driveMotor.setPosition(0);
-
-    if (RobotBase.isSimulation()) {
-      REVPhysicsSim.getInstance().addSparkMax(turnMotor, DCMotor.getNeo550(1));
-    }
   }
 
   /**
@@ -144,6 +129,15 @@ public class SwerveModule {
     return new SwerveModuleState(
         driveMotor.getVelocity().getValue(),
         getRotation2d());
+  }
+
+  /**
+   * Returns the current desired state of the module
+   * 
+   * @return The current desired state of the module
+   */
+  public SwerveModuleState getDesiredState() {
+    return desiredState;
   }
 
   /**
@@ -181,51 +175,20 @@ public class SwerveModule {
             .withVelocity(
                 // withVelocity accepts rps, not mps
                 optimizedDesiredState.speedMetersPerSecond / DriveConstants.WHEEL_CIRCUMFERENCE_METERS)
-            .withFeedForward(0.5));
+            .withFeedForward(DriveConstants.DRIVING_FF));
     turnController.setReference(
         optimizedDesiredState.angle.getRadians(),
-        CANSparkMax.ControlType.kPosition);
+        ControlType.kPosition);
 
     this.desiredState = desiredState;
   }
 
-  /** Zeroes all the SwerveModule encoders. */
+  /** Zeroes the drive encoder. */
   public void resetEncoders() {
     driveMotor.setPosition(0);
   }
 
-  public double getRotationDegrees() {
-    return turnEncoder.getPosition() * 360;
-  }
-
   public Rotation2d getRotation2d() {
-    return Rotation2d.fromDegrees(getRotationDegrees());
-  }
-
-  public void setPose(Pose2d pose) {
-    this.pose = pose;
-  }
-
-  public Pose2d getPose() {
-    return pose;
-  }
-
-  public void simulationPeriodic() {
-    System.out.println(driveMotor.get());
-    driveMotorSim.setInputVoltage(driveMotor.get() * RobotController.getBatteryVoltage());
-    driveMotorSim.update(0.02);
-
-    driveMotorSimDistance += driveMotorSim.getAngularVelocityRadPerSec() * 0.02;
-
-    driveMotor
-        .getSimState()
-        .setRawRotorPosition(
-            (int) (driveMotorSimDistance / DriveConstants.DRIVE_DISTANCE_PER_MOTOR_REVOLUTION));
-
-    driveMotor
-        .getSimState()
-        .setRotorVelocity(
-            (int) (driveMotorSim.getAngularVelocityRadPerSec()
-                / (DriveConstants.DRIVE_DISTANCE_PER_MOTOR_REVOLUTION * 10)));
+    return Rotation2d.fromRotations(turnEncoder.getPosition());
   }
 }

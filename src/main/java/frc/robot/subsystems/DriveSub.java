@@ -6,18 +6,18 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.REVPhysicsSim;
-
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.simulation.ADIS16470_IMUSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -40,14 +40,14 @@ public class DriveSub extends SubsystemBase {
       DriveConstants.FRONT_RIGHT_TURNING_CAN_ID,
       DriveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET);
 
-  private final SwerveModule rearLeft = new SwerveModule(
-      DriveConstants.REAR_LEFT_DRIVING_CAN_ID,
-      DriveConstants.REAR_LEFT_TURNING_CAN_ID,
+  private final SwerveModule backLeft = new SwerveModule(
+      DriveConstants.BACK_LEFT_DRIVING_CAN_ID,
+      DriveConstants.BACK_LEFT_TURNING_CAN_ID,
       DriveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET);
 
-  private final SwerveModule rearRight = new SwerveModule(
-      DriveConstants.REAR_RIGHT_DRIVING_CAN_ID,
-      DriveConstants.REAR_RIGHT_TURNING_CAN_ID,
+  private final SwerveModule backRight = new SwerveModule(
+      DriveConstants.BACK_RIGHT_DRIVING_CAN_ID,
+      DriveConstants.BACK_RIGHT_TURNING_CAN_ID,
       DriveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET);
 
   // The gyro sensor
@@ -74,12 +74,13 @@ public class DriveSub extends SubsystemBase {
       new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),
-          rearLeft.getPosition(),
-          rearRight.getPosition()
+          backLeft.getPosition(),
+          backRight.getPosition()
       }, new Pose2d());
 
   // Simulation Variables
   ADIS16470_IMUSim imuSim = new ADIS16470_IMUSim(imu);
+  private Pose2d poseSim = new Pose2d();
 
   /** Creates a new DriveSubsystem. */
   public DriveSub() {
@@ -98,7 +99,7 @@ public class DriveSub extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return poseEstimator.getEstimatedPosition();
+    return RobotBase.isSimulation() ? poseSim : poseEstimator.getEstimatedPosition();
   }
 
   /**
@@ -122,11 +123,23 @@ public class DriveSub extends SubsystemBase {
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
-            rearLeft.getPosition(),
-            rearRight.getPosition()
+            backLeft.getPosition(),
+            backRight.getPosition()
         },
         pose);
   }
+
+  // For reference, the below code is the actual drive function if the last two
+  // arguments are false
+  // public void drive(double xSpeed, double ySpeed, double rot) {
+  // var states = DriveConstants.DRIVE_KINEMATICS
+  // .toSwerveModuleStates(
+  // ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getHeading()));
+  // frontLeft.setDesiredState(states[0]);
+  // frontRight.setDesiredState(states[1]);
+  // backLeft.setDesiredState(states[2]);
+  // backRight.setDesiredState(states[3]);
+  // }
 
   /**
    * Method to drive the robot using joystick info.
@@ -197,14 +210,15 @@ public class DriveSub extends SubsystemBase {
     var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                Rotation2d.fromDegrees(imu.getAngle(IMUAxis.kZ)))
+                getHeading())
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.MAX_SPEED);
+
     frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
-    rearLeft.setDesiredState(swerveModuleStates[2]);
-    rearRight.setDesiredState(swerveModuleStates[3]);
+    backLeft.setDesiredState(swerveModuleStates[2]);
+    backRight.setDesiredState(swerveModuleStates[3]);
   }
 
   /**
@@ -213,8 +227,8 @@ public class DriveSub extends SubsystemBase {
   public void setX() {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-    rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-    rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+    backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
   /**
@@ -227,16 +241,16 @@ public class DriveSub extends SubsystemBase {
         desiredStates, DriveConstants.MAX_SPEED);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
-    rearLeft.setDesiredState(desiredStates[2]);
-    rearRight.setDesiredState(desiredStates[3]);
+    backLeft.setDesiredState(desiredStates[2]);
+    backRight.setDesiredState(desiredStates[3]);
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
     frontLeft.resetEncoders();
-    rearLeft.resetEncoders();
+    backLeft.resetEncoders();
     frontRight.resetEncoders();
-    rearRight.resetEncoders();
+    backRight.resetEncoders();
   }
 
   /** Zeroes the heading of the robot. */
@@ -247,7 +261,7 @@ public class DriveSub extends SubsystemBase {
   /**
    * Returns the heading of the robot.
    *
-   * @return the robot's heading in degrees, from -180 to 180
+   * @return the robot's heading as a Rotation2d
    */
   public Rotation2d getHeading() {
     return Rotation2d.fromDegrees(imu.getAngle(IMUAxis.kZ));
@@ -268,52 +282,30 @@ public class DriveSub extends SubsystemBase {
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
-            rearLeft.getPosition(),
-            rearRight.getPosition()
+            backLeft.getPosition(),
+            backRight.getPosition()
         });
 
-    frontLeft.setPose(
-        new Pose2d(
-            DriveConstants.FRONT_LEFT_MODULE_TRANSLATION.rotateBy(getHeading()).plus(getPose().getTranslation()),
-            frontLeft.getRotation2d().plus(getHeading())));
-    frontRight.setPose(
-        new Pose2d(
-            DriveConstants.FRONT_RIGHT_MODULE_TRANSLATION.rotateBy(getHeading()).plus(getPose().getTranslation()),
-            frontRight.getRotation2d().plus(getHeading())));
-    rearLeft.setPose(
-        new Pose2d(
-            DriveConstants.REAR_LEFT_MODULE_TRANSLATION.rotateBy(getHeading()).plus(getPose().getTranslation()),
-            rearLeft.getRotation2d().plus(getHeading())));
-    rearRight.setPose(
-        new Pose2d(
-            DriveConstants.REAR_RIGHT_MODULE_TRANSLATION.rotateBy(getHeading()).plus(getPose().getTranslation()),
-            rearRight.getRotation2d().plus(getHeading())));
     field.setRobotPose(getPose());
   }
 
   @Override
   public void simulationPeriodic() {
-    // TODO: make swerve sim work
+    var speeds = DriveConstants.DRIVE_KINEMATICS.toChassisSpeeds(
+        frontLeft.getDesiredState(),
+        frontRight.getDesiredState(),
+        backLeft.getDesiredState(),
+        backRight.getDesiredState());
 
-    REVPhysicsSim.getInstance().run();
+    imuSim.setGyroRateZ(speeds.omegaRadiansPerSecond * (180 / Math.PI));
+    imuSim.setGyroAngleZ(getHeading().plus(Rotation2d.fromRadians(speeds.omegaRadiansPerSecond * 0.02)).getDegrees());
 
-    frontLeft.simulationPeriodic();
-    frontRight.simulationPeriodic();
-    rearLeft.simulationPeriodic();
-    rearRight.simulationPeriodic();
+    poseSim = poseSim.exp(
+        new Twist2d(
+            speeds.vxMetersPerSecond * 0.02,
+            speeds.vyMetersPerSecond * 0.02,
+            speeds.omegaRadiansPerSecond * 0.02));
 
-    var chassisSpeedsSim = DriveConstants.DRIVE_KINEMATICS.toChassisSpeeds(
-        frontLeft.getState(),
-        frontRight.getState(),
-        rearLeft.getState(),
-        rearRight.getState());
-    imuSim.setGyroRateZ(Rotation2d.fromRadians(chassisSpeedsSim.omegaRadiansPerSecond).getDegrees());
-    poseEstimator.update(getHeading(), new SwerveModulePosition[] {
-        frontLeft.getPosition(),
-        frontRight.getPosition(),
-        rearLeft.getPosition(),
-        rearRight.getPosition()
-    });
     photon.simulationPeriodic(getPose());
     System.out.println(getPose());
   }
