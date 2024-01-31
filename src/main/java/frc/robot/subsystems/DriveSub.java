@@ -104,16 +104,6 @@ public class DriveSub extends SubsystemBase {
   }
 
   /**
-   * Incorporates a vision measurement into the robot pose estimator.
-   * 
-   * @param visionRobotPoseMeters The vision pose meters
-   * @param timestampSeconds      Timestamp in seconds
-   */
-  public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
-    poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
-  }
-
-  /**
    * Resets the odometry to the specified pose.
    *
    * @param pose The pose to which to set the odometry.
