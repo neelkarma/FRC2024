@@ -11,6 +11,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -79,6 +80,10 @@ public class PhotonBridge {
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
     return poseEstimator.update();
+  }
+
+  public PhotonPipelineResult getLatestPipelineResult() {
+    return cam.getLatestResult();
   }
 
   public void reset() {

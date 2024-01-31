@@ -54,7 +54,7 @@ public class DriveSub extends SubsystemBase {
   private final ADIS16470_IMU imu = new ADIS16470_IMU();
 
   // Photon Bridge
-  private final PhotonBridge photon = new PhotonBridge();
+  public final PhotonBridge photon = new PhotonBridge();
 
   // Field for robot viz
   private final Field2d field = new Field2d();
@@ -314,6 +314,5 @@ public class DriveSub extends SubsystemBase {
             speeds.omegaRadiansPerSecond * 0.02));
 
     photon.simulationPeriodic(getPose());
-    System.out.println(getPose());
   }
 }

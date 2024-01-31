@@ -108,11 +108,6 @@ public class Robot extends TimedRobot {
       autoCommand.cancel();
     }
 
-    teleopCommmand = robotContainer.getTeleopCommand();
-    if (teleopCommmand != null) {
-      teleopCommmand.schedule();
-    }
-
     Logger.header("Teleop Start ------------------------------------------------------------------------------------");
     logger.unpause();
   }

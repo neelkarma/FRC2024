@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.auto.AutoProvider;
 import frc.robot.teleop.TeleopProvider;
+import frc.robot.commands.AlignClimbCommand;
 import frc.robot.commands.IntakeCommand;
 
 /**
@@ -51,7 +53,8 @@ public class RobotContainer {
     }));
 
     OI.pilot.rightBumper().onTrue(new IntakeCommand());
- 
+
+    OI.pilot.x().whileTrue(new AlignClimbCommand());
 
     // climber up
     OI.pilot.povUp().whileTrue(
@@ -59,14 +62,14 @@ public class RobotContainer {
             () -> Subsystems.climber.set(0.5),
             Subsystems.climber::stop,
             Subsystems.climber));
-    
+
     // climber down
     OI.pilot.povDown().whileTrue(
         new StartEndCommand(
             () -> Subsystems.climber.set(-0.5),
             Subsystems.climber::stop,
             Subsystems.climber));
-    
+
     // Example of another intake command
     // OI.pilot.rightTrigger()
     // .whileTrue(
@@ -74,9 +77,6 @@ public class RobotContainer {
     // () -> Subsystems.intake.set(0.5),
     // Subsystems.intake::stop,
     // Subsystems.intake));
-
-    // OI.pilot.rightBumper().onTrue(LEDShow.cone());
-    // OI.pilot.leftBumper().onTrue(LEDShow.cube());
 
     // Drive bindings handled in teleop command
 
