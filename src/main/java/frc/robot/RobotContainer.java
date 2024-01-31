@@ -4,20 +4,12 @@
 
 package frc.robot;
 
-import java.util.List;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.auto.AutoProvider;
-import frc.robot.auto.SwerveTrajectoryCommand;
 import frc.robot.teleop.TeleopProvider;
 import frc.robot.commands.AlignClimbCommand;
 import frc.robot.commands.IntakeCommand;
