@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.IntakeConstants;
+import frc.robot.Variables;
 
 public class IntakeSub extends SubsystemBase {
   private final WPI_TalonSRX masterMotor = IntakeConstants.MOTOR_1_ID.build();
@@ -25,6 +26,9 @@ public class IntakeSub extends SubsystemBase {
   public void periodic() {
     boolean robotContainsNote = beamBreakSensor.get();
     locked = robotContainsNote;
+    if (locked) {
+      Variables.intakeIsIntaking = false;
+    }
   }
 
   /**
