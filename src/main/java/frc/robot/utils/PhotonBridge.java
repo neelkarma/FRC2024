@@ -53,15 +53,9 @@ public class PhotonBridge {
       visionSim.addAprilTags(fieldLayout);
 
       camProps = new SimCameraProperties();
-      // A 640 x 480 camera with a 100 degree diagonal FOV.
-      camProps.setCalibration(640, 480, Rotation2d.fromDegrees(100));
-      // Approximate detection noise with average and standard deviation error in
-      // pixels.
+      camProps.setCalibration(960, 720, Rotation2d.fromDegrees(90));
       camProps.setCalibError(0.25, 0.08);
-      // Set the camera image capture framerate (Note: this is limited by robot loop
-      // rate).
-      camProps.setFPS(20);
-      // The average and standard deviation in milliseconds of image data latency.
+      camProps.setFPS(45);
       camProps.setAvgLatencyMs(35);
       camProps.setLatencyStdDevMs(5);
 
@@ -83,8 +77,7 @@ public class PhotonBridge {
     }
   }
 
-  public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-    poseEstimator.setReferencePose(prevEstimatedRobotPose);
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
     return poseEstimator.update();
   }
 
@@ -99,9 +92,5 @@ public class PhotonBridge {
 
   public void simulationPeriodic(Pose2d pose) {
     visionSim.update(pose);
-
-    // todo: find out why the hell this always gives empty results
-    // System.out.println(cam.getLatestResult().targets.stream().map((target) ->
-    // target.toString()).toList());
   }
 }

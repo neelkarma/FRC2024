@@ -292,6 +292,17 @@ public class DriveSub extends SubsystemBase {
             backRight.getPosition()
         });
 
+    photon.getEstimatedGlobalPose()
+        .ifPresent((visionResult) -> {
+          var visionPose = visionResult.estimatedPose.toPose2d();
+
+          // Reject any egregiously incorrect vision pose estimates
+          if (visionPose.getTranslation().getDistance(getPose().getTranslation()) > 1)
+            return;
+
+          poseEstimator.addVisionMeasurement(visionPose, 0.02);
+        });
+
     field.setRobotPose(getPose());
   }
 
