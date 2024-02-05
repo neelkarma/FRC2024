@@ -53,10 +53,10 @@ public class RobotContainer {
 
     OI.pilot.rightBumper().onTrue(new IntakeCommand());
 
-    OI.pilot.x().whileTrue(new AlignClimbCommand(() -> OI.pilot.getHID().getXButton()));
+    //OI.pilot.x().whileTrue(new AlignClimbCommand(() -> OI.pilot.getHID().getXButton()));
 
     // climber up
-    OI.pilot.povUp().whileTrue(
+    /*OI.pilot.povUp().whileTrue(
         new StartEndCommand(
             () -> Subsystems.climber.set(0.5),
             Subsystems.climber::stop,
@@ -67,7 +67,7 @@ public class RobotContainer {
         new StartEndCommand(
             () -> Subsystems.climber.set(-0.5),
             Subsystems.climber::stop,
-            Subsystems.climber));
+            Subsystems.climber));*/
 
     // Example of another intake command
     // OI.pilot.rightTrigger()

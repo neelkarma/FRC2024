@@ -15,7 +15,7 @@ public class TeleopDriveSwerve extends Command {
     var translateY = -OI.applyAxisDeadband(OI.pilot.getLeftX());
     var rotate = -OI.applyAxisDeadband(OI.pilot.getRightX());
 
-    Subsystems.drive.drive(translateX, translateY, rotate, true, true);
+    Subsystems.drive.drive(translateX, translateY, rotate, false, false);
   }
 
   @Override

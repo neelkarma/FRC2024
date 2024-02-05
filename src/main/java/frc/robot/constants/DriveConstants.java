@@ -70,24 +70,24 @@ public class DriveConstants {
 
     // Angular offsets of the modules relative to the chassis in radians
     /** Angular offset of front left module relative to chassis */
-    public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
+    public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = (-Math.PI / 2) + 2.0566011;
     /** Angular offset of front right module relative to chassis */
-    public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0;
+    public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0 + 0.0581969;
     /** Angular offset of back left module relative to chassis */
-    public static final double BACK_LEFT_CHASSIS_ANGULAR_OFFSET = Math.PI;
+    public static final double BACK_LEFT_CHASSIS_ANGULAR_OFFSET = Math.PI + 0.4507443;
     /** Angular offset of back right module relative to chassis */
-    public static final double BACK_RIGHT_CHASSIS_ANGULAR_OFFSET = Math.PI / 2;
+    public static final double BACK_RIGHT_CHASSIS_ANGULAR_OFFSET = (Math.PI / 2) + 0.3893079;
 
     // SPARK MAX CAN IDs
-    public static final int FRONT_LEFT_DRIVING_CAN_ID = 11;
-    public static final int BACK_LEFT_DRIVING_CAN_ID = 13;
-    public static final int FRONT_RIGHT_DRIVING_CAN_ID = 15;
-    public static final int BACK_RIGHT_DRIVING_CAN_ID = 17;
+    public static final int FRONT_LEFT_DRIVING_CAN_ID = 1;
+    public static final int FRONT_RIGHT_DRIVING_CAN_ID = 2;
+    public static final int BACK_LEFT_DRIVING_CAN_ID = 3;
+    public static final int BACK_RIGHT_DRIVING_CAN_ID = 4;
 
-    public static final int FRONT_LEFT_TURNING_CAN_ID = 10;
-    public static final int BACK_LEFT_TURNING_CAN_ID = 12;
-    public static final int FRONT_RIGHT_TURNING_CAN_ID = 14;
-    public static final int BACK_RIGHT_TURNING_CAN_ID = 16;
+    public static final int FRONT_LEFT_TURNING_CAN_ID = 1;
+    public static final int FRONT_RIGHT_TURNING_CAN_ID = 2;
+    public static final int BACK_LEFT_TURNING_CAN_ID = 3;
+    public static final int BACK_RIGHT_TURNING_CAN_ID = 4;
 
     public static final boolean GYRO_REVERSED = false;
 
@@ -139,21 +139,21 @@ public class DriveConstants {
                                                                                                          // second
 
     /** Turning encoder position factor */
-    public static final double TURNING_ENCODER_POSITION_FACTOR = (2 * Math.PI); // radians
+    public static final double TURNING_ENCODER_POSITION_FACTOR = (2* Math.PI); // radians
     /** Turning encoder velocity factor */
     public static final double TURNING_ENCODER_VELOCITY_FACTOR = TURNING_ENCODER_POSITION_FACTOR / 60.0; // radians per
                                                                                                          // second
     public static final double TURNING_ENCODER_POSITION_PID_MIN_INPUT = 0; // radians
     public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
-    public static final double DRIVE_P = 0.01;
+    public static final double DRIVE_P = 0;
     public static final double DRIVE_I = 0;
     public static final double DRIVE_D = 0;
-    public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
+    public static final double DRIVING_FF = 0;//1 / DRIVE_WHEEL_FREE_SPEED_RPS;
 
-    public static final double TURNING_P = 0.01;
-    public static final double TURNING_I = 0;
-    public static final double TURNING_D = 0;
+    public static final double TURNING_P = 0.05;//.015;
+    public static final double TURNING_I = 0.00001;
+    public static final double TURNING_D = 0;//.001;
     public static final double TURNING_FF = 0;
 
     // Auto Constants

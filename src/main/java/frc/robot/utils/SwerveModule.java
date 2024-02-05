@@ -168,18 +168,20 @@ public class SwerveModule {
     SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(
         correctedDesiredState,
         getRotation2d());
-
-    // Command driving and turning motors towards their respective setpoints.
+    
+        
+        // Command driving and turning motors towards their respective setpoints.
     driveMotor.setControl(
-        driveController
-            .withVelocity(
-                // withVelocity accepts rps, not mps
-                optimizedDesiredState.speedMetersPerSecond / DriveConstants.WHEEL_CIRCUMFERENCE_METERS)
-            .withFeedForward(DriveConstants.DRIVING_FF));
-    turnController.setReference(
-        optimizedDesiredState.angle.getRadians(),
-        ControlType.kPosition);
-
+      driveController
+      .withVelocity(
+        // withVelocity accepts rps, not mps
+        optimizedDesiredState.speedMetersPerSecond / DriveConstants.WHEEL_CIRCUMFERENCE_METERS)
+        .withFeedForward(DriveConstants.DRIVING_FF));
+        turnController.setReference(
+          optimizedDesiredState.angle.getRadians(),
+          ControlType.kPosition);
+              
+    System.out.println(optimizedDesiredState.angle.getRadians()+" "+turnEncoder.getPosition()+" "+turnController.getP());
     this.desiredState = desiredState;
   }
 

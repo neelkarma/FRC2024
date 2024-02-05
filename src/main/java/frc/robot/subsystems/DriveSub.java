@@ -143,7 +143,6 @@ public class DriveSub extends SubsystemBase {
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-
     double xSpeedCommanded;
     double ySpeedCommanded;
 
@@ -198,6 +197,8 @@ public class DriveSub extends SubsystemBase {
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED;
     double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED;
 
+    System.out.println(xSpeedDelivered + " " + ySpeedDelivered + " " + rotDelivered +" "+ getHeading());
+
     var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
@@ -205,6 +206,11 @@ public class DriveSub extends SubsystemBase {
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.MAX_SPEED);
+
+    System.out.println(swerveModuleStates[0].speedMetersPerSecond+" "+swerveModuleStates[0].angle);
+    System.out.println(swerveModuleStates[1].speedMetersPerSecond+" "+swerveModuleStates[1].angle);
+    System.out.println(swerveModuleStates[2].speedMetersPerSecond+" "+swerveModuleStates[2].angle);
+    System.out.println(swerveModuleStates[3].speedMetersPerSecond+" "+swerveModuleStates[3].angle);
 
     frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
