@@ -197,7 +197,7 @@ public class DriveSub extends SubsystemBase {
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED;
     double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED;
 
-    System.out.println(xSpeedDelivered + " " + ySpeedDelivered + " " + rotDelivered +" "+ getHeading());
+    //System.out.println(xSpeedDelivered + " " + ySpeedDelivered + " " + rotDelivered +" "+ getHeading());
 
     var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
         fieldRelative
@@ -207,15 +207,15 @@ public class DriveSub extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.MAX_SPEED);
 
-    System.out.println(swerveModuleStates[0].speedMetersPerSecond+" "+swerveModuleStates[0].angle);
+    /*System.out.println(swerveModuleStates[0].speedMetersPerSecond+" "+swerveModuleStates[0].angle);
     System.out.println(swerveModuleStates[1].speedMetersPerSecond+" "+swerveModuleStates[1].angle);
     System.out.println(swerveModuleStates[2].speedMetersPerSecond+" "+swerveModuleStates[2].angle);
     System.out.println(swerveModuleStates[3].speedMetersPerSecond+" "+swerveModuleStates[3].angle);
-
+*/
     frontLeft.setDesiredState(swerveModuleStates[0]);
-    frontRight.setDesiredState(swerveModuleStates[1]);
-    backLeft.setDesiredState(swerveModuleStates[2]);
-    backRight.setDesiredState(swerveModuleStates[3]);
+    //frontRight.setDesiredState(swerveModuleStates[1]);
+    //backLeft.setDesiredState(swerveModuleStates[2]);
+    //backRight.setDesiredState(swerveModuleStates[3]);
   }
 
   /**

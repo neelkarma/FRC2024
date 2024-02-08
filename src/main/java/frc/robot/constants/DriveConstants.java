@@ -17,7 +17,7 @@ public class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     /** Max speed of robot in meters per second */
-    public static final double MAX_SPEED = 4.8;
+    public static final double MAX_SPEED = 4.8;                                                                         // TODO check this
     /** Max angular speed of robot in radians per second */
     public static final double MAX_ANGULAR_SPEED = 2 * Math.PI;
     /** Max angular acceleration of robot in radians per second squared */
@@ -32,7 +32,7 @@ public class DriveConstants {
 
     // Chassis configuration
     /** Distance between front and back wheel on robot in meters */
-    public static final double TRACK_WIDTH = Units.inchesToMeters(26.5);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(26.5);                                         // TODO check this
     /** Distance between centers of left and right wheels on robot in meters */
     public static final double WHEEL_BASE = Units.inchesToMeters(26.5);
 
@@ -70,13 +70,13 @@ public class DriveConstants {
 
     // Angular offsets of the modules relative to the chassis in radians
     /** Angular offset of front left module relative to chassis */
-    public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = (-Math.PI / 2) + 2.0566011;
+    public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
     /** Angular offset of front right module relative to chassis */
-    public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0 + 0.0581969;
+    public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0;
     /** Angular offset of back left module relative to chassis */
-    public static final double BACK_LEFT_CHASSIS_ANGULAR_OFFSET = Math.PI + 0.4507443;
+    public static final double BACK_LEFT_CHASSIS_ANGULAR_OFFSET = Math.PI;
     /** Angular offset of back right module relative to chassis */
-    public static final double BACK_RIGHT_CHASSIS_ANGULAR_OFFSET = (Math.PI / 2) + 0.3893079;
+    public static final double BACK_RIGHT_CHASSIS_ANGULAR_OFFSET = Math.PI / 2;
 
     // SPARK MAX CAN IDs
     public static final int FRONT_LEFT_DRIVING_CAN_ID = 1;
@@ -115,7 +115,7 @@ public class DriveConstants {
     /** Free speed of the driving motor in rps */
     public static final double DRIVING_MOTOR_FREE_SPEED_RPS = FREE_SPEED_RPM / 60;
     /** Wheel diameter in meters */
-    public static final double WHEEL_DIAMETER_METERS = 0.0762;
+    public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3);
     /** Wheel circumference in meters */
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     /** Driving distance per motor revolution, in meters */
@@ -135,23 +135,22 @@ public class DriveConstants {
     public static final double DRIVING_ENCODER_POSITION_FACTOR = (WHEEL_DIAMETER_METERS * Math.PI)
             / DRIVING_MOTOR_REDUCTION; // meters
     /** Driving encoder velocity factor */
-    public static final double DRIVING_ENCODER_VELOCITY_FACTOR = DRIVING_ENCODER_POSITION_FACTOR / 60.0; // meters per
-                                                                                                         // second
+    public static final double DRIVING_ENCODER_VELOCITY_FACTOR = DRIVING_ENCODER_POSITION_FACTOR / 60.0; // m/s
 
     /** Turning encoder position factor */
     public static final double TURNING_ENCODER_POSITION_FACTOR = (2* Math.PI); // radians
     /** Turning encoder velocity factor */
-    public static final double TURNING_ENCODER_VELOCITY_FACTOR = TURNING_ENCODER_POSITION_FACTOR / 60.0; // radians per
-                                                                                                         // second
+    public static final double TURNING_ENCODER_VELOCITY_FACTOR = TURNING_ENCODER_POSITION_FACTOR / 60.0; // rad/s
     public static final double TURNING_ENCODER_POSITION_PID_MIN_INPUT = 0; // radians
     public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
+                                                                                                                        // TODO tune PID
     public static final double DRIVE_P = 0;
     public static final double DRIVE_I = 0;
     public static final double DRIVE_D = 0;
     public static final double DRIVING_FF = 0;//1 / DRIVE_WHEEL_FREE_SPEED_RPS;
 
-    public static final double TURNING_P = 0.05;//.015;
+    public static final double TURNING_P = 0.015;
     public static final double TURNING_I = 0.00001;
     public static final double TURNING_D = 0;//.001;
     public static final double TURNING_FF = 0;

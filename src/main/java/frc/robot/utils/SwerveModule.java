@@ -33,7 +33,7 @@ public class SwerveModule {
   private final VelocityVoltage driveController;
   private final SparkPIDController turnController;
 
-  private double angularOffset = 0;
+  private double angularOffset = 0; //radians
   private SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
   /**
@@ -178,10 +178,10 @@ public class SwerveModule {
         optimizedDesiredState.speedMetersPerSecond / DriveConstants.WHEEL_CIRCUMFERENCE_METERS)
         .withFeedForward(DriveConstants.DRIVING_FF));
         turnController.setReference(
-          optimizedDesiredState.angle.getRadians(),
+          optimizedDesiredState.angle.getRadians() + Math.PI,
           ControlType.kPosition);
               
-    System.out.println(optimizedDesiredState.angle.getRadians()+" "+turnEncoder.getPosition()+" "+turnController.getP());
+    System.out.println(optimizedDesiredState.angle.getRadians() + Math.PI+" "+turnEncoder.getPosition()+ " " + desiredState.angle +" "+ correctedDesiredState.angle); //TODO remove
     this.desiredState = desiredState;
   }
 
@@ -191,6 +191,10 @@ public class SwerveModule {
   }
 
   public Rotation2d getRotation2d() {
-    return Rotation2d.fromRotations(turnEncoder.getPosition());
+    //take care, get position only returns as rotations when a scale factor is not set
+    return Rotation2d.fromRadians(turnEncoder.getPosition());
+    /*return Rotation2d.fromRotations(
+        turnEncoder.getPosition() / DriveConstants.TURNING_ENCODER_POSITION_FACTOR
+    );*/
   }
 }
