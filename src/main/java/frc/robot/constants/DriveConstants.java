@@ -49,26 +49,26 @@ public class DriveConstants {
    * Position of front left swerve module relative to robot center. Mainly for sim
    * purposes.
    */
-  public static final Translation2d FRONT_LEFT_MODULE_TRANSLATION = new Translation2d(-TRACK_WIDTH / 2,
-      WHEEL_BASE / 2);
+  public static final Translation2d FRONT_LEFT_MODULE_TRANSLATION 
+      = new Translation2d(-TRACK_WIDTH / 2,  WHEEL_BASE / 2);
   /**
    * Position of front right swerve module relative to robot center. Mainly for
    * sim purposes.
    */
-  public static final Translation2d FRONT_RIGHT_MODULE_TRANSLATION = new Translation2d(TRACK_WIDTH / 2,
-      WHEEL_BASE / 2);
+  public static final Translation2d FRONT_RIGHT_MODULE_TRANSLATION 
+      = new Translation2d( TRACK_WIDTH / 2,  WHEEL_BASE / 2);
   /**
    * Position of back left swerve module relative to robot center. Mainly for sim
    * purposes.
    */
-  public static final Translation2d BACK_LEFT_MODULE_TRANSLATION = new Translation2d(-TRACK_WIDTH / 2,
-      -WHEEL_BASE / 2);
+  public static final Translation2d BACK_LEFT_MODULE_TRANSLATION 
+      = new Translation2d(-TRACK_WIDTH / 2, -WHEEL_BASE / 2);
   /**
    * Position of back right swerve module relative to robot center. Mainly for sim
    * purposes.
    */
-  public static final Translation2d BACK_RIGHT_MODULE_TRANSLATION = new Translation2d(TRACK_WIDTH / 2,
-      -WHEEL_BASE / 2);
+  public static final Translation2d BACK_RIGHT_MODULE_TRANSLATION 
+      = new Translation2d( TRACK_WIDTH / 2, -WHEEL_BASE / 2);
 
   /** Swerve Kinematics */
   public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
@@ -79,13 +79,13 @@ public class DriveConstants {
 
     // Angular offsets of the modules relative to the chassis in radians
     /** Angular offset of front left module relative to chassis */
-    public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
+    public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET  =  0;
     /** Angular offset of front right module relative to chassis */
-    public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0;
+    public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = Math.PI / 2;
     /** Angular offset of back left module relative to chassis */
-    public static final double BACK_LEFT_CHASSIS_ANGULAR_OFFSET = Math.PI;
+    public static final double BACK_LEFT_CHASSIS_ANGULAR_OFFSET   =  -Math.PI / 2;
     /** Angular offset of back right module relative to chassis */
-    public static final double BACK_RIGHT_CHASSIS_ANGULAR_OFFSET = Math.PI / 2;
+    public static final double BACK_RIGHT_CHASSIS_ANGULAR_OFFSET  =  Math.PI;
 
   // SPARK MAX CAN IDs
   /** CAN ID for Front Left Module Driving Motor */
@@ -168,14 +168,14 @@ public class DriveConstants {
     public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
                                                                                                                         // TODO tune PID
-    public static final double DRIVE_P = 0;
+    public static final double DRIVE_P = 0.05;
     public static final double DRIVE_I = 0;
     public static final double DRIVE_D = 0;
     public static final double DRIVING_FF = 0;//1 / DRIVE_WHEEL_FREE_SPEED_RPS;
 
-    public static final double TURNING_P = 0.05;//.015;
-    public static final double TURNING_I = 0.00001;
-    public static final double TURNING_D = 0;//.001;
+    public static final double TURNING_P = 0.3;
+    public static final double TURNING_I = 0.0001;
+    public static final double TURNING_D = 0.005;
     public static final double TURNING_FF = 0;
 
   // Auto Constants

@@ -89,6 +89,7 @@ public class Robot extends TimedRobot {
       autoCommand.schedule();
     }
     Logger.header("Auto Start --------------------------------------------------------------------------------------");
+    Subsystems.drive.resetIntegral();
     logger.unpause();
   }
 
@@ -108,6 +109,7 @@ public class Robot extends TimedRobot {
     }
 
     Logger.header("Teleop Start ------------------------------------------------------------------------------------");
+    Subsystems.drive.resetIntegral();
     logger.unpause();
   }
 

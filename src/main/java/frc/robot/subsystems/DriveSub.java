@@ -207,15 +207,10 @@ public class DriveSub extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.MAX_SPEED);
 
-    /*System.out.println(swerveModuleStates[0].speedMetersPerSecond+" "+swerveModuleStates[0].angle);
-    System.out.println(swerveModuleStates[1].speedMetersPerSecond+" "+swerveModuleStates[1].angle);
-    System.out.println(swerveModuleStates[2].speedMetersPerSecond+" "+swerveModuleStates[2].angle);
-    System.out.println(swerveModuleStates[3].speedMetersPerSecond+" "+swerveModuleStates[3].angle);
-*/
     frontLeft.setDesiredState(swerveModuleStates[0]);
-    //frontRight.setDesiredState(swerveModuleStates[1]);
-    //backLeft.setDesiredState(swerveModuleStates[2]);
-    //backRight.setDesiredState(swerveModuleStates[3]);
+    frontRight.setDesiredState(swerveModuleStates[1]);
+    backLeft.setDesiredState(swerveModuleStates[2]);
+    backRight.setDesiredState(swerveModuleStates[3]);
   }
 
   /**
@@ -248,6 +243,15 @@ public class DriveSub extends SubsystemBase {
     backLeft.resetEncoders();
     frontRight.resetEncoders();
     backRight.resetEncoders();
+  }
+
+  /** reset turn motor pid I accumulation to 0 */
+  public void resetIntegral(){
+    frontLeft.resetIntegral();
+    backLeft.resetIntegral();
+    frontRight.resetIntegral();
+    backRight.resetIntegral();
+
   }
 
   /** Zeroes the heading of the robot. */

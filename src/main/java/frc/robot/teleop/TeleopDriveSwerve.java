@@ -11,11 +11,11 @@ public class TeleopDriveSwerve extends Command {
 
   @Override
   public void execute() {
-    var translateX = -OI.applyAxisDeadband(OI.pilot.getLeftY());
-    var translateY = -OI.applyAxisDeadband(OI.pilot.getLeftX());
-    var rotate = -OI.applyAxisDeadband(OI.pilot.getRightX());
+    var translateX  = -OI.applyAxisDeadband(OI.pilot.getLeftX());
+    var translateY  =  OI.applyAxisDeadband(OI.pilot.getLeftY());
+    var rotate      =  OI.applyAxisDeadband(OI.pilot.getRightX());
 
-    Subsystems.drive.drive(translateX, translateY, rotate, false, false);
+    Subsystems.drive.drive(translateX, translateY, rotate, true, true);
   }
 
   @Override

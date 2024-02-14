@@ -77,13 +77,15 @@ public class SwerveModule {
     turnEncoder = turnMotor.getAbsoluteEncoder(Type.kDutyCycle);
     turnController = turnMotor.getPIDController();
     turnController.setFeedbackDevice(turnEncoder);
+    
+
 
     // Apply position and velocity conversion factors for the turning encoder. We
     // want these in radians and radians per second to use with WPILib's swerve
     // APIs.
     turnEncoder.setPositionConversionFactor(DriveConstants.TURNING_ENCODER_POSITION_FACTOR);
     turnEncoder.setVelocityConversionFactor(DriveConstants.TURNING_ENCODER_VELOCITY_FACTOR);
-    turnEncoder.setZeroOffset(angularOffset);
+    //turnEncoder.setZeroOffset(angularOffset);
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
     // direction of
@@ -165,7 +167,7 @@ public class SwerveModule {
     correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(angularOffset));
 
     // Optimize the reference state to avoid spinning further than 90 degrees.
-    SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(
+    SwerveModuleState optimizedDesiredState = /*SwerveModuleState.*/optimize(
         correctedDesiredState,
         getRotation2d());
     
@@ -177,12 +179,26 @@ public class SwerveModule {
         // withVelocity accepts rps, not mps
         optimizedDesiredState.speedMetersPerSecond / DriveConstants.WHEEL_CIRCUMFERENCE_METERS)
         .withFeedForward(DriveConstants.DRIVING_FF));
-        turnController.setReference(
-          optimizedDesiredState.angle.getRadians() + Math.PI,
-          ControlType.kPosition);
-              
+      turnController.setReference(
+        optimizedDesiredState.angle.getRadians() + Math.PI,
+        ControlType.kPosition);
+            
+    System.out.println(optimizedDesiredState.speedMetersPerSecond+" "+driveMotor.getVelocity()+ " " + desiredState.speedMetersPerSecond +" "+ correctedDesiredState.speedMetersPerSecond); //TODO remove
     System.out.println(optimizedDesiredState.angle.getRadians() + Math.PI+" "+turnEncoder.getPosition()+ " " + desiredState.angle +" "+ correctedDesiredState.angle); //TODO remove
     this.desiredState = desiredState;
+  }
+  public SwerveModuleState optimize(
+      SwerveModuleState desiredState, Rotation2d currentAngle) {
+    var delta = desiredState.angle.minus(currentAngle);
+    System.out.println(delta+" "+ desiredState.angle.getRadians()+" "+ currentAngle+" "+Rotation2d.fromRadians(angularOffset)+" "+getRotation2d());
+    if (Math.abs(delta.getDegrees()) < 90.0) {
+      System.out.println("----------------------"+desiredState.angle);
+      return new SwerveModuleState(
+          -desiredState.speedMetersPerSecond,
+          desiredState.angle.rotateBy(Rotation2d.fromDegrees(180.0)));
+    } else {
+      return new SwerveModuleState(desiredState.speedMetersPerSecond, desiredState.angle);
+    }
   }
 
   /** Zeroes the drive encoder. */
@@ -190,11 +206,13 @@ public class SwerveModule {
     driveMotor.setPosition(0);
   }
 
+  /** reset turn motor pid I accumulation to 0 */
+  public void resetIntegral(){
+    turnController.setIAccum(0);
+  }
+
   public Rotation2d getRotation2d() {
     //take care, get position only returns as rotations when a scale factor is not set
     return Rotation2d.fromRadians(turnEncoder.getPosition());
-    /*return Rotation2d.fromRotations(
-        turnEncoder.getPosition() / DriveConstants.TURNING_ENCODER_POSITION_FACTOR
-    );*/
   }
 }
