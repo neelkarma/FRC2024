@@ -36,7 +36,10 @@ public class ShooterSub extends SubsystemBase {
    * @param targetTanSpeed The target tangential speed of the shooter wheel.
    */
   public void setSpeed(double targetTanSpeed) {
-    isStopped = false;
+    if (isStopped) {
+      controller.reset();
+      isStopped = false;
+    }
 
     // ω = v/r
     var targetRotSpeed = targetTanSpeed / ShooterConstants.WHEEL_RADIUS;

@@ -46,17 +46,35 @@ public class RobotContainer {
     // +----------------+
 
     // Invert Drive
-    OI.pilot.start().onTrue(new InstantCommand(() -> {
-      Variables.invertDriveDirection = !Variables.invertDriveDirection;
-      // CommandScheduler.getInstance().schedule(LEDShow.direction());
-    }));
+    OI.pilot.start().onTrue(new InstantCommand(() -> Variables.invertDriveDirection = !Variables.invertDriveDirection));
 
-    OI.pilot.rightBumper().onTrue(new IntakeCommand());
+    // intake
+    OI.pilot.leftTrigger()
+        .whileTrue(
+            new StartEndCommand(
+                () -> Subsystems.intake.set(0.5),
+                Subsystems.intake::stop,
+                Subsystems.intake));
 
-    //OI.pilot.x().whileTrue(new AlignClimbCommand(() -> OI.pilot.getHID().getXButton()));
+    // shoot
+    OI.pilot.rightTrigger()
+        .whileTrue(
+            new StartEndCommand(
+                () -> Subsystems.shooter.setSpeed(10),
+                Subsystems.shooter::stop,
+                Subsystems.shooter));
+
+    // pivot up
+    OI.pilot.povRight().onTrue(Subsystems.pivot.runOnce(Subsystems.pivot::up));
+
+    // pivot down
+    OI.pilot.povLeft().onTrue(Subsystems.pivot.runOnce(Subsystems.pivot::down));
+
+    // auto climb align
+    OI.pilot.back().whileTrue(new AlignClimbCommand(() -> OI.pilot.getHID().getBackButton()));
 
     // climber up
-    /*OI.pilot.povUp().whileTrue(
+    OI.pilot.povUp().whileTrue(
         new StartEndCommand(
             () -> Subsystems.climber.set(0.5),
             Subsystems.climber::stop,
@@ -67,15 +85,7 @@ public class RobotContainer {
         new StartEndCommand(
             () -> Subsystems.climber.set(-0.5),
             Subsystems.climber::stop,
-            Subsystems.climber));*/
-
-    // Example of another intake command
-    // OI.pilot.rightTrigger()
-    // .whileTrue(
-    // new StartEndCommand(
-    // () -> Subsystems.intake.set(0.5),
-    // Subsystems.intake::stop,
-    // Subsystems.intake));
+            Subsystems.climber));
 
     // Drive bindings handled in teleop command
 
