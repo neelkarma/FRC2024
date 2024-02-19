@@ -18,14 +18,17 @@ public class PivotSub extends SubsystemBase {
     }
   }
 
+  /** Start pivoting upwards. Will automatically stop at the limit. */
   public void startMovingUp() {
     motor.set(1);
   }
 
+  /** Start pivoting downwards. Will automatically stop at the limit. */
   public void startMovingDown() {
     motor.set(-1);
   }
 
+  /** Stops pivoting immediately. */
   public void stop() {
     motor.stopMotor();
   }
