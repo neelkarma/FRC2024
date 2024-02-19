@@ -1,16 +1,16 @@
-package frc.robot.utils.motorbuilder;
+package frc.robot.utils.motorsupplier;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import frc.robot.utils.logger.Logger;
 
-public class VictorMotorBuilder extends MotorBuilder<WPI_VictorSPX> {
-  public VictorMotorBuilder(int port) {
+public class VictorMotorSupplier extends MotorSupplier<WPI_VictorSPX> {
+  public VictorMotorSupplier(int port) {
     super(port);
   }
 
-  public WPI_VictorSPX build() {
+  public WPI_VictorSPX get() {
     if (port < 0) {
       Logger.error("MotorInfo : motor port num < 0, check port is defined : " + port);
       return new WPI_VictorSPX(99);

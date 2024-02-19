@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
 
 public class ShooterSub extends SubsystemBase {
-  private final WPI_TalonSRX masterMotor = ShooterConstants.MOTOR_1_ID.build();
-  private final WPI_TalonSRX slaveMotor = ShooterConstants.MOTOR_2_ID.build();
-  private final Encoder encoder = ShooterConstants.ENCODER_ID.build();
+  private final WPI_TalonSRX masterMotor = ShooterConstants.MOTOR_1_ID.get();
+  private final WPI_TalonSRX slaveMotor = ShooterConstants.MOTOR_2_ID.get();
+  private final Encoder encoder = ShooterConstants.ENCODER_ID.get();
   private final PIDController controller = new PIDController(0, 0, 0);
 
   private boolean isStopped = false;

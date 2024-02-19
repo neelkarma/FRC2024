@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 
 public class IntakeSub extends SubsystemBase {
-  private final WPI_TalonSRX masterMotor = IntakeConstants.MOTOR_1_ID.build();
-  private final WPI_TalonSRX slaveMotor = IntakeConstants.MOTOR_2_ID.build();
+  private final WPI_TalonSRX masterMotor = IntakeConstants.MOTOR_1_ID.get();
+  private final WPI_TalonSRX slaveMotor = IntakeConstants.MOTOR_2_ID.get();
   private final DigitalInput beamBreakSensor = new DigitalInput(IntakeConstants.BEAM_BREAK_SENSOR_ID);
 
   private boolean isRunning = false;
