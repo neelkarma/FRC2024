@@ -13,6 +13,8 @@ public class IntakeSub extends SubsystemBase {
   private final WPI_TalonSRX masterMotor = IntakeConstants.MOTOR_1_ID.build();
   private final WPI_TalonSRX slaveMotor = IntakeConstants.MOTOR_2_ID.build();
   private final DigitalInput beamBreakSensor = new DigitalInput(IntakeConstants.BEAM_BREAK_SENSOR_ID);
+
+  private boolean isRunning = false;
   private boolean locked = false;
 
   public IntakeSub() {
@@ -24,11 +26,9 @@ public class IntakeSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    boolean robotContainsNote = beamBreakSensor.get();
-    locked = robotContainsNote;
-    if (locked) {
-      Variables.intakeIsIntaking = false;
-    }
+    locked = notePresent();
+    if (isRunning && locked)
+      stop();
   }
 
   /**
@@ -39,14 +39,19 @@ public class IntakeSub extends SubsystemBase {
   public void set(double speed) {
     if (locked)
       return;
+
+    isRunning = true;
     speed = MathUtil.clamp(speed, -1, 1);
     masterMotor.set(speed);
   }
 
   /** Stops the intake motor */
   public void stop() {
-    if (locked)
-      return;
+    isRunning = false;
     masterMotor.stopMotor();
+  }
+
+  public boolean notePresent() {
+    return beamBreakSensor.get();
   }
 }
