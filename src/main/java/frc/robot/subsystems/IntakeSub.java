@@ -5,9 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.constants.IntakeConstants;
-import frc.robot.Variables;
 
 public class IntakeSub extends SubsystemBase {
   private final WPI_TalonSRX masterMotor = IntakeConstants.MOTOR_1_ID.build();
@@ -26,7 +24,7 @@ public class IntakeSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    locked = notePresent();
+    locked = noteIsPresent();
     if (isRunning && locked)
       stop();
   }
@@ -37,7 +35,18 @@ public class IntakeSub extends SubsystemBase {
    * @param speed Speed from -1 to 1
    */
   public void set(double speed) {
-    if (locked)
+    set(speed, false);
+  }
+
+  /**
+   * Set the speed of the intake
+   * 
+   * @param speed        Speed from -1 to 1
+   * @param overrideLock overrides the lock imposed by the beam break sensor.
+   *                     mainly used for shooting.
+   */
+  public void set(double speed, boolean overrideLock) {
+    if (locked && !overrideLock)
       return;
 
     isRunning = true;
@@ -51,7 +60,8 @@ public class IntakeSub extends SubsystemBase {
     masterMotor.stopMotor();
   }
 
-  public boolean notePresent() {
+  public boolean noteIsPresent() {
     return beamBreakSensor.get();
   }
+
 }

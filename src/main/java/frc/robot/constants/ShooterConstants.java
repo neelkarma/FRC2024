@@ -14,4 +14,10 @@ public class ShooterConstants {
 
   /** Shooter wheel radius in meters */
   public static final double WHEEL_RADIUS = 0.2;
+
+  /**
+   * The robot will consider the shooter at the target tangential wheel speed
+   * within this tolerance
+   */
+  public static final double SPEED_TOLERANCE = 0.5;
 }

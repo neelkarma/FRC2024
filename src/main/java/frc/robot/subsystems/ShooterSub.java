@@ -18,6 +18,7 @@ public class ShooterSub extends SubsystemBase {
 
   public ShooterSub() {
     slaveMotor.follow(masterMotor);
+    controller.setTolerance(ShooterConstants.SPEED_TOLERANCE);
   }
 
   @Override
@@ -52,5 +53,14 @@ public class ShooterSub extends SubsystemBase {
   public void stop() {
     masterMotor.stopMotor();
     isStopped = true;
+  }
+
+  /**
+   * @return true if the tangential wheel speed is within the accepted bounds of
+   *         the target wheel speed as defined by
+   *         {@link ShooterTolerance.SPEED_TOLERANCE}
+   */
+  public boolean atSetSpeed() {
+    return controller.atSetpoint();
   }
 }

@@ -8,11 +8,15 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.auto.AutoProvider;
 import frc.robot.teleop.TeleopProvider;
 import frc.robot.commands.AlignClimbCommand;
-import frc.robot.commands.IntakeCommand;
+import frc.robot.subsystems.PivotSub;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -45,6 +49,8 @@ public class RobotContainer {
     // | PILOT CONTROLS |
     // +----------------+
 
+    // --- Manual Controls ---
+
     // Invert Drive
     OI.pilot.start().onTrue(new InstantCommand(() -> Variables.invertDriveDirection = !Variables.invertDriveDirection));
 
@@ -70,9 +76,6 @@ public class RobotContainer {
     // pivot down
     OI.pilot.povLeft().onTrue(Subsystems.pivot.runOnce(Subsystems.pivot::down));
 
-    // auto climb align
-    OI.pilot.back().whileTrue(new AlignClimbCommand(() -> OI.pilot.getHID().getBackButton()));
-
     // climber up
     OI.pilot.povUp().whileTrue(
         new StartEndCommand(
@@ -87,13 +90,75 @@ public class RobotContainer {
             Subsystems.climber::stop,
             Subsystems.climber));
 
+    // --- Recipes ---
+
+    // auto climb align
+    OI.pilot.back().whileTrue(new AlignClimbCommand(() -> OI.pilot.getHID().getBackButton()));
+
+    // amp shooting sequence
+    OI.pilot.x()
+        .whileTrue(
+            new SequentialCommandGroup(
+                // At the same time:
+                // - Stop the intake
+                // - Start pivoting up
+                // - Start speeding up the shooter
+                new ParallelCommandGroup(
+                    Subsystems.intake.runOnce(Subsystems.intake::stop),
+                    Subsystems.pivot.runOnce(Subsystems.pivot::up),
+                    Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(5))),
+
+                // Wait until the pivot is finished and the shooter is at the desired speed
+                new WaitUntilCommand(
+                    () -> (Subsystems.pivot.getState() == PivotSub.State.FullyUp
+                        && Subsystems.shooter.atSetSpeed())),
+
+                // Shoot
+                Subsystems.intake.runOnce(() -> Subsystems.intake.set(1, true)),
+
+                // Wait until the note is no longer in the robot, and some more after that
+                // for completeness
+                new WaitUntilCommand(() -> !Subsystems.intake.noteIsPresent()),
+                new WaitCommand(0.5),
+
+                // Pivot back down and stop shooting
+                new ParallelCommandGroup(
+                    Subsystems.intake.runOnce(Subsystems.intake::stop),
+                    Subsystems.shooter.runOnce(Subsystems.shooter::stop),
+                    Subsystems.pivot.runOnce(Subsystems.pivot::down))));
+
+    // speaker shooting sequence
+    OI.pilot.a()
+        .whileTrue(
+            new SequentialCommandGroup(
+                // At the same time:
+                // - Stop the intake
+                // - Start pivoting down
+                // - Start speeding up the shooter
+                new ParallelCommandGroup(
+                    Subsystems.intake.runOnce(Subsystems.intake::stop),
+                    Subsystems.pivot.runOnce(Subsystems.pivot::down),
+                    Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(5))),
+
+                // Wait until the pivot is completed and the shooter is at the desired speed
+                new WaitUntilCommand(
+                    () -> (Subsystems.pivot.getState() == PivotSub.State.FullyDown
+                        && Subsystems.shooter.atSetSpeed())),
+
+                // Shoot
+                Subsystems.intake.runOnce(() -> Subsystems.intake.set(1, true)),
+
+                // Wait until the note is no longer in the robot, and some more after that
+                // for completeness
+                new WaitUntilCommand(() -> !Subsystems.intake.noteIsPresent()),
+                new WaitCommand(0.5),
+
+                // Stop shooting
+                new ParallelCommandGroup(
+                    Subsystems.intake.runOnce(Subsystems.intake::stop),
+                    Subsystems.shooter.runOnce(Subsystems.shooter::stop))));
+
     // Drive bindings handled in teleop command
-
-    // +------------------+
-    // | COPILOT CONTROLS |
-    // +------------------+
-
-    // ...there aren't any lol
   }
 
   /**
