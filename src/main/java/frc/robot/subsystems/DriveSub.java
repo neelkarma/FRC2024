@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.simulation.ADIS16470_IMUSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.DriveConstants;
+import frc.robot.shufflecontrol.ShuffleControl;
 import frc.robot.utils.SwerveModule;
 import frc.robot.utils.PhotonBridge;
 import frc.robot.utils.SwerveUtils;
@@ -211,6 +212,14 @@ public class DriveSub extends SubsystemBase {
     frontRight.setDesiredState(swerveModuleStates[1]);
     backLeft.setDesiredState(swerveModuleStates[2]);
     backRight.setDesiredState(swerveModuleStates[3]);
+
+
+    ShuffleControl.driveTab.setWheelAxes(
+      frontLeft.getState(),
+      frontRight.getState(),
+      backLeft.getState(),
+      backRight.getState()
+    );
   }
 
   /**

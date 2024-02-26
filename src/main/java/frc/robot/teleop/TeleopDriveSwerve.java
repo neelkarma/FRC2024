@@ -3,6 +3,7 @@ package frc.robot.teleop;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
 import frc.robot.Subsystems;
+import frc.robot.shufflecontrol.ShuffleControl;
 
 public class TeleopDriveSwerve extends Command {
   public TeleopDriveSwerve() {
@@ -16,6 +17,7 @@ public class TeleopDriveSwerve extends Command {
     var rotate      =  OI.applyAxisDeadband(OI.pilot.getRightX());
 
     Subsystems.drive.drive(translateX, translateY, rotate, true, true);
+    ShuffleControl.driveTab.setControlAxis(translateX, translateY, rotate);
   }
 
   @Override
