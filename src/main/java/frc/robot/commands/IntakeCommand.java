@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Subsystems;
-import frc.robot.Variables;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -20,11 +19,11 @@ public class IntakeCommand extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Variables.intakeIsIntaking = !Variables.intakeIsIntaking;
-    if (Variables.intakeIsIntaking) {
-      Subsystems.intake.set(0.5);
-    } else {
-      Subsystems.intake.stop();
-    }
+    // Variables.intakeIsIntaking = !Variables.intakeIsIntaking;
+    // if (Variables.intakeIsIntaking) {
+    // Subsystems.intake.set(0.5);
+    // } else {
+    // Subsystems.intake.stop();
+    // }
   }
 }

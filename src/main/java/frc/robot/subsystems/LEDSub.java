@@ -9,8 +9,8 @@ import frc.robot.constants.LEDConstants;
 /**
  * This subsystem controls the robot's LEDs.
  * 
- * To use, instantiate, and then in a command you can modify the sub's public
- * `buffer` field (an instance of {@link AddressableLEDBuffer}), and then call
+ * To use, instantiate, and then modify the sub's public `buffer` field (an
+ * instance of {@link AddressableLEDBuffer}) in a command, and then call
  * `apply`.
  */
 public class LEDSub extends SubsystemBase {

@@ -5,14 +5,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.constants.IntakeConstants;
-import frc.robot.Variables;
 
 public class IntakeSub extends SubsystemBase {
-  private final WPI_TalonSRX masterMotor = IntakeConstants.MOTOR_1_ID.build();
-  private final WPI_TalonSRX slaveMotor = IntakeConstants.MOTOR_2_ID.build();
+  private final WPI_TalonSRX masterMotor = IntakeConstants.MOTOR_1_ID.get();
+  private final WPI_TalonSRX slaveMotor = IntakeConstants.MOTOR_2_ID.get();
   private final DigitalInput beamBreakSensor = new DigitalInput(IntakeConstants.BEAM_BREAK_SENSOR_ID);
+
+  private boolean isRunning = false;
   private boolean locked = false;
 
   public IntakeSub() {
@@ -24,11 +24,9 @@ public class IntakeSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    boolean robotContainsNote = beamBreakSensor.get();
-    locked = robotContainsNote;
-    if (locked) {
-      Variables.intakeIsIntaking = false;
-    }
+    locked = noteIsPresent();
+    if (isRunning && locked)
+      stop();
   }
 
   /**
@@ -37,16 +35,33 @@ public class IntakeSub extends SubsystemBase {
    * @param speed Speed from -1 to 1
    */
   public void set(double speed) {
-    if (locked)
+    set(speed, false);
+  }
+
+  /**
+   * Set the speed of the intake
+   * 
+   * @param speed        Speed from -1 to 1
+   * @param overrideLock overrides the lock imposed by the beam break sensor.
+   *                     mainly used for shooting.
+   */
+  public void set(double speed, boolean overrideLock) {
+    if (locked && !overrideLock)
       return;
+
+    isRunning = true;
     speed = MathUtil.clamp(speed, -1, 1);
     masterMotor.set(speed);
   }
 
   /** Stops the intake motor */
   public void stop() {
-    if (locked)
-      return;
+    isRunning = false;
     masterMotor.stopMotor();
   }
+
+  public boolean noteIsPresent() {
+    return beamBreakSensor.get();
+  }
+
 }
