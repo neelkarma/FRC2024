@@ -66,6 +66,7 @@ public class SwerveModule {
     driveMotorConfig.Slot0.kP = DriveConstants.DRIVE_P;
     driveMotorConfig.Slot0.kI = DriveConstants.DRIVE_I;
     driveMotorConfig.Slot0.kD = DriveConstants.DRIVE_D;
+    
 
     driveMotor.getConfigurator().apply(driveMotorConfig);
     driveController = new VelocityVoltage(0).withSlot(0);
@@ -77,8 +78,6 @@ public class SwerveModule {
     turnEncoder = turnMotor.getAbsoluteEncoder(Type.kDutyCycle);
     turnController = turnMotor.getPIDController();
     turnController.setFeedbackDevice(turnEncoder);
-    
-
 
     // Apply position and velocity conversion factors for the turning encoder. We
     // want these in radians and radians per second to use with WPILib's swerve
