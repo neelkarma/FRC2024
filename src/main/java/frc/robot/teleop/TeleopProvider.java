@@ -16,7 +16,7 @@ public class TeleopProvider {
 
   private final Command teleopSwerve = new TeleopDriveSwerve();
 
-  public final SendableChooser<Command> chooser = new SendableChooser<>(); // pub for shuffle board
+  private final SendableChooser<Command> chooser = new SendableChooser<>(); // pub for shuffle board
 
   private TeleopProvider() {
     // swerve

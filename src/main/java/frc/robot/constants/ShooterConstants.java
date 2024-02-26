@@ -10,7 +10,7 @@ public class ShooterConstants {
   public static final MotorSupplier<WPI_TalonSRX> MOTOR_1_ID = new TalonMotorSupplier(2);
   public static final MotorSupplier<WPI_TalonSRX> MOTOR_2_ID = new TalonMotorSupplier(3);
 
-  public static final EncoderSupplier ENCODER_ID = new EncoderSupplier(new int[] { 1, 1 }, 0);
+  public static final EncoderSupplier ENCODER_ID = new EncoderSupplier(new int[] { 9, 10 }, 1);
 
   /** Shooter wheel radius in meters */
   public static final double WHEEL_RADIUS = 0.2;

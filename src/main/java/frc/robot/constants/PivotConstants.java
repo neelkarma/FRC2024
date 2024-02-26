@@ -12,11 +12,11 @@ public class PivotConstants {
    * Port for the limit switch that will trigger when the pivot reaches max angle
    * of elevation
    */
-  public static final int HIGHEST_PIVOT_SWITCH_ID = 1;
+  public static final int HIGHEST_PIVOT_SWITCH_ID = 11;
 
   /**
    * Port for the limit switch that will trigger when the pivot reaches min angle
    * of elevation
    */
-  public static final int LOWEST_PIVOT_SWITCH_ID = 1;
+  public static final int LOWEST_PIVOT_SWITCH_ID = 12;
 }

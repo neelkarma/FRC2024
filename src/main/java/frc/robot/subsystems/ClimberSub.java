@@ -12,6 +12,7 @@ public class ClimberSub extends SubsystemBase {
   public ClimberSub() {
 
     masterMotor.configFactoryDefault();
+    addChild("Motor", masterMotor);
   }
 
   /**

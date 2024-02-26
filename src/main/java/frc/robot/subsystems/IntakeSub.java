@@ -6,6 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.shufflecontrol.ShuffleControl;
 
 public class IntakeSub extends SubsystemBase {
   private final WPI_TalonSRX masterMotor = IntakeConstants.MOTOR_1_ID.get();
@@ -20,10 +21,16 @@ public class IntakeSub extends SubsystemBase {
     slaveMotor.configFactoryDefault();
 
     slaveMotor.follow(masterMotor);
+
+    addChild("Master Motor", masterMotor);
+    addChild("Slave Motor", slaveMotor);
+    addChild("Beam Broken", beamBreakSensor);
   }
 
   @Override
   public void periodic() {
+    ShuffleControl.miscTab.setIntakeVars(locked, isRunning);
+
     locked = noteIsPresent();
     if (isRunning && locked)
       stop();

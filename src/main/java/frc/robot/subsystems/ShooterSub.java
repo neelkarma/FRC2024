@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.shufflecontrol.ShuffleControl;
 
 public class ShooterSub extends SubsystemBase {
   private final WPI_TalonSRX masterMotor = ShooterConstants.MOTOR_1_ID.get();
@@ -19,10 +20,17 @@ public class ShooterSub extends SubsystemBase {
   public ShooterSub() {
     slaveMotor.follow(masterMotor);
     controller.setTolerance(ShooterConstants.SPEED_TOLERANCE);
+
+    addChild("Master Motor", masterMotor);
+    addChild("Slave Motor", slaveMotor);
+    addChild("Encoder", encoder);
+    addChild("PID Controller", controller);
   }
 
   @Override
   public void periodic() {
+    ShuffleControl.miscTab.setShooterIsStopped(isStopped);
+
     if (isStopped)
       return;
 

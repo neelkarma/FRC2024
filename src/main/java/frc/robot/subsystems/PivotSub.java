@@ -5,13 +5,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.PivotConstants;
+import frc.robot.shufflecontrol.ShuffleControl;
 
 public class PivotSub extends SubsystemBase {
   private final WPI_TalonSRX motor = PivotConstants.PIVOT_MOTOR_ID.get();
   private final DigitalInput highestSwitch = new DigitalInput(PivotConstants.HIGHEST_PIVOT_SWITCH_ID);
   private final DigitalInput lowestSwitch = new DigitalInput(PivotConstants.LOWEST_PIVOT_SWITCH_ID);
 
-  private State state;
+  private State state = State.FullyDown;
 
   public static enum State {
     Idle,
@@ -21,8 +22,16 @@ public class PivotSub extends SubsystemBase {
     FullyDown
   }
 
+  public PivotSub() {
+    addChild("Motor", motor);
+    addChild("Highest Limit Switch", highestSwitch);
+    addChild("Lowest Limit Switch", lowestSwitch);
+  }
+
   @Override
   public void periodic() {
+    ShuffleControl.miscTab.setPivotState(state);
+
     if (highestSwitch.get()) {
       state = State.FullyUp;
       motor.stopMotor();
