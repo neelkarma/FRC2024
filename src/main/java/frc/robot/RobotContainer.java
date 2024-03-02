@@ -58,7 +58,7 @@ public class RobotContainer {
     OI.pilot.leftTrigger()
         .whileTrue(
             new StartEndCommand(
-                () -> Subsystems.intake.set(0.5),
+                () -> Subsystems.intake.set(0.2),
                 Subsystems.intake::stop,
                 Subsystems.intake));
 

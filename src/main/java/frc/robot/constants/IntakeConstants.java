@@ -1,13 +1,13 @@
 package frc.robot.constants;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import frc.robot.utils.motorsupplier.MotorSupplier;
-import frc.robot.utils.motorsupplier.TalonMotorSupplier;
+import frc.robot.utils.motorsupplier.VictorMotorSupplier;
 
 public class IntakeConstants {
   // Just a random number
-  public static final MotorSupplier<WPI_TalonSRX> MOTOR_1_ID = new TalonMotorSupplier(9);
-  public static final MotorSupplier<WPI_TalonSRX> MOTOR_2_ID = new TalonMotorSupplier(10);
+  public static final MotorSupplier<WPI_VictorSPX> UPPER_MOTOR_ID = new VictorMotorSupplier(9);
+  public static final MotorSupplier<WPI_VictorSPX> LOWER_MOTOR_ID = new VictorMotorSupplier(10).withInvert();
   public static final int BEAM_BREAK_SENSOR_ID = 15;
 }

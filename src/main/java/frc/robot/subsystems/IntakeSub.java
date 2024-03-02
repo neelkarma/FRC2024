@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -9,8 +9,8 @@ import frc.robot.constants.IntakeConstants;
 import frc.robot.shufflecontrol.ShuffleControl;
 
 public class IntakeSub extends SubsystemBase {
-  private final WPI_TalonSRX masterMotor = IntakeConstants.MOTOR_1_ID.get();
-  private final WPI_TalonSRX slaveMotor = IntakeConstants.MOTOR_2_ID.get();
+  private final WPI_VictorSPX masterMotor = IntakeConstants.UPPER_MOTOR_ID.get();
+  private final WPI_VictorSPX slaveMotor = IntakeConstants.LOWER_MOTOR_ID.get();
   private final DigitalInput beamBreakSensor = new DigitalInput(IntakeConstants.BEAM_BREAK_SENSOR_ID);
 
   private boolean isRunning = false;
@@ -53,10 +53,10 @@ public class IntakeSub extends SubsystemBase {
    *                     mainly used for shooting.
    */
   public void set(double speed, boolean overrideLock) {
-    if (locked && !overrideLock)
-      return;
+    // if (locked && !overrideLock)
+    //   return;
 
-    isRunning = true;
+    // isRunning = true;
     speed = MathUtil.clamp(speed, -1, 1);
     masterMotor.set(speed);
   }
