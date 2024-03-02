@@ -45,15 +45,15 @@ public class DriveTab {
       .withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", -10, "max", 10))
       .getEntry();
 
-  private final GenericEntry driveX = drive.add("Turn FL8", 0)
+  private final GenericEntry driveX = drive.add("Drive X", 0)
       .withSize(1, 1).withPosition(5, 2)
       .withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", -1, "max", 1))
       .getEntry();
-  private final GenericEntry driveY = drive.add("Turn FL9", 0)
+  private final GenericEntry driveY = drive.add("Drive Y", 0)
       .withSize(1, 1).withPosition(6, 3)
       .withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", -1, "max", 1))
       .getEntry();
-  private final GenericEntry driveR = drive.add("Turn FL10", 0)
+  private final GenericEntry driveR = drive.add("Drive Rot", 0)
       .withSize(1, 1).withPosition(5, 3)
       .withWidget(BuiltInWidgets.kDial).withProperties(Map.of("min", -1, "max", 1))
       .getEntry();

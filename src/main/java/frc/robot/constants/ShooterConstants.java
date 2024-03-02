@@ -7,8 +7,8 @@ import frc.robot.utils.motorsupplier.MotorSupplier;
 import frc.robot.utils.motorsupplier.VictorMotorSupplier;
 
 public class ShooterConstants {
-  public static final MotorSupplier<WPI_VictorSPX> MOTOR_1_ID = new VictorMotorSupplier(13);
-  public static final MotorSupplier<WPI_VictorSPX> MOTOR_2_ID = new VictorMotorSupplier(14);
+  public static final MotorSupplier<WPI_VictorSPX> UPPER_MOTOR_ID = new VictorMotorSupplier(11).withInvert();
+  public static final MotorSupplier<WPI_VictorSPX> LOWER_MOTOR_ID = new VictorMotorSupplier(12).withInvert();
 
   public static final EncoderSupplier ENCODER_ID = new EncoderSupplier(new int[] { 9, 10 }, 1);
 

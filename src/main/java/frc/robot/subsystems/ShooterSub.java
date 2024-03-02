@@ -7,11 +7,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.shufflecontrol.ShuffleControl;
 
 public class ShooterSub extends SubsystemBase {
-  private final WPI_VictorSPX masterMotor = ShooterConstants.MOTOR_1_ID.get();
-  private final WPI_VictorSPX slaveMotor = ShooterConstants.MOTOR_2_ID.get();
+  private final WPI_VictorSPX masterMotor = ShooterConstants.UPPER_MOTOR_ID.get();
+  private final WPI_VictorSPX slaveMotor = ShooterConstants.LOWER_MOTOR_ID.get();
   private final Encoder encoder = ShooterConstants.ENCODER_ID.get();
   private final PIDController controller = new PIDController(0, 0, 0);
 
@@ -29,14 +28,14 @@ public class ShooterSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    ShuffleControl.miscTab.setShooterIsStopped(isStopped);
+    // ShuffleControl.miscTab.setShooterIsStopped(isStopped);
 
-    if (isStopped)
-      return;
+    // if (isStopped)
+    //   return;
 
-    var rate = encoder.getRate();
-    var out = controller.calculate(rate);
-    masterMotor.set(MathUtil.clamp(out, -1, 1));
+    // var rate = encoder.getRate();
+    // var out = controller.calculate(rate);
+    // masterMotor.set(MathUtil.clamp(out, -1, 1));
   }
 
   /**
@@ -55,6 +54,11 @@ public class ShooterSub extends SubsystemBase {
 
     // encoder calculates rotations, not radians
     controller.setSetpoint(targetRotSpeed * (2 * Math.PI));
+  }
+
+  public void setRawSpeed(double speed) {
+    speed = MathUtil.clamp(speed, -1, 1);
+    masterMotor.set(speed);
   }
 
   /** Stops the shooter. Call `setSpeed` to start again. */

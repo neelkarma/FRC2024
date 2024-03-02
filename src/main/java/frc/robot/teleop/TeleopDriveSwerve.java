@@ -12,12 +12,12 @@ public class TeleopDriveSwerve extends Command {
 
   @Override
   public void execute() {
+    ShuffleControl.driveTab.setControlAxis(OI.pilot.getLeftX(), OI.pilot.getLeftY(), OI.pilot.getRightX());
     var translateX  = -OI.applyAxisDeadband(OI.pilot.getLeftX());
     var translateY  =  OI.applyAxisDeadband(OI.pilot.getLeftY());
     var rotate      =  OI.applyAxisDeadband(OI.pilot.getRightX());
 
-    Subsystems.drive.drive(translateX, translateY, rotate, true, true);
-    ShuffleControl.driveTab.setControlAxis(translateX, translateY, rotate);
+    Subsystems.drive.drive(translateX, translateY, rotate, true, false);
   }
 
   @Override

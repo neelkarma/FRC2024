@@ -66,7 +66,7 @@ public class RobotContainer {
     OI.pilot.rightTrigger()
         .whileTrue(
             new StartEndCommand(
-                () -> Subsystems.shooter.setSpeed(10),
+                () -> Subsystems.shooter.setRawSpeed(0.2),
                 Subsystems.shooter::stop,
                 Subsystems.shooter));
 

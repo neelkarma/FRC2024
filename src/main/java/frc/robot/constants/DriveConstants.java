@@ -164,15 +164,15 @@ public class DriveConstants {
   public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
   // TODO tune PID
-  public static final double DRIVE_P = 0.05;
+  public static final double DRIVE_P = 0.3;
   public static final double DRIVE_I = 0;
-  public static final double DRIVE_D = 0;
-  public static final double DRIVING_FF = 0;// 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
+  public static final double DRIVE_D = 0.05;
+  public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
 
-  public static final double TURNING_P = 0.3;
-  public static final double TURNING_I = 0.0001;
-  public static final double TURNING_D = 0.005;
-  public static final double TURNING_FF = 0;
+  public static final double TURNING_P = 0.6;
+  public static final double TURNING_I = 0;
+  public static final double TURNING_D = 0;
+  public static final double TURNING_FF = 0.1;
 
   // Auto Constants
   /** Auto X PID P - This controls the target X speed relative to the field */
