@@ -87,20 +87,20 @@ public class DriveConstants {
   /** CAN ID for Front Left Module Driving Motor */
   public static final int FRONT_LEFT_DRIVING_CAN_ID = 1;
   /** CAN ID for Front Right Module Driving Motor */
-  public static final int FRONT_RIGHT_DRIVING_CAN_ID = 3;
+  public static final int FRONT_RIGHT_DRIVING_CAN_ID = 2;
   /** CAN ID for Back Left Module Driving Motor */
-  public static final int BACK_LEFT_DRIVING_CAN_ID = 5;
+  public static final int BACK_LEFT_DRIVING_CAN_ID = 3;
   /** CAN ID for Back Right Module Driving Motor */
-  public static final int BACK_RIGHT_DRIVING_CAN_ID = 7;
+  public static final int BACK_RIGHT_DRIVING_CAN_ID = 4;
 
   /** CAN ID for Front Left Module Turning Motor */
-  public static final int FRONT_LEFT_TURNING_CAN_ID = 2;
+  public static final int FRONT_LEFT_TURNING_CAN_ID = 1;
   /** CAN ID for Front Right Module Turning Motor */
-  public static final int FRONT_RIGHT_TURNING_CAN_ID = 4;
+  public static final int FRONT_RIGHT_TURNING_CAN_ID = 2;
   /** CAN ID for Back Left Module Turning Motor */
-  public static final int BACK_LEFT_TURNING_CAN_ID = 6;
+  public static final int BACK_LEFT_TURNING_CAN_ID = 3;
   /** CAN ID for Back Right Module Turning Motor */
-  public static final int BACK_RIGHT_TURNING_CAN_ID = 8;
+  public static final int BACK_RIGHT_TURNING_CAN_ID = 4;
 
   /** IMU Gyro Inversion */
   public static final boolean GYRO_REVERSED = false;
