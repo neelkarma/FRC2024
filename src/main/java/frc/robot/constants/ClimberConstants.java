@@ -7,7 +7,7 @@ import frc.robot.utils.motorsupplier.TalonMotorSupplier;
 
 public class ClimberConstants {
   // port needs to be set correctly
-  public static final MotorSupplier<WPI_TalonSRX> MOTOR_1_ID = new TalonMotorSupplier(32);
+  public static final MotorSupplier<WPI_TalonSRX> MOTOR_1_ID = new TalonMotorSupplier(11);
 
   public static final int SERVO_PORT = 14;
   public static final boolean SERVO_FLIPPED = false;

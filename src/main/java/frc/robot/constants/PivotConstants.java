@@ -6,7 +6,7 @@ import frc.robot.utils.motorsupplier.MotorSupplier;
 import frc.robot.utils.motorsupplier.TalonMotorSupplier;
 
 public class PivotConstants {
-  public static final MotorSupplier<WPI_TalonSRX> PIVOT_MOTOR_ID = new TalonMotorSupplier(1).withSafety().withBrake();
+  public static final MotorSupplier<WPI_TalonSRX> PIVOT_MOTOR_ID = new TalonMotorSupplier(12).withSafety().withBrake();
 
   /**
    * Port for the limit switch that will trigger when the pivot reaches max angle
