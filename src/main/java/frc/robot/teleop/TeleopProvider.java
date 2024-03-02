@@ -24,7 +24,7 @@ public class TeleopProvider {
     Subsystems.drive.setDefaultCommand(teleopSwerve);
 
     // disabled
-    chooser.addOption("Disable Teleop", new InstantCommand());
+    chooser.addOption("Disable Teleop", new InstantCommand(() -> {}, Subsystems.drive));
 
     chooser.onChange(Subsystems.drive::setDefaultCommand);
     SmartDashboard.putData("Teleop Chooser", chooser);
