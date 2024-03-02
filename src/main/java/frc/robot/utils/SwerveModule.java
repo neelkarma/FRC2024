@@ -182,16 +182,16 @@ public class SwerveModule {
         optimizedDesiredState.angle.getRadians() + Math.PI,
         ControlType.kPosition);
             
-    System.out.println(optimizedDesiredState.speedMetersPerSecond+" "+driveMotor.getVelocity()+ " " + desiredState.speedMetersPerSecond +" "+ correctedDesiredState.speedMetersPerSecond); //TODO remove
-    System.out.println(optimizedDesiredState.angle.getRadians() + Math.PI+" "+turnEncoder.getPosition()+ " " + desiredState.angle +" "+ correctedDesiredState.angle); //TODO remove
+    //System.out.println(optimizedDesiredState.speedMetersPerSecond+" "+driveMotor.getVelocity()+ " " + desiredState.speedMetersPerSecond +" "+ correctedDesiredState.speedMetersPerSecond); //TODO remove
+    //System.out.println(optimizedDesiredState.angle.getRadians() + Math.PI+" "+turnEncoder.getPosition()+ " " + desiredState.angle +" "+ correctedDesiredState.angle); //TODO remove
     this.desiredState = desiredState;
   }
   public SwerveModuleState optimize(
       SwerveModuleState desiredState, Rotation2d currentAngle) {
     var delta = desiredState.angle.minus(currentAngle);
-    System.out.println(delta+" "+ desiredState.angle.getRadians()+" "+ currentAngle+" "+Rotation2d.fromRadians(angularOffset)+" "+getRotation2d());
+    //System.out.println(delta+" "+ desiredState.angle.getRadians()+" "+ currentAngle+" "+Rotation2d.fromRadians(angularOffset)+" "+getRotation2d());
     if (Math.abs(delta.getDegrees()) < 90.0) {
-      System.out.println("----------------------"+desiredState.angle);
+      //System.out.println("----------------------"+desiredState.angle);
       return new SwerveModuleState(
           -desiredState.speedMetersPerSecond,
           desiredState.angle.rotateBy(Rotation2d.fromDegrees(180.0)));
