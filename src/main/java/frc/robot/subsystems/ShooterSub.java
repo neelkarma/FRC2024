@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -10,8 +10,8 @@ import frc.robot.constants.ShooterConstants;
 import frc.robot.shufflecontrol.ShuffleControl;
 
 public class ShooterSub extends SubsystemBase {
-  private final WPI_TalonSRX masterMotor = ShooterConstants.MOTOR_1_ID.get();
-  private final WPI_TalonSRX slaveMotor = ShooterConstants.MOTOR_2_ID.get();
+  private final WPI_VictorSPX masterMotor = ShooterConstants.MOTOR_1_ID.get();
+  private final WPI_VictorSPX slaveMotor = ShooterConstants.MOTOR_2_ID.get();
   private final Encoder encoder = ShooterConstants.ENCODER_ID.get();
   private final PIDController controller = new PIDController(0, 0, 0);
 

@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Servo;
@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ClimberConstants;
 
 public class ClimberSub extends SubsystemBase {
-  private final WPI_TalonSRX motor = ClimberConstants.MOTOR_1_ID.get();
+  private final WPI_VictorSPX motor = ClimberConstants.MOTOR_1_ID.get();
   private final Servo servo = new Servo(ClimberConstants.SERVO_PORT);
 
   private double targetSpeed = 0;
