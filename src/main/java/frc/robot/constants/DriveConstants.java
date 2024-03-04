@@ -182,6 +182,8 @@ public class DriveConstants {
   /** Auto X PID P - This controls the target angle relative to the field */
   public static final double AUTO_THETA_P = 3;
 
+  public static final double updateShuffleInterval = 1  / 0.02; /* (x / 20ms) */
+
   /**
    * Auto angular speed and acceleration constraints in radians per second and
    * radians per second squared

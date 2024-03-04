@@ -51,6 +51,14 @@ public class DriveSub extends SubsystemBase {
       DriveConstants.BACK_RIGHT_TURNING_CAN_ID,
       DriveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET);
 
+  public SwerveModuleState[] lastStates = {
+      frontLeft.getState(),
+      frontRight.getState(),
+      backLeft.getState(),
+      backRight.getState()
+  };
+  private int updateShuffleCounter = 0;
+
   // The gyro sensor
   private final ADIS16470_IMU imu = new ADIS16470_IMU();
 
@@ -92,6 +100,12 @@ public class DriveSub extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
+    if (updateShuffleCounter > DriveConstants.updateShuffleInterval) {
+      ShuffleControl.driveTab.setWheelAxes(lastStates[0], lastStates[1], lastStates[2], lastStates[3]);
+      updateShuffleCounter = 0;
+    } else {
+      updateShuffleCounter++;
+    }
     updateOdometry();
   }
 
@@ -214,12 +228,12 @@ public class DriveSub extends SubsystemBase {
     backRight.setDesiredState(swerveModuleStates[3]);
 
 
-    ShuffleControl.driveTab.setWheelAxes(
+    lastStates = new SwerveModuleState[] {
       frontLeft.getState(),
       frontRight.getState(),
       backLeft.getState(),
       backRight.getState()
-    );
+    };
   }
 
   /**
