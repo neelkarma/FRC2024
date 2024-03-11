@@ -61,25 +61,31 @@ public class RobotContainer {
                 () -> Subsystems.intake.set(0.2),
                 Subsystems.intake::stop,
                 Subsystems.intake));
-
+    // shoot feed
+    OI.pilot.rightBumper()
+        .whileTrue(
+            new StartEndCommand(
+                () -> Subsystems.intake.set(1),
+                Subsystems.intake::stop,
+                Subsystems.intake));
     // shoot
     OI.pilot.rightTrigger()
         .whileTrue(
             new StartEndCommand(
-                () -> Subsystems.shooter.setRawSpeed(0.2),
+                () -> Subsystems.shooter.setRawSpeed(0.8),
                 Subsystems.shooter::stop,
                 Subsystems.shooter));
 
     // pivot up
-    OI.pilot.povRight().onTrue(Subsystems.pivot.runOnce(Subsystems.pivot::up));
+    OI.pilot.povRight().whileTrue(Subsystems.pivot.run(Subsystems.pivot::up));
 
     // pivot down
-    OI.pilot.povLeft().onTrue(Subsystems.pivot.runOnce(Subsystems.pivot::down));
+    OI.pilot.povLeft().whileTrue(Subsystems.pivot.run(Subsystems.pivot::down));
 
     // climber up
     OI.pilot.povUp().whileTrue(
         new StartEndCommand(
-            () -> Subsystems.climber.set(0.5),
+            () -> Subsystems.climber.set(1),
             Subsystems.climber::stop,
             Subsystems.climber));
 

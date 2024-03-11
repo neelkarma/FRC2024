@@ -12,7 +12,7 @@ public class PivotSub extends SubsystemBase {
   private final DigitalInput highestSwitch = new DigitalInput(PivotConstants.HIGHEST_PIVOT_SWITCH_ID);
   private final DigitalInput lowestSwitch = new DigitalInput(PivotConstants.LOWEST_PIVOT_SWITCH_ID);
 
-  private State state = State.FullyDown;
+  private State state = State.Idle;
 
   public static enum State {
     Idle,
@@ -45,18 +45,18 @@ public class PivotSub extends SubsystemBase {
 
   /** Start pivoting upwards. Will automatically stop at the limit. */
   public void up() {
-    if (state == State.FullyUp)
-      return;
+    //if (state == State.FullyUp)
+    //  return;
     state = State.MovingUp;
-    motor.set(1);
+    motor.set(0.3);
   }
 
   /** Start pivoting downwards. Will automatically stop at the limit. */
   public void down() {
-    if (state == State.FullyDown)
-      return;
+    //if (state == State.FullyDown)
+    //  return;
     state = State.MovingDown;
-    motor.set(-1);
+    motor.set(-0.3);
   }
 
   /** Stops pivoting immediately. */

@@ -7,7 +7,7 @@ import frc.robot.utils.motorsupplier.VictorMotorSupplier;
 
 public class ClimberConstants {
   // port needs to be set correctly
-  public static final MotorSupplier<WPI_VictorSPX> MOTOR_1_ID = new VictorMotorSupplier(/*11*/ 37);
+  public static final MotorSupplier<WPI_VictorSPX> MOTOR_1_ID = new VictorMotorSupplier(11);
 
   public static final int SERVO_PORT = 14;
   public static final boolean SERVO_FLIPPED = false;
