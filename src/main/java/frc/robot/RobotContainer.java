@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.util.Map;
+
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,6 +38,25 @@ public class RobotContainer {
    * commands.
    */
   public RobotContainer() {
+    // configure auto named commands
+    NamedCommands.registerCommand(
+        "shoot",
+        new SequentialCommandGroup(
+            Subsystems.shooter.runOnce(() -> Subsystems.shooter.setRawSpeed(1)),
+            new WaitCommand(0.5),
+            Subsystems.intake.runOnce(() -> Subsystems.intake.set(1)),
+            new WaitCommand(0.5),
+            Subsystems.intake.runOnce(Subsystems.intake::stop),
+            Subsystems.shooter.runOnce(Subsystems.shooter::stop)));
+
+    NamedCommands.registerCommand(
+        "startIntake",
+        Subsystems.intake.runOnce(() -> Subsystems.intake.set(0.3)));
+
+    NamedCommands.registerCommand(
+        "stopIntake",
+        Subsystems.intake.runOnce(Subsystems.intake::stop));
+
     // Configure the button bindings
     configureButtonBindings();
   }

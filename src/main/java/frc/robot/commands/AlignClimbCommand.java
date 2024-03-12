@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
@@ -15,7 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Subsystems;
-import frc.robot.auto.SwerveTrajectoryCommand;
+import frc.robot.constants.DriveConstants;
 import frc.robot.utils.logger.Logger;
 
 public class AlignClimbCommand extends InstantCommand {
@@ -48,15 +51,16 @@ public class AlignClimbCommand extends InstantCommand {
           .get();
 
       try {
-        var trajectory = TrajectoryGenerator.generateTrajectory(
-            List.of(
-                Subsystems.drive.getPose(),
-                targetPose),
-            new TrajectoryConfig(2, 1));
-
         // I can't find a way to have dynamically instantiated commands in
         // SequentialCommandGroup, so we have to resort to this terribleness instead
-        new SwerveTrajectoryCommand(trajectory).onlyWhile(continueCondition).schedule();
+        AutoBuilder
+            .pathfindToPose(targetPose,
+                new PathConstraints(DriveConstants.MAX_SPEED,
+                    DriveConstants.MAX_ACCELERATION,
+                    DriveConstants.MAX_ANGULAR_SPEED,
+                    DriveConstants.MAX_ANGULAR_ACCELERATION),
+                0, 0)
+            .onlyWhile(continueCondition).schedule();
       } catch (TrajectoryGenerationException e) {
         Logger.error("AlignClimbCommand : Trajectory Generation Failed!");
       }
