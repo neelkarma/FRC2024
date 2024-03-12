@@ -167,15 +167,16 @@ public class DriveConstants {
   public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
   // TODO tune PID
-  public static final double DRIVE_P = 0.3;
-  public static final double DRIVE_I = 0;
-  public static final double DRIVE_D = 0.05;
-  public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
+  public static final double DRIVE_P = 0.1;
+  public static final double DRIVE_I = 0;//0.01;
+  public static final double DRIVE_D = 0.0;//5;
+  public static final double DRIVING_FF = 0;//1 / DRIVE_WHEEL_FREE_SPEED_RPS;
 
-  public static final double TURNING_P = 0.6;
-  public static final double TURNING_I = 0;
-  public static final double TURNING_D = 0;
-  public static final double TURNING_FF = 0.1;
+  public static final double TURNING_P = 0.25;
+  public static final double TURNING_I = 0.001;
+  public static final double TURNING_D = 0.02
+  ;
+  public static final double TURNING_FF = 0;//.1;
 
   // Auto Constants
   /** Auto translation PID constants */
@@ -187,7 +188,11 @@ public class DriveConstants {
   /** Drivebase radius in m (distance from center of robot to farthest module) */
   public static final double DRIVEBASE_RADIUS = Math.sqrt(Math.pow(WHEEL_BASE / 2, 2) + Math.pow(TRACK_WIDTH / 2, 2));
 
+<<<<<<< HEAD
   public static final double updateShuffleInterval = 1 / 0.02; /* (x / 20ms) */
+=======
+  public static final double updateShuffleInterval = 0.1  / 0.02; /* (x / 20ms) */
+>>>>>>> f023bf3f198e9a13ccdec5cba9992b9860ad4bdc
 
   /**
    * Auto angular speed and acceleration constraints in radians per second and
@@ -196,5 +201,12 @@ public class DriveConstants {
   public static final TrapezoidProfile.Constraints AUTO_THETA_CONSTRAINTS = new TrapezoidProfile.Constraints(
       MAX_ANGULAR_SPEED,
       MAX_ANGULAR_ACCELERATION);
+
+  /**
+   * settings for robot drive in default teleop
+   * {min throt,max throt,curve power}, {min turn throt, max turn throt,curve
+   * power}
+   */
+  public static double[][] PILOT_SETTINGS = { { 0, 1, 2 }, { 0, 1, 3, 0.3 } };
 
 }

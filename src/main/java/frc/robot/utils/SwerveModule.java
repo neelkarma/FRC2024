@@ -177,12 +177,12 @@ public class SwerveModule {
       .withVelocity(
         // withVelocity accepts rps, not mps
         optimizedDesiredState.speedMetersPerSecond / DriveConstants.WHEEL_CIRCUMFERENCE_METERS)
-        .withFeedForward(DriveConstants.DRIVING_FF));
+        );//.withFeedForward(DriveConstants.DRIVING_FF));
       turnController.setReference(
         optimizedDesiredState.angle.getRadians() + Math.PI,
         ControlType.kPosition);
             
-    //System.out.println(optimizedDesiredState.speedMetersPerSecond+" "+driveMotor.getVelocity()+ " " + desiredState.speedMetersPerSecond +" "+ correctedDesiredState.speedMetersPerSecond); //TODO remove
+    System.out.println(optimizedDesiredState.speedMetersPerSecond+" "+driveMotor.getVelocity()); //TODO remove
     //System.out.println(optimizedDesiredState.angle.getRadians() + Math.PI+" "+turnEncoder.getPosition()+ " " + desiredState.angle +" "+ correctedDesiredState.angle); //TODO remove
     this.desiredState = desiredState;
   }
