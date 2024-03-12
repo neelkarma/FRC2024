@@ -6,8 +6,10 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -15,9 +17,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.auto.AutoProvider;
 import frc.robot.teleop.TeleopProvider;
 import frc.robot.commands.AlignClimbCommand;
+import frc.robot.commands.FlashLEDCommand;
+import frc.robot.commands.SolidLEDCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -65,6 +70,13 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    // Robot Automations
+    // make leds green if note is present in robot
+    new Trigger(Subsystems.intake::noteIsPresent).whileTrue(new SolidLEDCommand(Color.kGreen));
+    // flash leds yellow during endgame
+    new Trigger(() -> DriverStation.isTeleop() && DriverStation.getMatchTime() <= 30)
+        .whileTrue(new FlashLEDCommand(Color.kYellow, 1));
+
     // +----------------+
     // | PILOT CONTROLS |
     // +----------------+
