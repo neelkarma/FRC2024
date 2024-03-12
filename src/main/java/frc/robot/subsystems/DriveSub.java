@@ -241,14 +241,9 @@ public class DriveSub extends SubsystemBase {
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED;
     double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED;
 
-<<<<<<< HEAD
     // System.out.println(xSpeedDelivered + " " + ySpeedDelivered + " " +
     // rotDelivered +" "+ getHeading());
 
-=======
-    //System.out.println(xSpeedDelivered + " " + ySpeedDelivered + " " + rotDelivered +" "+ getHeading());
-    
->>>>>>> f023bf3f198e9a13ccdec5cba9992b9860ad4bdc
     var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
@@ -256,7 +251,7 @@ public class DriveSub extends SubsystemBase {
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.MAX_SPEED);
-    
+
     frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
     backLeft.setDesiredState(swerveModuleStates[2]);
