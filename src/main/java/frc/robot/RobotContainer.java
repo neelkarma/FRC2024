@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.auto.AutoProvider;
 import frc.robot.teleop.TeleopProvider;
 import frc.robot.commands.AlignClimbCommand;
-import frc.robot.subsystems.PivotSub;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -42,7 +41,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "shoot",
         new SequentialCommandGroup(
-            Subsystems.shooter.runOnce(() -> Subsystems.shooter.setRawSpeed(1)),
+            Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(1)),
             new WaitCommand(0.5),
             Subsystems.intake.runOnce(() -> Subsystems.intake.set(1)),
             new WaitCommand(0.5),
@@ -95,7 +94,7 @@ public class RobotContainer {
     OI.pilot.rightTrigger()
         .whileTrue(
             new StartEndCommand(
-                () -> Subsystems.shooter.setRawSpeed(0.8),
+                () -> Subsystems.shooter.setSpeed(0.8),
                 Subsystems.shooter::stop,
                 Subsystems.shooter));
 
@@ -135,12 +134,10 @@ public class RobotContainer {
                 new ParallelCommandGroup(
                     Subsystems.intake.runOnce(Subsystems.intake::stop),
                     Subsystems.pivot.runOnce(Subsystems.pivot::up),
-                    Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(5))),
+                    Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(1))),
 
                 // Wait until the pivot is finished and the shooter is at the desired speed
-                new WaitUntilCommand(
-                    () -> (Subsystems.pivot.getState() == PivotSub.State.FullyUp
-                        && Subsystems.shooter.atSetSpeed())),
+                new WaitCommand(0.5),
 
                 // Shoot
                 Subsystems.intake.runOnce(() -> Subsystems.intake.set(1, true)),
@@ -170,9 +167,7 @@ public class RobotContainer {
                     Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(5))),
 
                 // Wait until the pivot is completed and the shooter is at the desired speed
-                new WaitUntilCommand(
-                    () -> (Subsystems.pivot.getState() == PivotSub.State.FullyDown
-                        && Subsystems.shooter.atSetSpeed())),
+                new WaitCommand(0.5),
 
                 // Shoot
                 Subsystems.intake.runOnce(() -> Subsystems.intake.set(1, true)),
