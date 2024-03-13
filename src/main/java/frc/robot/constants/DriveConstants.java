@@ -18,7 +18,7 @@ import edu.wpi.first.math.util.Units;
 public class DriveConstants {
   // NEO Motor Constants
   /** Free speed of the driving motor in rpm */
-  public static final double FREE_SPEED_RPM = 5676; // TODO: Change this - we're using falcons, not neos
+  public static final double FREE_SPEED_RPM = 6380;
 
   // Driving Parameters - Note that these are not the maximum capable speeds of
   // the robot, rather the allowed maximum speeds
@@ -41,9 +41,9 @@ public class DriveConstants {
 
   // Chassis configuration
   /** Distance between front and back wheel on robot in meters */
-  public static final double TRACK_WIDTH = Units.inchesToMeters(26.5); // TODO check this
+  public static final double TRACK_WIDTH = Units.inchesToMeters(20.7);
   /** Distance between centers of left and right wheels on robot in meters */
-  public static final double WHEEL_BASE = Units.inchesToMeters(26.5);
+  public static final double WHEEL_BASE = Units.inchesToMeters(20.7);
 
   /**
    * Position of front left swerve module relative to robot center. Mainly for sim
@@ -164,10 +164,10 @@ public class DriveConstants {
   public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
   // TODO tune PID
-  public static final double DRIVE_P = 0.1;
+  public static final double DRIVE_P = 0.5;
   public static final double DRIVE_I = 0;//0.01;
-  public static final double DRIVE_D = 0.0;//5;
-  public static final double DRIVING_FF = 0;//1 / DRIVE_WHEEL_FREE_SPEED_RPS;
+  public static final double DRIVE_D = 0.05;
+  public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
 
   public static final double TURNING_P = 0.25;
   public static final double TURNING_I = 0.001;

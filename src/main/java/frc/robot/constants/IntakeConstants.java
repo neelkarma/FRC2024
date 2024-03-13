@@ -9,5 +9,5 @@ public class IntakeConstants {
   // Just a random number
   public static final MotorSupplier<WPI_VictorSPX> UPPER_MOTOR_ID = new VictorMotorSupplier(9);
   public static final MotorSupplier<WPI_VictorSPX> LOWER_MOTOR_ID = new VictorMotorSupplier(10).withInvert();
-  public static final int BEAM_BREAK_SENSOR_ID = 15;
+  public static final int BEAM_BREAK_SENSOR_ID = 9;
 }

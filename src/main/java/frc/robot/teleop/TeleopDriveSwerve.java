@@ -32,7 +32,7 @@ public class TeleopDriveSwerve extends Command {
       updateShuffleCounter++;
     }
 
-    Subsystems.drive.drive(translateX, translateY, rotate, false, false);
+    Subsystems.drive.drive(translateX, translateY, rotate, true, true);
   }
 
   @Override

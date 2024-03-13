@@ -72,25 +72,25 @@ public class RobotContainer {
     OI.pilot.rightTrigger()
         .whileTrue(
             new StartEndCommand(
-                () -> Subsystems.shooter.setRawSpeed(0.8),
+                () -> Subsystems.shooter.setRawSpeed(0.65),
                 Subsystems.shooter::stop,
                 Subsystems.shooter));
 
     // pivot up
-    OI.pilot.povRight().whileTrue(Subsystems.pivot.run(Subsystems.pivot::up));
+    //OI.pilot.povRight().whileTrue(Subsystems.pivot.run(Subsystems.pivot::up));
 
     // pivot down
-    OI.pilot.povLeft().whileTrue(Subsystems.pivot.run(Subsystems.pivot::down));
+    //OI.pilot.povLeft().whileTrue(Subsystems.pivot.run(Subsystems.pivot::down));
 
     // climber up
-    OI.pilot.povUp().whileTrue(
+    OI.pilot.povDown().whileTrue(
         new StartEndCommand(
             () -> Subsystems.climber.set(1),
             Subsystems.climber::stop,
             Subsystems.climber));
 
     // climber down
-    OI.pilot.povDown().whileTrue(
+    OI.pilot.povUp().whileTrue(
         new StartEndCommand(
             () -> Subsystems.climber.set(-0.5),
             Subsystems.climber::stop,

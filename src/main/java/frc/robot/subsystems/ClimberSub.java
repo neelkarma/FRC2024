@@ -3,13 +3,16 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ClimberConstants;
+import frc.robot.constants.IntakeConstants;
 
 public class ClimberSub extends SubsystemBase {
   private final WPI_VictorSPX motor = ClimberConstants.MOTOR_1_ID.get();
   private final Servo servo = new Servo(ClimberConstants.SERVO_PORT);
+  private final DigitalInput climberStop = new DigitalInput(ClimberConstants.CLIMBER_STOP_PORT);
 
   private double targetSpeed = 0;
 
@@ -24,9 +27,10 @@ public class ClimberSub extends SubsystemBase {
     var servoUnlocked = servo.getPosition() == ClimberConstants.SERVO_LOCKED_POS;
     var motorIsCommanded = targetSpeed != 0;
 
-    if (servoUnlocked == motorIsCommanded) {
+    if (servoUnlocked == motorIsCommanded && (targetSpeed < 0 || climberStop.get())) {
       motor.set(targetSpeed);
     } else if (servoUnlocked && !motorIsCommanded) {
+      motor.set(0);
       servo.setPosition(ClimberConstants.SERVO_LOCKED_POS);
     } else if (!servoUnlocked && motorIsCommanded) {
       servo.setPosition(ClimberConstants.SERVO_UNLOCKED_POS);
