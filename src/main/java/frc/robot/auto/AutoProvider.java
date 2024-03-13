@@ -2,10 +2,11 @@ package frc.robot.auto;
 
 import java.util.Optional;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * Provides the default command for autonomous.
@@ -13,13 +14,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class AutoProvider {
   private static Optional<AutoProvider> inst = Optional.empty();
 
-  private final SendableChooser<Command> chooser = new SendableChooser<>();
+  private final SendableChooser<Command> chooser;
 
   private AutoProvider() {
-    chooser.addOption("PathWeaver Test", SwerveTrajectoryCommand.fromPathWeaver("paths/Sample.wpilib.json"));
-    chooser.addOption("Naive Auto", new NaiveAuto());
-    chooser.setDefaultOption("Disable Auto", new InstantCommand());
-
+    chooser = AutoBuilder.buildAutoChooser();
+    chooser.addOption("Mobility", new NaiveAuto());
     SmartDashboard.putData("Auto Chooser", chooser);
   }
 

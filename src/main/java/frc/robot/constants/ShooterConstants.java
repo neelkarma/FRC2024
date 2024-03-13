@@ -1,13 +1,9 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import com.ctre.phoenix6.hardware.TalonFX;
 
-import frc.robot.utils.EncoderSupplier;
 import frc.robot.utils.motorsupplier.MotorSupplier;
 import frc.robot.utils.motorsupplier.TalonMotorSupplier;
-import frc.robot.utils.motorsupplier.VictorMotorSupplier;
 
 public class ShooterConstants {
   public static final MotorSupplier<WPI_TalonSRX> UPPER_MOTOR_ID = new TalonMotorSupplier(7).withInvert();

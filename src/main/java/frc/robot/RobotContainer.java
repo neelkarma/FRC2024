@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -13,10 +17,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.auto.AutoProvider;
 import frc.robot.teleop.TeleopProvider;
 import frc.robot.commands.AlignClimbCommand;
-import frc.robot.subsystems.PivotSub;
+import frc.robot.commands.FlashLEDCommand;
+import frc.robot.commands.SolidLEDCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -34,6 +40,25 @@ public class RobotContainer {
    * commands.
    */
   public RobotContainer() {
+    // configure auto named commands
+    NamedCommands.registerCommand(
+        "shoot",
+        new SequentialCommandGroup(
+            Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(1)),
+            new WaitCommand(0.5),
+            Subsystems.intake.runOnce(() -> Subsystems.intake.set(1)),
+            new WaitCommand(0.5),
+            Subsystems.intake.runOnce(Subsystems.intake::stop),
+            Subsystems.shooter.runOnce(Subsystems.shooter::stop)));
+
+    NamedCommands.registerCommand(
+        "startIntake",
+        Subsystems.intake.runOnce(() -> Subsystems.intake.set(0.3)));
+
+    NamedCommands.registerCommand(
+        "stopIntake",
+        Subsystems.intake.runOnce(Subsystems.intake::stop));
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -45,6 +70,13 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    // Robot Automations
+    // make leds green if note is present in robot
+    new Trigger(Subsystems.intake::noteIsPresent).whileTrue(new SolidLEDCommand(Color.kGreen));
+    // flash leds yellow during endgame
+    new Trigger(() -> DriverStation.isTeleop() && DriverStation.getMatchTime() <= 30)
+        .whileTrue(new FlashLEDCommand(Color.kYellow, 1));
+
     // +----------------+
     // | PILOT CONTROLS |
     // +----------------+
@@ -112,12 +144,10 @@ public class RobotContainer {
                 new ParallelCommandGroup(
                     Subsystems.intake.runOnce(Subsystems.intake::stop),
                     Subsystems.pivot.runOnce(Subsystems.pivot::up),
-                    Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(5))),
+                    Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(1))),
 
                 // Wait until the pivot is finished and the shooter is at the desired speed
-                new WaitUntilCommand(
-                    () -> (Subsystems.pivot.getState() == PivotSub.State.FullyUp
-                        && Subsystems.shooter.atSetSpeed())),
+                new WaitCommand(0.5),
 
                 // Shoot
                 Subsystems.intake.runOnce(() -> Subsystems.intake.set(1, true)),
@@ -147,9 +177,7 @@ public class RobotContainer {
                     Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(5))),
 
                 // Wait until the pivot is completed and the shooter is at the desired speed
-                new WaitUntilCommand(
-                    () -> (Subsystems.pivot.getState() == PivotSub.State.FullyDown
-                        && Subsystems.shooter.atSetSpeed())),
+                new WaitCommand(0.5),
 
                 // Shoot
                 Subsystems.intake.runOnce(() -> Subsystems.intake.set(1, true)),

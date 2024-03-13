@@ -16,7 +16,6 @@ public class IntakeSub extends SubsystemBase {
   private final WPI_VictorSPX slaveMotor = IntakeConstants.LOWER_MOTOR_ID.get();
   private final DigitalInput beamBreakSensor = new DigitalInput(IntakeConstants.BEAM_BREAK_SENSOR_ID);
 
-  private boolean isRunning = false;
   private boolean locked = false;
   private boolean ledState = !locked;
 
@@ -33,8 +32,9 @@ public class IntakeSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    ShuffleControl.miscTab.setIntakeVars(locked, isRunning);
+    final var isRunning = masterMotor.get() != 0.0;
 
+    ShuffleControl.miscTab.setIntakeVars(locked, isRunning);
     locked = noteIsPresent();
     if (locked && !ledState) {
       for (int i = 0; i < Subsystems.led.buffer.getLength(); i++) {
@@ -71,7 +71,7 @@ public class IntakeSub extends SubsystemBase {
    */
   public void set(double speed, boolean overrideLock) {
     // if (locked && !overrideLock)
-    //   return;
+    // return;
 
     // isRunning = true;
     speed = MathUtil.clamp(speed, -1, 1);
@@ -80,7 +80,6 @@ public class IntakeSub extends SubsystemBase {
 
   /** Stops the intake motor */
   public void stop() {
-    isRunning = false;
     masterMotor.stopMotor();
   }
 

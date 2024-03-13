@@ -6,6 +6,10 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +23,7 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.ADIS16470_IMUSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -94,6 +99,27 @@ public class DriveSub extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSub() {
+    // Configure PathPlanner auto
+    AutoBuilder.configureHolonomic(
+        this::getPose,
+        this::resetOdometry,
+        this::getRelativeChassisSpeeds,
+        this::driveRelative,
+        new HolonomicPathFollowerConfig(
+            DriveConstants.AUTO_TRANSLATION_PID,
+            DriveConstants.AUTO_ROTATION_PID,
+            DriveConstants.MAX_MODULE_SPEED,
+            DriveConstants.DRIVEBASE_RADIUS,
+            new ReplanningConfig()),
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red
+          // alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+          return DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red;
+        },
+        this);
     SmartDashboard.putData(field);
   }
 
@@ -124,6 +150,7 @@ public class DriveSub extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
+    System.out.println("Hit");
     poseEstimator.resetPosition(
         getHeading(),
         new SwerveModulePosition[] {
@@ -133,6 +160,7 @@ public class DriveSub extends SubsystemBase {
             backRight.getPosition()
         },
         pose);
+    poseSim = pose;
   }
 
   // For reference, the below code is the actual drive function if the last two
@@ -212,8 +240,9 @@ public class DriveSub extends SubsystemBase {
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED;
     double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED;
 
-    //System.out.println(xSpeedDelivered + " " + ySpeedDelivered + " " + rotDelivered +" "+ getHeading());
-    
+    // System.out.println(xSpeedDelivered + " " + ySpeedDelivered + " " +
+    // rotDelivered +" "+ getHeading());
+
     var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
@@ -221,18 +250,27 @@ public class DriveSub extends SubsystemBase {
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.MAX_SPEED);
-    
+
     frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
     backLeft.setDesiredState(swerveModuleStates[2]);
     backRight.setDesiredState(swerveModuleStates[3]);
 
     lastStates = new SwerveModuleState[] {
-      frontLeft.getState(),
-      frontRight.getState(),
-      backLeft.getState(),
-      backRight.getState()
+        frontLeft.getState(),
+        frontRight.getState(),
+        backLeft.getState(),
+        backRight.getState()
     };
+  }
+
+  /**
+   * Drives with robot-relative ChassisSpeeds.
+   * 
+   * Mainly used by the auto.
+   */
+  public void driveRelative(ChassisSpeeds speeds) {
+    drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false, false);
   }
 
   /**
@@ -268,7 +306,7 @@ public class DriveSub extends SubsystemBase {
   }
 
   /** reset turn motor pid I accumulation to 0 */
-  public void resetIntegral(){
+  public void resetIntegral() {
     frontLeft.resetIntegral();
     backLeft.resetIntegral();
     frontRight.resetIntegral();
@@ -326,6 +364,14 @@ public class DriveSub extends SubsystemBase {
         });
 
     field.setRobotPose(getPose());
+  }
+
+  public ChassisSpeeds getRelativeChassisSpeeds() {
+    return DriveConstants.DRIVE_KINEMATICS.toChassisSpeeds(
+        frontLeft.getState(),
+        frontRight.getState(),
+        backLeft.getState(),
+        backRight.getState());
   }
 
   @Override

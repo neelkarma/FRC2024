@@ -2,6 +2,7 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -24,6 +25,8 @@ public class DriveConstants {
   // the robot, rather the allowed maximum speeds
   /** Max speed of robot in meters per second */
   public static final double MAX_SPEED = 4.8; // TODO check this
+  /** Max acceleration of robot in meters per second squared */
+  public static final double MAX_ACCELERATION = 1; // TODO check this
   /** Max angular speed of robot in radians per second */
   public static final double MAX_ANGULAR_SPEED = 2 * Math.PI;
   /** Max angular acceleration of robot in radians per second squared */
@@ -171,19 +174,20 @@ public class DriveConstants {
 
   public static final double TURNING_P = 0.25;
   public static final double TURNING_I = 0.001;
-  public static final double TURNING_D = 0.02
-  ;
-  public static final double TURNING_FF = 0;//.1;
+  public static final double TURNING_D = 0.02;
+  public static final double TURNING_FF = 0;// .1;
 
   // Auto Constants
-  /** Auto X PID P - This controls the target X speed relative to the field */
-  public static final double AUTO_X_P = 0;
-  /** Auto X PID P - This controls the target Y speed relative to the field */
-  public static final double AUTO_Y_P = 0;
-  /** Auto X PID P - This controls the target angle relative to the field */
-  public static final double AUTO_THETA_P = 3;
+  /** Auto translation PID constants */
+  public static final PIDConstants AUTO_TRANSLATION_PID = new PIDConstants(0.1, 0, 0);
+  /** Auto rotation PID constants */
+  public static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(0.25, 0, 0);
+  /** Auto module max speed in m/s */
+  public static final double MAX_MODULE_SPEED = 4.5;
+  /** Drivebase radius in m (distance from center of robot to farthest module) */
+  public static final double DRIVEBASE_RADIUS = Math.sqrt(Math.pow(WHEEL_BASE / 2, 2) + Math.pow(TRACK_WIDTH / 2, 2));
 
-  public static final double updateShuffleInterval = 0.1  / 0.02; /* (x / 20ms) */
+  public static final double updateShuffleInterval = 0.1 / 0.02; /* (x / 20ms) */
 
   /**
    * Auto angular speed and acceleration constraints in radians per second and
