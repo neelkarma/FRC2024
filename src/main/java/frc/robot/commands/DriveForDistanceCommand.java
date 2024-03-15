@@ -43,4 +43,9 @@ public class DriveForDistanceCommand extends InstantCommand {
   public boolean isFinished() {
     return startP.getDistance(Subsystems.drive.getPose().getTranslation()) > dist;
   }
+  
+  @Override
+  public void end(boolean interupted) {
+    Subsystems.drive.setX();
+  }
 }

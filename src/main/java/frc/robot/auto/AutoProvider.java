@@ -21,6 +21,7 @@ public class AutoProvider {
     chooser = new SendableChooser<>(); // pub for shuffle board
     //chooser = AutoBuilder.buildAutoChooser();
     chooser.setDefaultOption("Mobility", new NaiveAuto());
+    chooser.addOption("Amp", new AmpAuto());
     SmartDashboard.putData("Auto Chooser", chooser);
   }
 
