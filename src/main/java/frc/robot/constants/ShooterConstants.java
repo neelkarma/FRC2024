@@ -2,6 +2,7 @@ package frc.robot.constants;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import frc.robot.utils.EncoderSupplier;
 import frc.robot.utils.motorsupplier.MotorSupplier;
 import frc.robot.utils.motorsupplier.TalonMotorSupplier;
 
@@ -14,8 +15,8 @@ public class ShooterConstants {
   /** Shooter wheel radius in meters */
   public static final double WHEEL_RADIUS = 0.2;
   
-
-  public static final double SPIN_DIFF = 0.16;
+  /** depricated */
+  public static final double SPIN_DIFF = -0.16;
 
   /**
    * The robot will consider the shooter at the target tangential wheel speed

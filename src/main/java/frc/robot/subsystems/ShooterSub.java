@@ -20,9 +20,9 @@ public class ShooterSub extends SubsystemBase {
    * 
    * @param speed Speed, from -1 to 1.
    */
-  public void setSpeed(double speed) {
-    double speedUp = MathUtil.clamp(speed * (1 + ShooterConstants.SPIN_DIFF), -1, 1);
-    double speedDown = MathUtil.clamp(speed * (1 - ShooterConstants.SPIN_DIFF), -1, 1);
+  public void setSpeed(double speed, double diff) {
+    double speedUp = MathUtil.clamp(speed * (1 + diff), -1, 1);
+    double speedDown = MathUtil.clamp(speed * (1 - diff), -1, 1);
     upperMotor.set(speedUp);
     lowerMotor.set(speedDown);
   }

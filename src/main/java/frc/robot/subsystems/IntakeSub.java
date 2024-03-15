@@ -49,8 +49,8 @@ public class IntakeSub extends SubsystemBase {
       Subsystems.led.apply();
       ledState = false;
     }
-    if (isRunning && locked)
-      stop();
+    //if (isRunning && locked)
+    //  stop();
   }
 
   /**

@@ -17,8 +17,10 @@ public class AutoProvider {
   private final SendableChooser<Command> chooser;
 
   private AutoProvider() {
-    chooser = AutoBuilder.buildAutoChooser();
-    chooser.addOption("Mobility", new NaiveAuto());
+    
+    chooser = new SendableChooser<>(); // pub for shuffle board
+    //chooser = AutoBuilder.buildAutoChooser();
+    chooser.setDefaultOption("Mobility", new NaiveAuto());
     SmartDashboard.putData("Auto Chooser", chooser);
   }
 

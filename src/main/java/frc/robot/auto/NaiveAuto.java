@@ -16,7 +16,7 @@ public class NaiveAuto extends SequentialCommandGroup {
         new InstantCommand(() -> {
           // This assumes that the robot is facing towards the field center,
           // otherwise it will drive backwards.
-          Subsystems.drive.drive(0.5, 0, 0, false, false);
+          Subsystems.drive.drive(0, -0.5, 0, false, false);
         }, Subsystems.drive),
         // Wait 1s
         new WaitCommand(1),

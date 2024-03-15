@@ -44,7 +44,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "shoot",
         new SequentialCommandGroup(
-            Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(1)),
+            Subsystems.shooter.runOnce(() -> Subsystems.shooter.setSpeed(1,0)),
             new WaitCommand(0.5),
             Subsystems.intake.runOnce(() -> Subsystems.intake.set(1)),
             new WaitCommand(0.5),
@@ -85,7 +85,14 @@ public class RobotContainer {
 
     // Invert Drive
     OI.pilot.start().onTrue(new InstantCommand(() -> Variables.invertDriveDirection = !Variables.invertDriveDirection));
-
+    
+    // intake reverse
+    OI.pilot.leftBumper()
+        .whileTrue(
+            new StartEndCommand(
+                () -> Subsystems.intake.set(-0.2),
+                Subsystems.intake::stop,
+                Subsystems.intake));
     // intake
     OI.pilot.leftTrigger()
         .whileTrue(
@@ -93,8 +100,8 @@ public class RobotContainer {
                 () -> Subsystems.intake.set(0.2),
                 Subsystems.intake::stop,
                 Subsystems.intake));
-    // shoot feed
-    OI.pilot.rightBumper()
+    // intake rapid
+    OI.pilot.y()
         .whileTrue(
             new StartEndCommand(
                 () -> Subsystems.intake.set(1),
@@ -104,9 +111,21 @@ public class RobotContainer {
     OI.pilot.rightTrigger()
         .whileTrue(
             new StartEndCommand(
-                () -> Subsystems.shooter.setRawSpeed(0.65),
+                () -> Subsystems.shooter.setSpeed(0.65, -0.18),
                 Subsystems.shooter::stop,
                 Subsystems.shooter));
+    // shoot
+    OI.pilot.rightBumper()
+        .whileTrue(
+            new StartEndCommand(
+                () -> Subsystems.shooter.setSpeed(.9,0),
+                Subsystems.shooter::stop,
+                Subsystems.shooter));
+    
+    OI.pilot.start()
+        .onTrue(
+            new InstantCommand(() -> Subsystems.drive.zeroHeading()) 
+        );
 
     // pivot up
     //OI.pilot.povRight().whileTrue(Subsystems.pivot.run(Subsystems.pivot::up));
@@ -131,10 +150,10 @@ public class RobotContainer {
     // --- Recipes ---
 
     // auto climb align
-    OI.pilot.back().whileTrue(new AlignClimbCommand(() -> OI.pilot.getHID().getBackButton()));
+    //OI.pilot.back().whileTrue(new AlignClimbCommand(() -> OI.pilot.getHID().getBackButton()));
 
     // amp shooting sequence
-    OI.pilot.x()
+    /*OI.pilot.x()
         .whileTrue(
             new SequentialCommandGroup(
                 // At the same time:
@@ -162,8 +181,9 @@ public class RobotContainer {
                     Subsystems.intake.runOnce(Subsystems.intake::stop),
                     Subsystems.shooter.runOnce(Subsystems.shooter::stop),
                     Subsystems.pivot.runOnce(Subsystems.pivot::down))));
-
+    */
     // speaker shooting sequence
+    /*
     OI.pilot.a()
         .whileTrue(
             new SequentialCommandGroup(
@@ -191,7 +211,7 @@ public class RobotContainer {
                 new ParallelCommandGroup(
                     Subsystems.intake.runOnce(Subsystems.intake::stop),
                     Subsystems.shooter.runOnce(Subsystems.shooter::stop))));
-
+    */
     // Drive bindings handled in teleop command
   }
 
