@@ -23,18 +23,24 @@ import frc.robot.utils.logger.Logger;
 
 public class DriveForDistanceCommand extends InstantCommand {
   Translation2d startP;
-  public DriveForDistanceCommand() {
-    
+  double xSpeed = 0;
+  double ySpeed = 0;
+  double dist = 0;
+
+  public DriveForDistanceCommand(double xspeed, double ySpeed, double dist) {
+    this.xSpeed = xspeed;
+    this.ySpeed = ySpeed;
+    this.dist = dist;
   }
   
   @Override
   public void initialize(){
     startP = Subsystems.drive.getPose().getTranslation();
-    Subsystems.drive.drive(0,0.5,0,false,true);
+    Subsystems.drive.drive(xSpeed,ySpeed,0,false,true);
   }
 
   @Override
   public boolean isFinished() {
-    if 
+    return startP.getDistance(Subsystems.drive.getPose().getTranslation()) > dist;
   }
 }
