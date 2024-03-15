@@ -14,14 +14,16 @@ public class AmpAuto extends SequentialCommandGroup {
   public AmpAuto() {
     addCommands(
         // Start driving the robot forwards
-        new DriveForDistanceCommand(0,-0.2,1.575),
+        new DriveForDistanceCommand(0,-0.4,1.575),
         // Wait 0.2s while it stops
         new WaitCommand(0.2),
         //drive left
-        new DriveForDistanceCommand(0.2,0,0.4),
+        new DriveForDistanceCommand(0.4,0,0.5),
         // Stop the robot
-        new InstantCommand(() -> {
-          Subsystems.drive.setX();
-        }, Subsystems.drive));
+        //run the intake
+        new InstantCommand(() -> {Subsystems.shooter.setSpeed(0.65,0.18);}, Subsystems.shooter),
+        new WaitCommand(1),
+        new InstantCommand(() -> {Subsystems.shooter.setSpeed(0,0);}, Subsystems.shooter)
+        );
   }
 }

@@ -36,7 +36,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSub extends SubsystemBase {
   // Swerve Modules
-  private final SwerveModule frontLeft = new SwerveModule(
+  public final SwerveModule frontLeft = new SwerveModule(
       DriveConstants.FRONT_LEFT_DRIVING_CAN_ID,
       DriveConstants.FRONT_LEFT_TURNING_CAN_ID,
       DriveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET);
@@ -335,6 +335,11 @@ public class DriveSub extends SubsystemBase {
    */
   public double getTurnRate() {
     return imu.getRate(IMUAxis.kZ) * (DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
+  }
+
+  public double estimateDist() {
+    double d = (frontLeft.getPosition().distanceMeters) / 3.5151856018;
+    return d;
   }
 
   /**

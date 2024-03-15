@@ -118,7 +118,7 @@ public class RobotContainer {
     OI.pilot.rightBumper()
         .whileTrue(
             new StartEndCommand(
-                () -> Subsystems.shooter.setSpeed(.9,0),
+                () -> Subsystems.shooter.setSpeed(.98,0),
                 Subsystems.shooter::stop,
                 Subsystems.shooter));
     
