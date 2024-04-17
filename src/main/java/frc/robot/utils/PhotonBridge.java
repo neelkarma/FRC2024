@@ -79,10 +79,10 @@ public class PhotonBridge {
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
-    if(cam.isConnected()){
+    if (cam.isConnected()) {
       return poseEstimator.update();
     } else {
-      //System.out.println("Photon Bridge Error: Camera Not Found");
+      // System.out.println("Photon Bridge Error: Camera Not Found");
       return Optional.empty();
     }
   }
