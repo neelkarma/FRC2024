@@ -11,25 +11,26 @@ public class ShooterSub extends SubsystemBase {
   private final WPI_TalonSRX lowerMotor = ShooterConstants.LOWER_MOTOR_ID.get();
 
   public ShooterSub() {
-    addChild("Master Motor", upperMotor);
-    addChild("Slave Motor", lowerMotor);
+    addChild("Upper Motor", upperMotor);
+    addChild("Lower Motor", lowerMotor);
   }
 
-  /**
-   * Sets the speed of the shooter wheel.
-   * 
-   * @param speed Speed, from -1 to 1.
-   */
-  public void setSpeed(double speed, double diff) {
-    double speedUp = MathUtil.clamp(speed * (1 + diff), -1, 1);
-    double speedDown = MathUtil.clamp(speed * (1 - diff), -1, 1);
-    upperMotor.set(speedUp);
-    lowerMotor.set(speedDown);
-  }
-
-  /** Stops the shooter. Call `setSpeed` to start again. */
   public void stop() {
     upperMotor.stopMotor();
     lowerMotor.stopMotor();
+  }
+
+  public void setSpeed(double speed, double spin) {
+    var upperSpeed = speed * (1 + spin);
+    var lowerSpeed = speed * (1 - spin);
+
+    final var upperAbs = Math.abs(upperSpeed);
+    final var lowerAbs = Math.abs(lowerSpeed);
+
+    upperSpeed -= Math.copySign(Math.max(upperAbs - 1, 0), upperSpeed);
+    lowerSpeed -= Math.copySign(Math.max(lowerAbs - 1, 0), lowerSpeed);
+
+    upperMotor.set(MathUtil.clamp(upperSpeed, -1, 1));
+    lowerMotor.set(MathUtil.clamp(lowerSpeed, -1, 1));
   }
 }
