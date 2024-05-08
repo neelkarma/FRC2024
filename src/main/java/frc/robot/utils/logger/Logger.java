@@ -3,7 +3,6 @@ package frc.robot.utils.logger;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.locks.ReentrantLock;
@@ -13,11 +12,10 @@ import frc.robot.constants.LoggerConstants;
 
 public class Logger {
 
-  private ArrayList<LogRow> cache = new ArrayList<LogRow>();
+  private ArrayList<double[]> cache = new ArrayList<double[]>();
   private final ReentrantLock cacheLock = new ReentrantLock();
 
-  private final Instant dateCutoff = Instant.parse("2000-01-01T00:00:00.00Z");
-  private final int millisPerCSVLine = 20;
+  private final long creationTime = Calendar.getInstance().getTime().toInstant().toEpochMilli();
 
   private Thread thread;
 
@@ -28,43 +26,28 @@ public class Logger {
   private String logFolderPath;
   private String fileName;
 
-  public Logger(String fileName) {
+  public Logger(String fileName, String[] columns) {
     this.fileName = fileName;
     findFilePath();
     makeFile();
+
+    save(columns);
+
     launchThread();
   }
 
-  public void log(String line) {
-    addLine(line);
-  }
 
-  /** Adds a new entry to the current row in the log file */
-  private void addLine(String line) {
+  public void log(double[] values) {
 
-    if (paused || stopped) {
-      return;
+    var row = new double[values.length + 1];
+    row[0] = (double)(Calendar.getInstance().getTime().toInstant().toEpochMilli() - creationTime) / 1000d;
+    for (int i = 0; i < values.length; i++) {
+      row[i+1] = values[i];
     }
 
     cacheLock.lock();
-
-    var index = getCurrentGroupIndex();
-    var newGroup = cache.get(index);
-    newGroup.addLine(line);
-    cache.set(index, newGroup);
-
+    cache.add(row);
     cacheLock.unlock();
-  }
-
-  private int getCurrentGroupIndex() {
-
-    // create a new LogRow if the last one is out-of-date
-    var lastGroup = cache.get(cache.size()-1);
-    if (lastGroup.getTime().isBefore(Calendar.getInstance().getTime().toInstant().minusMillis(millisPerCSVLine))) {
-      cache.add(new LogRow());
-    }
-
-    return cache.size()-1;
   }
 
   private void findFilePath() {
@@ -123,22 +106,30 @@ public class Logger {
   }
 
   public void save() {
+    save(new String[0]);
+  }
+
+  public void save(String[] override) {
     cacheLock.lock();
 
     try {
       FileWriter writer = new FileWriter(file, true);
+
+      if (override.length != 0) {
+        writer.write(", "); // first cell is empty
+        for (int i = 1; i < override.length; i++) {
+          writer.write(", " + override[i]);
+        }
+        writer.write(System.lineSeparator());
+      }
+
       while (!cache.isEmpty()) {
         
-        var group = cache.remove(0);
-
-        var timestamp = group.getTime();
-        if (timestamp.isBefore(dateCutoff)) {
-          timestamp = dateCutoff;
-        }
-        writer.write(timestamp.toString());
+        var row = cache.remove(0);
         
-        for (String line : group.getLines()) {
-          writer.write(", " + line.toString());
+        writer.write(String.valueOf(row[0])); // timestamp
+        for (int i = 1; i < row.length; i++) {
+          writer.write(", " + row[i]);
         }
         
         writer.write(System.lineSeparator());
@@ -146,15 +137,14 @@ public class Logger {
       writer.close();
     } catch (IOException e) {
       System.out.println("[" + fileName + " Logger] File Save Failed : IOExeption : " + e);
+      stopped = true;
     } catch (SecurityException e) {
       System.out.println("[" + fileName + " Logger] File Save Failed : Security Exeption : " + e);
+      stopped = true;
     } finally {
       if (!cache.isEmpty()) {
         System.out.println("[" + fileName + " Logger] Save Error : Killing Logger");
       }
-      stopped = true;
-      
-      cacheLock.unlock();
     }
     cacheLock.unlock();
   }

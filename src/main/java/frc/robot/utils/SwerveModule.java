@@ -49,7 +49,7 @@ public class SwerveModule {
   public SwerveModule(int drivingCANId, int turningCANId, double angularOffset) {
 
     // create loggger
-    logger = new Logger("swerve-" + drivingCANId);
+    logger = new Logger("swerve-" + drivingCANId, new String[] {"pos", "vel", "rot"});
 
     driveMotor = new TalonFX(drivingCANId);
     turnMotor = new CANSparkMax(turningCANId, MotorType.kBrushless);
@@ -191,11 +191,14 @@ public class SwerveModule {
     //System.out.println(optimizedDesiredState.speedMetersPerSecond+" "+driveMotor.getVelocity()); //TODO remove
     //System.out.println(optimizedDesiredState.angle.getRadians() + Math.PI+" "+turnEncoder.getPosition()+ " " + desiredState.angle +" "+ correctedDesiredState.angle); //TODO remove
     this.desiredState = desiredState;
-
-    logger.log("pos: " + driveMotor.getPosition().getValue());
-    logger.log("vel: " + driveMotor.getVelocity().getValue());
-    logger.log("rot: " + getRotation2d());
     
+
+    logger.log(new double[] {
+      driveMotor.getPosition().getValue(),
+      driveMotor.getVelocity().getValue(),
+      getRotation2d().getDegrees()
+    });
+
   }
 
 
