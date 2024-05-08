@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Subsystems;
 import frc.robot.constants.DriveConstants;
-import frc.robot.utils.logger.Logger;
 
 public class AlignClimbCommand extends InstantCommand {
   private static final Pose2d[] RED_CLIMB_POSES = new Pose2d[] {
@@ -59,7 +58,7 @@ public class AlignClimbCommand extends InstantCommand {
                 0, 0)
             .onlyWhile(continueCondition).schedule();
       } catch (TrajectoryGenerationException e) {
-        Logger.error("AlignClimbCommand : Trajectory Generation Failed!");
+        System.out.println("AlignClimbCommand : Trajectory Generation Failed!");
       }
     });
   }

@@ -22,7 +22,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.constants.VisionConstants;
-import frc.robot.utils.logger.Logger;
 
 public class PhotonBridge {
   private final AprilTagFieldLayout fieldLayout;
@@ -42,7 +41,7 @@ public class PhotonBridge {
       tempFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
     } catch (IOException e) {
       tempFieldLayout = new AprilTagFieldLayout(List.of(), 0, 0);
-      Logger.error("PhotonSub : Error reading AprilTag field layout: " + e);
+      System.out.println("PhotonSub : Error reading AprilTag field layout: " + e);
     }
 
     fieldLayout = tempFieldLayout;

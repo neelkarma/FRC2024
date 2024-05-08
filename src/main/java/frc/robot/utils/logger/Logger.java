@@ -3,25 +3,21 @@ package frc.robot.utils.logger;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
 import frc.robot.constants.FileConstants;
 import frc.robot.constants.LoggerConstants;
 
 public class Logger {
-  private static Optional<Logger> inst = Optional.empty();
 
-  private ArrayList<LogLine> cache = new ArrayList<LogLine>();
-
+  private ArrayList<LogRow> cache = new ArrayList<LogRow>();
   private final ReentrantLock cacheLock = new ReentrantLock();
 
-  private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_hh-mm");
+  private final Instant dateCutoff = Instant.parse("2000-01-01T00:00:00.00Z");
+  private final int millisPerCSVLine = 20;
 
   private Thread thread;
 
@@ -29,129 +25,135 @@ public class Logger {
   private boolean stopped = false;
 
   private File file;
-  private String filePath;
-  private boolean fileCreationFailed = false;
+  private String logFolderPath;
+  private String fileName;
 
-  private Logger() {
+  public Logger(String fileName) {
+    this.fileName = fileName;
     findFilePath();
     makeFile();
     launchThread();
   }
 
-  public static Logger getInstance() {
-    if (!inst.isPresent()) {
-      inst = Optional.of(new Logger());
+  public void log(String line) {
+    addLine(line);
+  }
+
+  /** Adds a new entry to the current row in the log file */
+  private void addLine(String line) {
+
+    if (paused || stopped) {
+      return;
     }
-    return inst.get();
+
+    cacheLock.lock();
+
+    var index = getCurrentGroupIndex();
+    var newGroup = cache.get(index);
+    newGroup.addLine(line);
+    cache.set(index, newGroup);
+
+    cacheLock.unlock();
   }
 
-  public static void header(String content) {
-    LogLine line = new LogLine(content, LogLevel.HEADER);
-    addLine(line);
-  }
+  private int getCurrentGroupIndex() {
 
-  public static void info(String content) {
-    LogLine line = new LogLine(content, LogLevel.INFO);
-    addLine(line);
-  }
+    // create a new LogRow if the last one is out-of-date
+    var lastGroup = cache.get(cache.size()-1);
+    if (lastGroup.getTime().isBefore(Calendar.getInstance().getTime().toInstant().minusMillis(millisPerCSVLine))) {
+      cache.add(new LogRow());
+    }
 
-  public static void warn(String content) {
-    LogLine line = new LogLine(content, LogLevel.WARNING);
-    addLine(line);
-  }
-
-  public static void error(String content) {
-    LogLine line = new LogLine(content, LogLevel.ERROR);
-    addLine(line);
-  }
-
-  private static void addLine(LogLine line) {
-    Logger logger = getInstance();
-    logger.cacheLock.lock();
-    logger.cache.add(line);
-    logger.cacheLock.unlock();
+    return cache.size()-1;
   }
 
   private void findFilePath() {
-    if (paused) {
+    if (paused || stopped) {
       return;
     }
 
     try {
       for (String tmpPath : FileConstants.PATH_USB) {
         if (new File(tmpPath).exists()) {
-          filePath = tmpPath;
-          System.out.println("Logger : File Path Found : " + filePath);
+          logFolderPath = tmpPath;
           return;
         }
       }
-      fileCreationFailed = true;
-      System.out.println("Logger : File Path Not Found : Logger printing to console");
+      stopped = true;
+      System.out.println("[" + fileName + " Logger] Log Folder Path Not Found : Killing Logger");
     } catch (SecurityException e) {
-      fileCreationFailed = true;
-      System.out.println("Logger : File Path Security Exception : Logger printing to console");
+      stopped = true;
+      System.out.println("[" + fileName + " Logger] Log Folder Path Security Exception : Killing Logger");
     }
   }
 
   private void makeFile() {
-    if (fileCreationFailed || paused) {
+    if (paused || stopped) {
       return;
     }
 
-    Date date = Calendar.getInstance().getTime();
-    file = new File(filePath + dateFormat.format(date) + ".txt");
+    file = new File(logFolderPath + fileName + ".csv");
+
 
     try {
+      String filePath = "";
       for (int i = 0; !file.createNewFile(); i++) {
         if (i > LoggerConstants.REPEAT_LIMIT_LOGGER_CREATION) {
-          fileCreationFailed = true;
-          System.out.println("Logger : File Creation Failed : Timed Out : Logger printing to console");
+          stopped = true;
+          System.out.println("[" + fileName + " Logger] File Creation Attempt Limit Exceeded : Killing Logger");
           return;
         }
-        file = new File(filePath + dateFormat.format(date) + "_(" + i + ").txt");
+        filePath = logFolderPath + fileName + "_(" + i + ").csv";
+        file = new File(filePath);
+
       }
+      
+      if (!stopped) {
+        System.out.println("[" + fileName + " Logger] Log File Path Found : " + filePath);
+      }
+
     } catch (IOException e) {
-      fileCreationFailed = true;
-      System.out.println("Logger : File Creation Failed : IOException : " + e + " : Logger printing to console");
+      stopped = true;
+      System.out.println("[" + fileName + " Logger] File Creation Failed : IOException : " + e + " : Killing Logger");
     } catch (SecurityException e) {
-      fileCreationFailed = true;
-      System.out.println("Logger : File Creation Failed : Security Exception : " + e + " : Logger printing to consol");
+      stopped = true;
+      System.out.println("[" + fileName + " Logger] File Creation Failed : Security Exception : " + e + " : Killing Logger");
     }
+
   }
 
   public void save() {
-    if (cache.isEmpty() || paused) {
-      return;
-    }
-
     cacheLock.lock();
-
-    if (fileCreationFailed) {
-      while (!cache.isEmpty()) {
-        System.out.println(cache.remove(0).toString());
-      }
-      cacheLock.unlock();
-      return;
-    }
 
     try {
       FileWriter writer = new FileWriter(file, true);
       while (!cache.isEmpty()) {
-        writer.write(cache.remove(0).toString());
+        
+        var group = cache.remove(0);
+
+        var timestamp = group.getTime();
+        if (timestamp.isBefore(dateCutoff)) {
+          timestamp = dateCutoff;
+        }
+        writer.write(timestamp.toString());
+        
+        for (String line : group.getLines()) {
+          writer.write(", " + line.toString());
+        }
+        
         writer.write(System.lineSeparator());
       }
       writer.close();
     } catch (IOException e) {
-      System.out.println("Logger : File Save Failed : IOExeption : " + e);
+      System.out.println("[" + fileName + " Logger] File Save Failed : IOExeption : " + e);
     } catch (SecurityException e) {
-      System.out.println("Logger : File Save Failed : Security Exeption : " + e);
+      System.out.println("[" + fileName + " Logger] File Save Failed : Security Exeption : " + e);
     } finally {
       if (!cache.isEmpty()) {
-        System.out.println("Logger : Save Error : Dumping Cache to Console");
+        System.out.println("[" + fileName + " Logger] Save Error : Killing Logger");
       }
-      while (!cache.isEmpty()) {
-        System.out.println(cache.remove(0).toString());
-      }
+      stopped = true;
+      
       cacheLock.unlock();
     }
     cacheLock.unlock();
@@ -186,11 +188,15 @@ public class Logger {
     thread = new Thread(() -> {
       try {
         while (!stopped) {
-          save();
+          if (!cache.isEmpty() && !paused && !stopped) {
+            save();
+          }
+
           Thread.sleep(1000 / LoggerConstants.SAVE_RATE);
         }
+        cache.clear();
       } catch (InterruptedException e) {
-        System.out.println("Logger : Save Thread Interrupted : " + e);
+        System.out.println("[" + fileName + " Logger] Save Thread Interrupted : " + e);
       }
     });
     thread.start();

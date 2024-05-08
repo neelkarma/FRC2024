@@ -23,6 +23,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.constants.DriveConstants;
+import frc.robot.utils.logger.Logger;
 
 public class SwerveModule {
   private final TalonFX driveMotor;
@@ -36,6 +37,7 @@ public class SwerveModule {
   private double angularOffset = 0; //radians
   private SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
+  private Logger logger;
   /**
    * Constructs a new SwerveModule for a MAX Swerve Module housing a Falcon
    * driving motor and a Neo 550 Turning Motor.
@@ -45,6 +47,10 @@ public class SwerveModule {
    * @param angularOffset Angular offset of the module in radians.
    */
   public SwerveModule(int drivingCANId, int turningCANId, double angularOffset) {
+
+    // create loggger
+    logger = new Logger("swerve-" + drivingCANId);
+
     driveMotor = new TalonFX(drivingCANId);
     turnMotor = new CANSparkMax(turningCANId, MotorType.kBrushless);
     this.angularOffset = angularOffset;
@@ -185,7 +191,14 @@ public class SwerveModule {
     //System.out.println(optimizedDesiredState.speedMetersPerSecond+" "+driveMotor.getVelocity()); //TODO remove
     //System.out.println(optimizedDesiredState.angle.getRadians() + Math.PI+" "+turnEncoder.getPosition()+ " " + desiredState.angle +" "+ correctedDesiredState.angle); //TODO remove
     this.desiredState = desiredState;
+
+    logger.log("pos: " + driveMotor.getPosition().getValue());
+    logger.log("vel: " + driveMotor.getVelocity().getValue());
+    logger.log("rot: " + getRotation2d());
+    
   }
+
+
   public SwerveModuleState optimize(
       SwerveModuleState desiredState, Rotation2d currentAngle) {
     var delta = desiredState.angle.minus(currentAngle);

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.RainbowLEDCommand;
 import frc.robot.shufflecontrol.ShuffleControl;
-import frc.robot.utils.logger.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,8 +22,6 @@ import frc.robot.utils.logger.Logger;
 public class Robot extends TimedRobot {
   private Command autoCommand;
   private RobotContainer robotContainer;
-
-  private final Logger logger = Logger.getInstance();
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -68,7 +65,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    Logger.header("Disabled ----------------------------------------------------------------------------------------");
+    System.out.println("Disabled ----------------------------------------------------------------------------------------");
   }
 
   @Override
@@ -87,9 +84,8 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.schedule();
     }
-    Logger.header("Auto Start --------------------------------------------------------------------------------------");
+    System.out.println("Auto Start --------------------------------------------------------------------------------------");
     Subsystems.drive.resetIntegral();
-    logger.unpause();
   }
 
   /** This function is called periodically during autonomous. */
@@ -107,9 +103,8 @@ public class Robot extends TimedRobot {
       autoCommand.cancel();
     }
 
-    Logger.header("Teleop Start ------------------------------------------------------------------------------------");
+    System.out.println("Teleop Start ------------------------------------------------------------------------------------");
     Subsystems.drive.resetIntegral();
-    logger.unpause();
   }
 
   /** This function is called periodically during operator control. */
@@ -121,8 +116,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-    Logger.header("Test Start --------------------------------------------------------------------------------------");
-    logger.unpause();
+    System.out.println("Test Start --------------------------------------------------------------------------------------");
   }
 
   /** This function is called periodically during test mode. */

@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Subsystems;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.DriveSub;
-import frc.robot.utils.logger.Logger;
 
 public class DriveForDistanceCommand extends InstantCommand {
   double startP;
