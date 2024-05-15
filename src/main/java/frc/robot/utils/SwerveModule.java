@@ -49,7 +49,7 @@ public class SwerveModule {
   public SwerveModule(int drivingCANId, int turningCANId, double angularOffset) {
 
     // create loggger
-    logger = new Logger("swerve-" + drivingCANId, new String[] {"pos", "vel", "rot"});
+    logger = new Logger("swerve-" + drivingCANId, new String[] {"Pos", "Vel", "Ang", "Ang Rate"});
 
     driveMotor = new TalonFX(drivingCANId);
     turnMotor = new CANSparkMax(turningCANId, MotorType.kBrushless);
@@ -90,7 +90,7 @@ public class SwerveModule {
     // APIs.
     turnEncoder.setPositionConversionFactor(DriveConstants.TURNING_ENCODER_POSITION_FACTOR);
     turnEncoder.setVelocityConversionFactor(DriveConstants.TURNING_ENCODER_VELOCITY_FACTOR);
-    //turnEncoder.setZeroOffset(angularOffset);
+    //turnEncoder.setZeroOffset(angularOffset); dont use
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
     // direction of
@@ -196,7 +196,8 @@ public class SwerveModule {
     logger.log(new double[] {
       driveMotor.getPosition().getValue(),
       driveMotor.getVelocity().getValue(),
-      getRotation2d().getDegrees()
+      getRotation2d().getDegrees(),
+      turnEncoder.getVelocity() * (180/Math.PI)
     });
 
   }

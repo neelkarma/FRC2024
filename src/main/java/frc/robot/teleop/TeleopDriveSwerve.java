@@ -21,8 +21,8 @@ public class TeleopDriveSwerve extends Command {
   @Override
   public void execute() {
 
-    var translateX  = throtFit.fit(-OI.applyAxisDeadband(OI.pilot.getLeftX()));
-    var translateY  = throtFit.fit( OI.applyAxisDeadband(OI.pilot.getLeftY()));
+    var translateX  = throtFit.fit(-OI.applyAxisDeadband(OI.pilot.getLeftX()))*0.2;
+    var translateY  = throtFit.fit( OI.applyAxisDeadband(OI.pilot.getLeftY()))*0.2;
     var rotate      = steerFit.fit( OI.applyAxisDeadband(OI.pilot.getRightX()));
 
     if (updateShuffleCounter > DriveConstants.updateShuffleInterval) {

@@ -31,9 +31,11 @@ public class Logger {
     findFilePath();
     makeFile();
 
-    save(columns);
+    if(!stopped){
+      save(columns);
 
-    launchThread();
+      launchThread();
+    }
   }
 
 
@@ -76,6 +78,10 @@ public class Logger {
     }
 
     file = new File(logFolderPath + fileName + ".csv");
+    if (file == null) {
+      stopped = true;
+      return;
+    }
 
 
     try {
@@ -116,8 +122,8 @@ public class Logger {
       FileWriter writer = new FileWriter(file, true);
 
       if (override.length != 0) {
-        writer.write(", "); // first cell is empty
-        for (int i = 1; i < override.length; i++) {
+        writer.write("Time");
+        for (int i = 0; i < override.length; i++) {
           writer.write(", " + override[i]);
         }
         writer.write(System.lineSeparator());
