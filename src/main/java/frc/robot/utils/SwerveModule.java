@@ -34,6 +34,8 @@ public class SwerveModule {
   private final VelocityVoltage driveController;
   private final SparkPIDController turnController;
 
+  private int lastOptimise = 0;
+
   private double angularOffset = 0; //radians
   private SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
@@ -176,8 +178,6 @@ public class SwerveModule {
         correctedDesiredState,
         getRotation2d());
     
-        
-        // Command driving and turning motors towards their respective setpoints.
     driveMotor.setControl(
       driveController
       .withVelocity(
@@ -203,16 +203,18 @@ public class SwerveModule {
   }
 
 
-  public SwerveModuleState optimize(
-      SwerveModuleState desiredState, Rotation2d currentAngle) {
+  public SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentAngle) {
     var delta = desiredState.angle.minus(currentAngle);
-    //System.out.println(delta+" "+ desiredState.angle.getRadians()+" "+ currentAngle+" "+Rotation2d.fromRadians(angularOffset)+" "+getRotation2d());
-    if (Math.abs(delta.getDegrees()) < 90.0) {
-      //System.out.println("----------------------"+desiredState.angle);
+    int limit = lastOptimise == 0 ? 90 : (lastOptimise>0 ? 135 : 45);
+
+    double error = Math.abs(delta.getDegrees());
+    if (error < limit) {
+      lastOptimise = error < 20 ? 0 : 1;
       return new SwerveModuleState(
           -desiredState.speedMetersPerSecond,
           desiredState.angle.rotateBy(Rotation2d.fromDegrees(180.0)));
     } else {
+      lastOptimise = error > 160 ? 0 : -1;
       return new SwerveModuleState(desiredState.speedMetersPerSecond, desiredState.angle);
     }
   }

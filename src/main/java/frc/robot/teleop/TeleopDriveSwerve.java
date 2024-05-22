@@ -20,7 +20,7 @@ public class TeleopDriveSwerve extends Command {
 
   @Override
   public void execute() {
-
+    System.out.println(Math.atan2(OI.applyAxisDeadband(OI.pilot.getLeftY()),OI.applyAxisDeadband(OI.pilot.getLeftX())));
     var translateX  = throtFit.fit(-OI.applyAxisDeadband(OI.pilot.getLeftX()))*0.2;
     var translateY  = throtFit.fit( OI.applyAxisDeadband(OI.pilot.getLeftY()))*0.2;
     var rotate      = steerFit.fit( OI.applyAxisDeadband(OI.pilot.getRightX()));
