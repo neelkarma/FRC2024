@@ -37,7 +37,7 @@ public class DriveConstants {
   /** Magnitude slew rate in percent per second (1 = 100%) */
   public static final double MAGNITUDE_SLEW_RATE = 1.8;
   /** Rotational slew rate in percent per second (1 = 100%) */
-  public static final double ROTATIONAL_SLEW_RATE = 2.0;
+  public static final double ROTATIONAL_SLEW_RATE = 8.0;
 
   /** Gear ratio of the MAX Swerve Module driving motor */
   public static final double DRIVE_GEAR_RATIO = 4.71;
@@ -167,8 +167,8 @@ public class DriveConstants {
   public static final double TURNING_ENCODER_POSITION_PID_MAX_INPUT = TURNING_ENCODER_POSITION_FACTOR; // radians
 
   // TODO tune PID
-  public static final double DRIVE_P = 0.5;
-  public static final double DRIVE_I = 0;//0.01;
+  public static final double DRIVE_P = 0.7;
+  public static final double DRIVE_I = 0.0;//5;
   public static final double DRIVE_D = 0.05;
   public static final double DRIVING_FF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
 
@@ -202,6 +202,6 @@ public class DriveConstants {
    * {min throt,max throt,curve power}, {min turn throt, max turn throt,curve
    * power}
    */
-  public static double[][] PILOT_SETTINGS = { { 0, 1, 2 }, { 0, 1, 3, 0.3 } };
+  public static double[][] PILOT_SETTINGS = { { 0, 1, 4 }, { 0, 1, 3, 0.3 } };
 
 }

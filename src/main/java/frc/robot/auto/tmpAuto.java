@@ -10,11 +10,10 @@ import frc.robot.commands.DriveForDistanceCommand;
  * Naive Auto - Literally justs drives out of the starting zone to get mobility
  * points.
  */
-public class NaiveAuto extends SequentialCommandGroup {
-  public NaiveAuto() {
+public class tmpAuto extends SequentialCommandGroup {
+  public tmpAuto() {
     addCommands(
-        new WaitCommand(10),
         // Start driving the robot forwards
-        new DriveForDistanceCommand(0,-0.7,4));
+        new DriveForDistanceCommand(0,-0.1,0.5));
   }
 }

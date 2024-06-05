@@ -186,6 +186,9 @@ public class DriveSub extends SubsystemBase {
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+    if (xSpeed == 0 && ySpeed == 0) {
+      resetIntegral();
+    }
     double xSpeedCommanded;
     double ySpeedCommanded;
 
@@ -348,6 +351,7 @@ public class DriveSub extends SubsystemBase {
    * This should be called every robot tick, in the periodic function.
    */
   public void updateOdometry() {
+    //System.out.println(poseEstimator.getEstimatedPosition());
     poseEstimator.update(
         getHeading(),
         new SwerveModulePosition[] {
@@ -356,6 +360,10 @@ public class DriveSub extends SubsystemBase {
             backLeft.getPosition(),
             backRight.getPosition()
         });
+        //System.out.println(frontLeft.getPosition() + " " +
+        //    frontRight.getPosition() + " " +
+        //    backLeft.getPosition() + " " +
+        //    backRight.getPosition());
 
     photon.getEstimatedGlobalPose()
         .ifPresent((visionResult) -> {

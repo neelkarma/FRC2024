@@ -1,8 +1,11 @@
 package frc.robot.teleop;
 
+import org.ejml.equation.Variable;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
 import frc.robot.Subsystems;
+import frc.robot.Variables;
 import frc.robot.constants.DriveConstants;
 import frc.robot.shufflecontrol.ShuffleControl;
 import frc.robot.utils.CurveFit;
@@ -20,10 +23,14 @@ public class TeleopDriveSwerve extends Command {
 
   @Override
   public void execute() {
+    var translateX  = throtFit.fit(-OI.applyAxisDeadband(OI.pilot.getLeftX()))*0.15;
+    var translateY  = throtFit.fit( OI.applyAxisDeadband(OI.pilot.getLeftY()))*0.15;
+    var rotate      = steerFit.fit( OI.applyAxisDeadband(OI.pilot.getRightX()))*0.3;
 
-    var translateX  = throtFit.fit(-OI.applyAxisDeadband(OI.pilot.getLeftX()));
-    var translateY  = throtFit.fit( OI.applyAxisDeadband(OI.pilot.getLeftY()));
-    var rotate      = steerFit.fit( OI.applyAxisDeadband(OI.pilot.getRightX()));
+    translateX = translateX * (Variables.driveSlow ? 0.4 : 1);
+    translateY = translateY * (Variables.driveSlow ? 0.4 : 1);
+    rotate     = rotate     * (Variables.driveSlow ? 0.4 : 1);
+
 
     if (updateShuffleCounter > DriveConstants.updateShuffleInterval) {
       ShuffleControl.driveTab.setControlAxis(translateX, translateY, rotate);

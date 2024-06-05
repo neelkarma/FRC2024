@@ -111,14 +111,14 @@ public class RobotContainer {
     OI.pilot.rightTrigger()
         .whileTrue(
             new StartEndCommand(
-                () -> Subsystems.shooter.setSpeed(0.65, -0.18),
+                () -> Subsystems.shooter.setAmp(),
                 Subsystems.shooter::stop,
                 Subsystems.shooter));
     // shoot
     OI.pilot.rightBumper()
         .whileTrue(
             new StartEndCommand(
-                () -> Subsystems.shooter.setSpeed(.98,0),
+                () -> Subsystems.shooter.setSpeaker(),
                 Subsystems.shooter::stop,
                 Subsystems.shooter));
     
@@ -126,6 +126,8 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(() -> Subsystems.drive.zeroHeading()) 
         );
+    OI.pilot.leftStick()
+        .onTrue(new InstantCommand(() -> Variables.driveSlow = !Variables.driveSlow));
 
     // pivot up
     //OI.pilot.povRight().whileTrue(Subsystems.pivot.run(Subsystems.pivot::up));
@@ -230,6 +232,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoProvider.getSelected();
+    return null;//utoutoProvider.getSelected();
   }
 }

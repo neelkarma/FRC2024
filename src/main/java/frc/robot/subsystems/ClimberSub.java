@@ -24,15 +24,14 @@ public class ClimberSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    var servoUnlocked = servo.getPosition() == ClimberConstants.SERVO_LOCKED_POS;
+    //var servoUnlocked = servo.getPosition() == ClimberConstants.SERVO_LOCKED_POS;
     var motorIsCommanded = targetSpeed != 0;
 
-    if (servoUnlocked == motorIsCommanded && (targetSpeed < 0 || climberStop.get())) {
-      motor.set(targetSpeed);
-    } else if (servoUnlocked && !motorIsCommanded) {
+    if (!motorIsCommanded) {
       motor.set(0);
       servo.setPosition(ClimberConstants.SERVO_LOCKED_POS);
-    } else if (!servoUnlocked && motorIsCommanded) {
+    } else if (motorIsCommanded) {
+      motor.set(targetSpeed);
       servo.setPosition(ClimberConstants.SERVO_UNLOCKED_POS);
     }
   }

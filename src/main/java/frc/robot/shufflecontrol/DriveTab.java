@@ -4,6 +4,8 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.Subsystems;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 import java.util.Map;
@@ -57,6 +59,18 @@ public class DriveTab {
       .withSize(1, 1).withPosition(5, 3)
       .withWidget(BuiltInWidgets.kDial).withProperties(Map.of("min", -1, "max", 1))
       .getEntry();
+
+  private GenericEntry ampS = drive.add("amp spd", Subsystems.shooter.ampSpd).getEntry();
+  private GenericEntry ampD = drive.add("amp Dif", Subsystems.shooter.ampDiff).getEntry();
+  private GenericEntry SpeS = drive.add("Speaker spd", Subsystems.shooter.SpeakerSpd).getEntry();
+  private GenericEntry SpeD = drive.add("Speaker Dif", Subsystems.shooter.speakerDiff).getEntry();
+
+  public void updateShooterSpd(){
+    Subsystems.shooter.ampSpd = ampS.getDouble(Subsystems.shooter.ampSpd);
+    Subsystems.shooter.ampDiff = ampD.getDouble(Subsystems.shooter.ampDiff);
+    Subsystems.shooter.SpeakerSpd = SpeS.getDouble(Subsystems.shooter.SpeakerSpd);
+    Subsystems.shooter.speakerDiff = SpeD.getDouble(Subsystems.shooter.speakerDiff);
+  }
 
   public void setControlAxis(double contX, double contY, double contR) {
     driveX.setDouble(contX);
