@@ -10,13 +10,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
@@ -68,7 +68,7 @@ public class DriveSub extends SubsystemBase {
   private final ADIS16470_IMU imu = new ADIS16470_IMU();
 
   // Photon Bridge
-  public final PhotonBridge photon = new PhotonBridge();
+  // public final PhotonBridge photon = new PhotonBridge();
 
   // Field for robot viz
   private final Field2d field = new Field2d();
@@ -83,7 +83,7 @@ public class DriveSub extends SubsystemBase {
   private double prevTime = WPIUtilJNI.now() * 1e-6;
 
   // Pose estimation class for tracking robot pose
-  SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+  SwerveDriveOdometry odometry = new SwerveDriveOdometry(
       DriveConstants.DRIVE_KINEMATICS,
       Rotation2d.fromDegrees(imu.getAngle(IMUAxis.kZ)),
       new SwerveModulePosition[] {
@@ -141,7 +141,7 @@ public class DriveSub extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return RobotBase.isSimulation() ? poseSim : poseEstimator.getEstimatedPosition();
+    return RobotBase.isSimulation() ? poseSim : odometry.getPoseMeters();
   }
 
   /**
@@ -150,8 +150,13 @@ public class DriveSub extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
-    System.out.println("Hit");
-    poseEstimator.resetPosition(
+    if (RobotBase.isSimulation()) {
+      imuSim.setGyroAngleZ(pose.getRotation().getDegrees());
+      poseSim = pose;
+      return;
+    }
+
+    odometry.resetPosition(
         getHeading(),
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
@@ -160,15 +165,18 @@ public class DriveSub extends SubsystemBase {
             backRight.getPosition()
         },
         pose);
-    poseSim = pose;
   }
 
-  // For reference, the below code is the actual drive function if the last two
-  // arguments are false
+  // For reference, the below code is the actual drive function if the last
+  // argument is false
+  //
   // public void drive(double xSpeed, double ySpeed, double rot) {
-  // var states = DriveConstants.DRIVE_KINEMATICS
-  // .toSwerveModuleStates(
+  // var states = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
   // ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getHeading()));
+  //
+  // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates,
+  // DriveConstants.MAX_SPEED);
+  //
   // frontLeft.setDesiredState(states[0]);
   // frontRight.setDesiredState(states[1]);
   // backLeft.setDesiredState(states[2]);
@@ -351,8 +359,7 @@ public class DriveSub extends SubsystemBase {
    * This should be called every robot tick, in the periodic function.
    */
   public void updateOdometry() {
-    //System.out.println(poseEstimator.getEstimatedPosition());
-    poseEstimator.update(
+    odometry.update(
         getHeading(),
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
@@ -365,16 +372,16 @@ public class DriveSub extends SubsystemBase {
         //    backLeft.getPosition() + " " +
         //    backRight.getPosition());
 
-    photon.getEstimatedGlobalPose()
-        .ifPresent((visionResult) -> {
-          var visionPose = visionResult.estimatedPose.toPose2d();
+    // photon.getEstimatedGlobalPose()
+    // .ifPresent((visionResult) -> {
+    // var visionPose = visionResult.estimatedPose.toPose2d();
 
-          // Reject any egregiously incorrect vision pose estimates
-          if (visionPose.getTranslation().getDistance(getPose().getTranslation()) > 1)
-            return;
+    // // Reject any egregiously incorrect vision pose estimates
+    // if (visionPose.getTranslation().getDistance(getPose().getTranslation()) > 1)
+    // return;
 
-          poseEstimator.addVisionMeasurement(visionPose, 0.02);
-        });
+    // odometry.addVisionMeasurement(visionPose, 0.02);
+    // });
 
     field.setRobotPose(getPose());
   }
@@ -389,7 +396,7 @@ public class DriveSub extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    var speeds = DriveConstants.DRIVE_KINEMATICS.toChassisSpeeds(
+    final var speeds = DriveConstants.DRIVE_KINEMATICS.toChassisSpeeds(
         frontLeft.getDesiredState(),
         frontRight.getDesiredState(),
         backLeft.getDesiredState(),
@@ -404,6 +411,6 @@ public class DriveSub extends SubsystemBase {
             speeds.vyMetersPerSecond * 0.02,
             speeds.omegaRadiansPerSecond * 0.02));
 
-    photon.simulationPeriodic(getPose());
+    // photon.simulationPeriodic(getPose());
   }
 }

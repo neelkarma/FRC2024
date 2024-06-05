@@ -47,4 +47,18 @@ public class ShooterSub extends SubsystemBase {
     upperMotor.stopMotor();
     lowerMotor.stopMotor();
   }
+
+  public void setSpeed(double speed, double spin) {
+    var upperSpeed = speed * (1 + spin);
+    var lowerSpeed = speed * (1 - spin);
+
+    final var upperAbs = Math.abs(upperSpeed);
+    final var lowerAbs = Math.abs(lowerSpeed);
+
+    upperSpeed -= Math.copySign(Math.max(upperAbs - 1, 0), upperSpeed);
+    lowerSpeed -= Math.copySign(Math.max(lowerAbs - 1, 0), lowerSpeed);
+
+    upperMotor.set(MathUtil.clamp(upperSpeed, -1, 1));
+    lowerMotor.set(MathUtil.clamp(lowerSpeed, -1, 1));
+  }
 }

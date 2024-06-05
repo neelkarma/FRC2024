@@ -3,8 +3,6 @@ package frc.robot.utils.motorsupplier;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import frc.robot.utils.logger.Logger;
-
 public class TalonMotorSupplier extends MotorSupplier<WPI_TalonSRX> {
   public TalonMotorSupplier(int port) {
     super(port);
@@ -12,12 +10,12 @@ public class TalonMotorSupplier extends MotorSupplier<WPI_TalonSRX> {
 
   public WPI_TalonSRX get() {
     if (port < 0) {
-      Logger.error("MotorInfo : motor port num < 0, check port is defined : " + port);
+      System.out.println("MotorInfo : motor port num < 0, check port is defined : " + port);
       return new WPI_TalonSRX(99);
     }
     WPI_TalonSRX talon = new WPI_TalonSRX(port);
     if (!talon.isAlive()) {
-      Logger.warn(
+      System.out.println(
           "MotorInfo : new WPI_TalonSRX on port " + port + "not found, may not exist or be of wrong type");
     }
     talon.setInverted(invert);

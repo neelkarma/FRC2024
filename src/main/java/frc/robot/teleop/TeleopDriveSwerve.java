@@ -23,14 +23,10 @@ public class TeleopDriveSwerve extends Command {
 
   @Override
   public void execute() {
-    var translateX  = throtFit.fit(-OI.applyAxisDeadband(OI.pilot.getLeftX()))*0.15;
-    var translateY  = throtFit.fit( OI.applyAxisDeadband(OI.pilot.getLeftY()))*0.15;
-    var rotate      = steerFit.fit( OI.applyAxisDeadband(OI.pilot.getRightX()))*0.3;
-
-    translateX = translateX * (Variables.driveSlow ? 0.4 : 1);
-    translateY = translateY * (Variables.driveSlow ? 0.4 : 1);
-    rotate     = rotate     * (Variables.driveSlow ? 0.4 : 1);
-
+    System.out.println(Math.atan2(OI.applyAxisDeadband(OI.pilot.getLeftY()),OI.applyAxisDeadband(OI.pilot.getLeftX())));
+    var translateX  = throtFit.fit(-OI.applyAxisDeadband(OI.pilot.getLeftX()))*0.2;
+    var translateY  = throtFit.fit( OI.applyAxisDeadband(OI.pilot.getLeftY()))*0.2;
+    var rotate      = steerFit.fit( OI.applyAxisDeadband(OI.pilot.getRightX()));
 
     if (updateShuffleCounter > DriveConstants.updateShuffleInterval) {
       ShuffleControl.driveTab.setControlAxis(translateX, translateY, rotate);

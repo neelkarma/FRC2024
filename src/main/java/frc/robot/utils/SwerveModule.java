@@ -23,6 +23,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.constants.DriveConstants;
+import frc.robot.utils.logger.Logger;
 
 public class SwerveModule {
   private final TalonFX driveMotor;
@@ -33,9 +34,12 @@ public class SwerveModule {
   private final VelocityVoltage driveController;
   private final SparkPIDController turnController;
 
+  private int lastOptimise = 0;
+
   private double angularOffset = 0; //radians
   private SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
+  private Logger logger;
   /**
    * Constructs a new SwerveModule for a MAX Swerve Module housing a Falcon
    * driving motor and a Neo 550 Turning Motor.
@@ -45,6 +49,10 @@ public class SwerveModule {
    * @param angularOffset Angular offset of the module in radians.
    */
   public SwerveModule(int drivingCANId, int turningCANId, double angularOffset) {
+
+    // create loggger
+    logger = new Logger("swerve-" + drivingCANId, new String[] {"Pos", "Vel", "Ang", "Ang Rate"});
+
     driveMotor = new TalonFX(drivingCANId);
     turnMotor = new CANSparkMax(turningCANId, MotorType.kBrushless);
     this.angularOffset = angularOffset;
@@ -84,7 +92,7 @@ public class SwerveModule {
     // APIs.
     turnEncoder.setPositionConversionFactor(DriveConstants.TURNING_ENCODER_POSITION_FACTOR);
     turnEncoder.setVelocityConversionFactor(DriveConstants.TURNING_ENCODER_VELOCITY_FACTOR);
-    //turnEncoder.setZeroOffset(angularOffset);
+    //turnEncoder.setZeroOffset(angularOffset); dont use
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
     // direction of
@@ -171,8 +179,6 @@ public class SwerveModule {
         correctedDesiredState,
         getRotation2d());
     
-        
-        // Command driving and turning motors towards their respective setpoints.
     driveMotor.setControl(
       driveController
       .withVelocity(
@@ -186,17 +192,30 @@ public class SwerveModule {
     //System.out.println(optimizedDesiredState.speedMetersPerSecond+" "+driveMotor.getVelocity()); //TODO remove
     //System.out.println(optimizedDesiredState.angle.getRadians() + Math.PI+" "+turnEncoder.getPosition()+ " " + desiredState.angle +" "+ correctedDesiredState.angle); //TODO remove
     this.desiredState = desiredState;
+    
+
+    logger.log(new double[] {
+      driveMotor.getPosition().getValue(),
+      driveMotor.getVelocity().getValue(),
+      getRotation2d().getDegrees(),
+      turnEncoder.getVelocity() * (180/Math.PI)
+    });
+
   }
-  public SwerveModuleState optimize(
-      SwerveModuleState desiredState, Rotation2d currentAngle) {
+
+
+  public SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentAngle) {
     var delta = desiredState.angle.minus(currentAngle);
-    //System.out.println(delta+" "+ desiredState.angle.getRadians()+" "+ currentAngle+" "+Rotation2d.fromRadians(angularOffset)+" "+getRotation2d());
-    if (Math.abs(delta.getDegrees()) < 90.0) {
-      //System.out.println("----------------------"+desiredState.angle);
+    int limit = lastOptimise == 0 ? 90 : (lastOptimise>0 ? 135 : 45);
+
+    double error = Math.abs(delta.getDegrees());
+    if (error < limit) {
+      lastOptimise = error < 20 ? 0 : 1;
       return new SwerveModuleState(
           -desiredState.speedMetersPerSecond,
           desiredState.angle.rotateBy(Rotation2d.fromDegrees(180.0)));
     } else {
+      lastOptimise = error > 160 ? 0 : -1;
       return new SwerveModuleState(desiredState.speedMetersPerSecond, desiredState.angle);
     }
   }
