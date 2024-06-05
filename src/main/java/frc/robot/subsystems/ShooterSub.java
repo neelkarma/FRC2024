@@ -21,18 +21,6 @@ public class ShooterSub extends SubsystemBase {
     addChild("Slave Motor", lowerMotor);
   }
 
-  /**
-   * Sets the speed of the shooter wheel.
-   * 
-   * @param speed Speed, from -1 to 1.
-   */
-  public void setSpeed(double speed, double diff) {
-    double speedUp = MathUtil.clamp(speed * (1 + diff), -1, 1);
-    double speedDown = MathUtil.clamp(speed * (1 - diff), -1, 1);
-    upperMotor.set(speedUp);
-    lowerMotor.set(speedDown);
-  }
-
   public void setAmp(){
     ShuffleControl.driveTab.updateShooterSpd();
     setSpeed(ampSpd, ampDiff);

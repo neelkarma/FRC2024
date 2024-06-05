@@ -1,4 +1,4 @@
-package frc.robot.utils;
+package frc.robot.utils.RangeMath;
 
 import edu.wpi.first.math.MathUtil;
 

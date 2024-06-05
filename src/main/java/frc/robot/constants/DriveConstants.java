@@ -202,6 +202,6 @@ public class DriveConstants {
    * {min throt,max throt,curve power}, {min turn throt, max turn throt,curve
    * power}
    */
-  public static double[][] PILOT_SETTINGS = { { 0, 1, 4 }, { 0, 1, 3, 0.3 } };
+  public static double[][] PILOT_SETTINGS = { { 0, 1, 4 }, { 0, 1, 3, 0 } };
 
 }
