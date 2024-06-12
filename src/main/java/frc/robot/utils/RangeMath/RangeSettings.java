@@ -1,17 +1,22 @@
 package frc.robot.utils.RangeMath;
 
-import java.util.Optional;
-
 public class RangeSettings {
-  protected double minThrottle = 0; // >= 0
-  protected double maxThrottle = 1; // <= 1
-  protected double minTurn = 0;     // >= 0
-  protected double maxTurn = 1;     // <= 1
+  protected enum axis{
+    x,
+    y,
+    r
+  };
 
-  protected double turnCurvePower = 1;     // often 2 to 4
-  protected double throttleCurvePower = 1;     // often 2 to 4
+  protected double[] min = {0,0,0}; // >= 0
+  protected double[] max = {1,1,1}; // <= 1
+  protected boolean[] invert = {false, false, false};
+
+  protected double[] pow = {1,1,1}; // often 2 to 4
   
-  protected double throttleEffectOnTurn = 1;
+  protected double[] deadband = {0,0,0}; // 0 <= x <= 1
+  
+  protected double effectXonR = 0;
+  protected double effectYonR = 0;
 
 
   public RangeSettings(){
@@ -19,51 +24,68 @@ public class RangeSettings {
   }
 
   /**
-   * 
-   * @param minThrottle
-   * @param maxThrottle
-   * @param minTurn
-   * @param maxTurn
-   * @param throttleEffect
+   * @param minX smallest x power outside deadband (0 < x < 1)
+   * @param maxX largest x power outside deadband (0 < x < 1)
+   * @param powX curve power applied to x output (output^powX) (0 < x)
+   * @param deadbandX minimum input that will not be set to 0
+   * @param minR smallest turn power outside deadband (0 < x < 1)
+   * @param maxR largest turn power outside deadband (0 < x < 1)
+   * @param powR curve power applied to turn output (output^powX) (0 < x)
+   * @param deadbandR minimum input that will not be set to 0
+   * @param effectXonR reduces turn power when throttle is low (tank bots turn around twice as fast when not moving this reduces that to be consistant across speeds)
    * @return
    */
-  public static RangeSettings InitTankBot(double minThrottle, double maxThrottle, double throttleCurve,
-                                      double minTurn, double maxTurn, double turnCurve, double throttleEffect){
+  public static RangeSettings InitTankBot(double minX, double maxX, double powX, double deadbandX, boolean invertX,
+                                          double minR, double maxR, double powR, double deadbandR, boolean invertR,
+                                          double effectXonR){
     RangeSettings rangSets = new RangeSettings();
-    rangSets.setThrottle(minThrottle, maxThrottle, throttleCurve);
-    rangSets.setTurn(minTurn, maxTurn, turnCurve, throttleEffect);
+    rangSets.setX(minX, maxX, powX, deadbandX, invertX);
+    rangSets.setY(0,0,0, 0, false);
+    rangSets.setR(minR, maxR, powR, deadbandR, invertR, effectXonR, 0);
     return rangSets;
   }
 
   /**
-   * 
-   * @param minThrottle
-   * @param maxThrottle
-   * @param minTurn
-   * @param maxTurn
-   * @param throttleEffect
+   * @param minX smallest x power outside deadband (0 < x < 1)
+   * @param maxX largest x power outside deadband (0 < x < 1)
+   * @param powX curve power applied to x output (output^powX) (0 < x)
+   * @param minY smallest y power outside deadband (0 < x < 1)
+   * @param maxY largest y power outside deadband (0 < x < 1)
+   * @param powY curve power applied to y output (output^powX) (0 < x)
+   * @param minR smallest turn power outside deadband (0 < x < 1)
+   * @param maxR largest turn power outside deadband (0 < x < 1)
+   * @param powR curve power applied to turn output (output^powX) (0 < x)
+   * @param effectXonR reduces turn power when throttle is low (tank bots turn around twice as fast when not moving this reduces that to be consistant across speeds)
    * @return
    */
-  public static RangeSettings InitSwerveBot(double minThrottle, double maxThrottle, double throttleCurve,
-                                      double minTurn, double maxTurn, double turnCurve){
+  public static RangeSettings InitSwerveBot(double minX, double maxX, double powX, double deadbandX, boolean invertX,
+                                          double minY, double maxY, double powY, double deadbandY, boolean invertY,
+                                          double minR, double maxR, double powR, double deadbandR, boolean invertR){
     RangeSettings rangSets = new RangeSettings();
-    rangSets.setThrottle(minThrottle, maxThrottle, throttleCurve);
-    rangSets.setTurn(minTurn, maxTurn, turnCurve, 0);
+    rangSets.setX(minX, maxX, powX, deadbandX, invertX);
+    rangSets.setY(minY, maxY, powY, deadbandY, invertY);
+    rangSets.setR(minR, maxR, powR, deadbandR, invertR, 0, 0);
     return rangSets;
   }
 
-  /**
-   * 
-   * @param ThrottleRange [min, max]
-   * @param Throttlecurve
-   */
-  public void setThrottle(double minThrottle, double maxThrottle, double throttleCurve){
-    if(minThrottle > 1 || maxThrottle < 0 || minThrottle > maxThrottle){
+  public void setX(double minX, double maxX, double powX, double deadbandX, boolean invertX){
+    if(minX > 1 || maxX < 0 || minX > maxX){
       throw new IllegalArgumentException("Min > 1, Max < 0, or Min > Max");
     }
-    this.minThrottle = minThrottle;
-    this.maxThrottle = maxThrottle;
-    this.throttleCurvePower = throttleCurve;
+    this.min[0] = minX;
+    this.max[0] = maxX;
+    this.pow[0] = powX;
+    this.invert[0] = invertX;
+  }
+
+  public void setY(double minY, double maxY, double powY, double deadbandY, boolean invertY){
+    if(minY > 1 || maxY < 0 || minY > maxY){
+      throw new IllegalArgumentException("Min > 1, Max < 0, or Min > Max");
+    }
+    this.min[1] = minY;
+    this.max[1] = maxY;
+    this.pow[1] = powY;
+    this.invert[1] = invertY;
   }
 
   /**
@@ -71,15 +93,18 @@ public class RangeSettings {
    * @param ThrottleRange [min, max]
    * @param Throttlecurve
    */
-  public void setTurn(double minTurn, double maxTurn, double turnCurve, double throttleEffect){
-    if(minTurn > 1 || maxTurn < 0 || minTurn > maxTurn){
+  public void setR(double minR, double maxR, double powR, double deadbandR, boolean invertR,
+                   double effectXonR, double effectYonR){
+    if(minR > 1 || maxR < 0 || minR > maxR){
       throw new IllegalArgumentException("Min > 1, Max < 0, or Min > Max");
-    } else if(throttleEffect < 0 || throttleEffect > 1) {
+    } else if(effectXonR < 0 || effectXonR > 1 || effectYonR < 0 || effectYonR > 1) {
       throw new IllegalArgumentException("throttleEffect < 0 or > 1");
     }
-    this.minTurn = minTurn;
-    this.maxTurn = maxTurn;
-    this.throttleCurvePower = turnCurve;
-    this.throttleEffectOnTurn = throttleEffect;
+    this.min[2] = minR;
+    this.max[2] = maxR;
+    this.pow[2] = powR;
+    this.invert[2] = invertR;
+    this.effectXonR = effectXonR;
+    this.effectYonR = effectYonR;
   }
 }

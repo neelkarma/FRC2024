@@ -178,12 +178,12 @@ public class SwerveModule {
     SwerveModuleState optimizedDesiredState = /*SwerveModuleState.*/optimize(
         correctedDesiredState,
         getRotation2d());
-    
+
     driveMotor.setControl(
       driveController
       .withVelocity(
         // withVelocity accepts rps, not mps
-        optimizedDesiredState.speedMetersPerSecond / DriveConstants.WHEEL_CIRCUMFERENCE_METERS)
+        optimizedDesiredState.speedMetersPerSecond / DriveConstants.WHEEL_CIRCUMFERENCE_METERS )
         );//.withFeedForward(DriveConstants.DRIVING_FF));
       turnController.setReference(
         optimizedDesiredState.angle.getRadians() + Math.PI,

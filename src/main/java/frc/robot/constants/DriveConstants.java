@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.utils.RangeMath.RangeSettings;
 
 // Originally from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java
 // You can reference the above URL if you want to check the validity of any non-robot-specific constants.
@@ -111,11 +112,14 @@ public class DriveConstants {
   // Module Constants
 
   /**
-   * The MAXSwerve module can be configured with one of three pinion gears: 12T,
-   * 13T, or 14T. This changes the drive speed of the module (a pinion gear with
+   * Gear attached direct to the drive motor
+   * The MAXSwerve module can be configured with several different gears.
+   * This changes the drive speed of the module (a pinion gear with
    * more teeth will result in a robot that drives faster).
+   * []
    */
   public static final int DRIVING_MOTOR_PINION_TEETH = 14;
+  public static final int DRIVING_MOTOR_SPUR_TEETH = 14;
 
   /** Drive motor inversion. */
   public static final InvertedValue DRIVE_MOTOR_INVERTED = InvertedValue.Clockwise_Positive;
@@ -146,7 +150,7 @@ public class DriveConstants {
    * 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
    * teeth on the bevel pinion
    */
-  public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
+  public static final double DRIVING_MOTOR_REDUCTION = (22.0/DRIVING_MOTOR_PINION_TEETH) * (45.0/15.0);
 
   /** Free speed of the wheel in rps */
   public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS
@@ -197,11 +201,9 @@ public class DriveConstants {
       MAX_ANGULAR_SPEED,
       MAX_ANGULAR_ACCELERATION);
 
-  /**
-   * settings for robot drive in default teleop
-   * {min throt,max throt,curve power}, {min turn throt, max turn throt,curve
-   * power}
-   */
-  public static double[][] PILOT_SETTINGS = { { 0, 1, 4 }, { 0, 1, 3, 0 } };
+
+  public static RangeSettings PILOT_SETTINGS = RangeSettings.InitSwerveBot(0, 1, 4, 0.1, true,
+                                                                           0, 1, 4, 0.1, false,
+                                                                           0, 1, 3, 0.1, false);
 
 }

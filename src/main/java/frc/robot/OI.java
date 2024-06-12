@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.OIConstants;
 
@@ -17,16 +16,6 @@ public class OI {
     return Math.abs(pilot.getLeftY()) > OIConstants.CONTROLLER_AXIS_DEADZONE ||
         Math.abs(pilot.getRightY()) > OIConstants.CONTROLLER_AXIS_DEADZONE ||
         Math.abs(pilot.getRightX()) > OIConstants.CONTROLLER_AXIS_DEADZONE;
-  }
-
-  /**
-   * Applies the controller axis deadband to a value
-   * 
-   * @param value The value to apply the deadband to
-   * @return The value with the deadband applied
-   */
-  public static double applyAxisDeadband(double value) {
-    return MathUtil.applyDeadband(value, OIConstants.CONTROLLER_AXIS_DEADZONE);
   }
 
   /** The pilot's controller */
