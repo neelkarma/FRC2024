@@ -1,17 +1,16 @@
 package frc.robot.teleop;
 
-import org.ejml.equation.Variable;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
 import frc.robot.Subsystems;
-import frc.robot.Variables;
 import frc.robot.constants.DriveConstants;
 import frc.robot.shufflecontrol.ShuffleControl;
 import frc.robot.utils.RangeMath.CurveFit;
+import frc.robot.utils.RangeMath.RangeSettings;
 
 public class TeleopDriveSwerve extends Command {
   private int updateShuffleCounter = 0;
+  public RangeSettings settings = DriveConstants.PILOT_SETTINGS;
 
   public TeleopDriveSwerve() {
     addRequirements(Subsystems.drive);
@@ -19,9 +18,8 @@ public class TeleopDriveSwerve extends Command {
 
   @Override
   public void execute() {
-    //System.out.println(Math.atan2(OI.applyAxisDeadband(OI.pilot.getLeftY()),OI.applyAxisDeadband(OI.pilot.getLeftX())));
     double[] control = CurveFit.fitDrive(new double[]{OI.pilot.getLeftX(), OI.pilot.getLeftY(), 
-                                         OI.pilot.getRightX()}, DriveConstants.PILOT_SETTINGS);
+                                         OI.pilot.getRightX()}, settings);
     var translateX  = control[0];
     var translateY  = control[1];
     var rotate      = control[2];

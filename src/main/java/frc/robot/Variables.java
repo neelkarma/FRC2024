@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import frc.robot.constants.DriveConstants;
+import frc.robot.utils.RangeMath.RangeSettings;
+
 /**
  * Variables - use this class to define and set globally-accessed
  * settings/options/variables.
@@ -17,4 +20,6 @@ public final class Variables {
   /** LED string brightness modifier (0-1) */
   public static double ledBrightnessMod = 1;
   public static boolean driveSlow = false;
+
+  public static RangeSettings driveSettings = DriveConstants.PILOT_SETTINGS;
 }
