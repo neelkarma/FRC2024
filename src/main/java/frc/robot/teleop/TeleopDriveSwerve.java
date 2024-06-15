@@ -19,8 +19,10 @@ public class TeleopDriveSwerve extends Command {
 
   @Override
   public void execute() {
+    double limiter = 1;//OI.pilot.getLeftTriggerAxis(); //TODO enable this when everything else is tested
+    // organise feild relitive switch
     double[] control = CurveFit.fitDrive(new double[]{OI.pilot.getLeftX(), OI.pilot.getLeftY(), 
-                                         OI.pilot.getRightX(), 1}, settings);
+                                         OI.pilot.getRightX(), limiter}, settings);
     var translateX  = control[0];
     var translateY  = control[1];
     var rotate      = control[2];
