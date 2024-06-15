@@ -19,7 +19,7 @@ public class TeleopDriveSwerve extends Command {
   @Override
   public void execute() {
     double[] control = CurveFit.fitDrive(new double[]{OI.pilot.getLeftX(), OI.pilot.getLeftY(), 
-                                         OI.pilot.getRightX()}, settings);
+                                         OI.pilot.getRightX(), 1}, settings);
     var translateX  = control[0];
     var translateY  = control[1];
     var rotate      = control[2];

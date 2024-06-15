@@ -24,10 +24,13 @@ public class CurveFit {
    * sign of input respected
    * 
    * <pre>
+   * @param inputs [x Speed, y Speed, yaw Speed, Speed Modifier]
+   * @param settings settings that define all factors of how the drive should be controlled
    */
   public static double[] fitDrive(double[] inputs, RangeSettings settings) {
     for(int i = 0; i < 3; i++)
       inputs[i] = MathUtil.clamp(inputs[i], -1, 1);
+    inputs[3] = MathUtil.clamp(inputs[3], 0, 1);
     inputs = deadbandAll(inputs, settings);
     inputs = invertAll(inputs, settings);
 
@@ -90,7 +93,7 @@ public class CurveFit {
       } else {
         limiter = 0;
       }
-      inputs[i] = setOutRange(inputs[i], settings.min[i], settings.max[i]*limiter);
+      inputs[i] = setOutRange(inputs[i], settings.min[i], settings.max[i]*limiter*inputs[3]);
     }
     return inputs;
   }
