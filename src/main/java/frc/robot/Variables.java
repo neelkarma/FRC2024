@@ -22,4 +22,5 @@ public final class Variables {
   public static boolean driveSlow = false;
 
   public static RangeSettings driveSettings = DriveConstants.PILOT_SETTINGS;
+  public static boolean fieldRelative = true;
 }

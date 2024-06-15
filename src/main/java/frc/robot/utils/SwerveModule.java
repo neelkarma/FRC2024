@@ -159,8 +159,8 @@ public class SwerveModule {
     // relative to the chassis.
     double angle = (getRotation2d().getRadians() - Math.toRadians(angularOffset)) % (2*Math.PI);
     return new SwerveModulePosition(
-        Math.abs(driveMotor.getPosition().getValue()) * angle > Math.PI ? -1 : 1,
-        new Rotation2d(angle % Math.PI));
+        Math.abs(driveMotor.getPosition().getValue())  ,// * angle > Math.PI ? -1 : 1,
+        new Rotation2d(angle));
   }
 
   /**

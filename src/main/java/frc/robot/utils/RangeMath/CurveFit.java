@@ -93,7 +93,7 @@ public class CurveFit {
       } else {
         limiter = 0;
       }
-      inputs[i] = setOutRange(inputs[i], settings.min[i], settings.max[i]*limiter*inputs[3]);
+      inputs[i] = setOutRange(inputs[i], settings.min[i], settings.max[i]*(0.3+0.7*limiter)*inputs[3]);
     }
     return inputs;
   }

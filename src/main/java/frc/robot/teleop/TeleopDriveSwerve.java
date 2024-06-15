@@ -3,6 +3,7 @@ package frc.robot.teleop;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
 import frc.robot.Subsystems;
+import frc.robot.Variables;
 import frc.robot.constants.DriveConstants;
 import frc.robot.shufflecontrol.ShuffleControl;
 import frc.robot.utils.RangeMath.CurveFit;
@@ -31,7 +32,7 @@ public class TeleopDriveSwerve extends Command {
       updateShuffleCounter++;
     }
 
-    Subsystems.drive.drive(translateX, translateY, rotate, true, false);
+    Subsystems.drive.drive(translateX, translateY, rotate, Variables.fieldRelative, false); // TODO fix rate limit
   }
 
   @Override
