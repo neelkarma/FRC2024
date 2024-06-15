@@ -7,8 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.RainbowLEDCommand;
+//import frc.robot.commands.RainbowLEDCommand;
 import frc.robot.shufflecontrol.ShuffleControl;
+import frc.robot.utils.logger.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -65,6 +66,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    Logger.pauseAllLoggers();
     System.out.println("Disabled ----------------------------------------------------------------------------------------");
   }
 
@@ -84,6 +86,7 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.schedule();
     }
+    Logger.unpauseAllLoggers();
     System.out.println("Auto Start --------------------------------------------------------------------------------------");
     Subsystems.drive.resetIntegral();
   }
@@ -102,7 +105,7 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-
+    Logger.unpauseAllLoggers();
     System.out.println("Teleop Start ------------------------------------------------------------------------------------");
     Subsystems.drive.resetIntegral();
   }
@@ -116,6 +119,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    Logger.unpauseAllLoggers();
     System.out.println("Test Start --------------------------------------------------------------------------------------");
   }
 

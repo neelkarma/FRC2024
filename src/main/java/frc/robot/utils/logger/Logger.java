@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
 import frc.robot.constants.FileConstants;
@@ -19,18 +20,24 @@ public class Logger {
 
   private Thread thread;
 
-  private boolean paused = false;
-  private boolean stopped = false;
+  private static boolean pausedGlobal = false;
+  private boolean pausedLocal = false;
+  private static boolean stopped = false;
 
   private File file;
-  private String logFolderPath;
+  private static Optional<String> pathName = Optional.empty();
   private String fileName;
 
   public Logger(String fileName, String[] columns) {
-    this.fileName = fileName;
-    findFilePath();
+    
+    if(pathName.isEmpty() && !stopped)
+      findSavePath();
+    if (!stopped && !!pathName.isEmpty())
+      this.fileName = pathName.get() + "//" + fileName;
+    else
+      stopped = true;
     makeFile();
-
+    
     if(!stopped){
       save(columns);
 
@@ -52,37 +59,51 @@ public class Logger {
     cacheLock.unlock();
   }
 
-  private void findFilePath() {
-    if (paused || stopped) {
-      return;
+  private Optional<String> findSavePath() {
+    if (pausedGlobal || pausedLocal || stopped) {
+      return Optional.empty();
     }
-
+    String pathDrive = "";
+                                                                                                    // try to find a drive
     try {
-      for (String tmpPath : FileConstants.PATH_USB) {
-        if (new File(tmpPath).exists()) {
-          logFolderPath = tmpPath;
-          return;
+      for (String tmpDrivePath : FileConstants.PATH_USB) {
+        if (!new File(tmpDrivePath).exists()) {
+          pathDrive = tmpDrivePath;
+          break;
         }
       }
+    } catch (SecurityException e) {
       stopped = true;
-      System.out.println("[" + fileName + " Logger] Log Folder Path Not Found : Killing Logger");
+      System.out.println("[" + fileName + " Logger] Log Drive Path Security Exception : Killing Logger");
+    }
+                                                                                                    // try to create a folder
+    try {
+      if (pathDrive != ""){
+        for (int i = 0; i < LoggerConstants.REPEAT_LIMIT_LOGGER_FOLDER_CREATION; i++){
+          if (!new File(pathDrive+"//LogFile_("+i+")").exists()) {
+            pathName = Optional.of(pathDrive+"//LogFile_("+i+")");
+          }
+        }
+      }
     } catch (SecurityException e) {
       stopped = true;
       System.out.println("[" + fileName + " Logger] Log Folder Path Security Exception : Killing Logger");
     }
+    System.out.println("[" + fileName + " Logger] Log Save Path Not Found : Killing Logger");
+    stopped = true;
+    return Optional.empty();
   }
 
   private void makeFile() {
-    if (paused || stopped) {
+    if (pausedGlobal || pausedLocal || stopped) {
       return;
     }
 
-    file = new File(logFolderPath + fileName + ".csv");
+    file = new File(fileName + ".csv");
     if (file == null) {
       stopped = true;
       return;
     }
-
 
     try {
       String filePath = "";
@@ -92,13 +113,12 @@ public class Logger {
           System.out.println("[" + fileName + " Logger] File Creation Attempt Limit Exceeded : Killing Logger");
           return;
         }
-        filePath = logFolderPath + fileName + "_(" + i + ").csv";
+        filePath = fileName + "_(" + i + ").csv";
         file = new File(filePath);
-
       }
       
       if (!stopped) {
-        System.out.println("[" + fileName + " Logger] Log File Path Found : " + filePath);
+        System.out.println("[" + fileName + " Logger] Log File Initialised : " + filePath);
       }
 
     } catch (IOException e) {
@@ -155,24 +175,38 @@ public class Logger {
     cacheLock.unlock();
   }
 
-  /** reversibly stops operation of the logger */
-  public void pause() {
+  /** reversibly pauses operation of all loggers (will not effect per logger pauses)*/
+  public static void pauseAllLoggers() {
     if (!stopped) {
-      paused = true;
+      pausedGlobal = true;
     }
   }
 
-  /** restarts the logger when paused */
-  public void unpause() {
+  /** restarts all loggers when paused (will not effect per logger pauses) */
+  public static void unpauseAllLoggers() {
     if (!stopped) {
-      paused = false;
+      pausedGlobal = false;
     }
   }
 
-  /** irreversably kills the logger */
-  public void stop() {
+  /** reversibly pauses operation of instance loggers (will not effect global logger pauses)*/
+  public void pauseLogger() {
     if (!stopped) {
-      pause();
+      pausedLocal = true;
+    }
+  }
+
+  /** restarts instance loggers when paused (will not effect global logger pauses) */
+  public void unpauseLogger() {
+    if (!stopped) {
+      pausedLocal = false;
+    }
+  }
+
+  /** irreversably kills all loggers */
+  public static void stop() {
+    if (!stopped) {
+      pauseAllLoggers();
       stopped = true;
     }
   }
@@ -184,7 +218,7 @@ public class Logger {
     thread = new Thread(() -> {
       try {
         while (!stopped) {
-          if (!cache.isEmpty() && !paused && !stopped) {
+          if (!cache.isEmpty() && !pausedGlobal && !pausedLocal && !stopped) {
             save();
           }
 
