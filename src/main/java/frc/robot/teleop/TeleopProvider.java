@@ -19,22 +19,18 @@ import frc.robot.constants.DriveConstants;
 public class TeleopProvider {
   private static Optional<TeleopProvider> inst = Optional.empty();
 
-  private final Command teleopSwerve = new TeleopDriveSwerve();
+  private final Command teleopSwerve = new TeleopDriveSwerve(DriveConstants.PILOT_SETTINGS);
+  private final Command teleopDemoSwerve = new TeleopDriveSwerve(DriveConstants.PILOT_DEMO_SETTINGS);
 
   private final SendableChooser<Command> chooser = new SendableChooser<>(); // pub for shuffle board
 
   private TeleopProvider() {
     // swerve
     chooser.setDefaultOption("Swerve Teleop", teleopSwerve);
-    Subsystems.drive.setDefaultCommand(new SequentialCommandGroup(
-        new InstantCommand(() -> Variables.driveSettings = DriveConstants.PILOT_SETTINGS),
-        teleopSwerve));
 
     // disabled
     chooser.addOption("Disable Teleop", new InstantCommand(() -> {}, Subsystems.drive));
-    chooser.addOption("Disable Teleop",new SequentialCommandGroup(
-        new InstantCommand(() -> Variables.driveSettings = DriveConstants.PILOT_DEMO_SETTINGS),
-        teleopSwerve));
+    chooser.addOption("Swerve Demo Teleop", teleopDemoSwerve);
 
     chooser.onChange(Subsystems.drive::setDefaultCommand);
     SmartDashboard.putData("Teleop Chooser", chooser);

@@ -207,8 +207,8 @@ public class DriveConstants {
   public static RangeSettings PILOT_SETTINGS = RangeSettings.InitSwerveBot(0, 1, 4, 0.1, true,
                                                                            0, 1, 4, 0.1, false,
                                                                            0, 1, 3, 0.1, false);
-  public static RangeSettings PILOT_DEMO_SETTINGS = RangeSettings.InitSwerveBot(0, 0.2, 4, 0.1, true,
-                                                                           0, 0.2, 4, 0.1, false,
-                                                                           0, 0.4, 3, 0.1, false);
+  public static RangeSettings PILOT_DEMO_SETTINGS = RangeSettings.InitSwerveBot(0, 0.2, 1, 0.1, true,
+                                                                           0, 0.2, 1, 0.1, false,
+                                                                           0, 0.2, 1, 0.1, false);
 
 }

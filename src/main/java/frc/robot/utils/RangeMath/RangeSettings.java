@@ -75,6 +75,7 @@ public class RangeSettings {
     this.min[0] = minX;
     this.max[0] = maxX;
     this.pow[0] = powX;
+    this.deadband[0] = deadbandX;
     this.invert[0] = invertX;
   }
 
@@ -85,6 +86,7 @@ public class RangeSettings {
     this.min[1] = minY;
     this.max[1] = maxY;
     this.pow[1] = powY;
+    this.deadband[1] = deadbandY;
     this.invert[1] = invertY;
   }
 
@@ -103,6 +105,7 @@ public class RangeSettings {
     this.min[2] = minR;
     this.max[2] = maxR;
     this.pow[2] = powR;
+    this.deadband[2] = deadbandR;
     this.invert[2] = invertR;
     this.effectXonR = effectXonR;
     this.effectYonR = effectYonR;

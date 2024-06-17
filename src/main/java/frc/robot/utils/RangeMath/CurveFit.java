@@ -34,6 +34,7 @@ public class CurveFit {
     inputs = deadbandAll(inputs, settings);
     inputs = invertAll(inputs, settings);
 
+    
     inputs = applyCurveAll(inputs, settings); // fit power of curve to the input
     inputs = setOutRangeAll(inputs, settings); //set the range of output
     /*
@@ -86,14 +87,14 @@ public class CurveFit {
   }
 
   private static double[] setOutRangeAll(double[] inputs, RangeSettings settings){
-    double limiter = 0;
+    double limiter = 1;
     for(int i = 0; i < 3; i++){
       if(i == 2){
         limiter = limitTurnByThrottle(inputs, settings);
       } else {
-        limiter = 0;
+        limiter = 1;
       }
-      inputs[i] = setOutRange(inputs[i], settings.min[i], settings.max[i]*(0.3+0.7*limiter)*inputs[3]);
+      inputs[i] = setOutRange(inputs[i], settings.min[i], settings.max[i]*(0.3+0.7*inputs[3])*limiter);
     }
     return inputs;
   }

@@ -394,6 +394,12 @@ public class DriveSub extends SubsystemBase {
         backRight.getState());
   }
 
+  /** not really intended for more accuracy than logging requires */
+  public double getSpeedMS(){
+    ChassisSpeeds speed = getRelativeChassisSpeeds();
+    return Math.hypot(speed.vxMetersPerSecond, speed.vyMetersPerSecond);
+  }
+
   @Override
   public void simulationPeriodic() {
     final var speeds = DriveConstants.DRIVE_KINEMATICS.toChassisSpeeds(

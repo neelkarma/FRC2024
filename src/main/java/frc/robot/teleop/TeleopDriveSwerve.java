@@ -11,9 +11,10 @@ import frc.robot.utils.RangeMath.RangeSettings;
 
 public class TeleopDriveSwerve extends Command {
   private int updateShuffleCounter = 0;
-  public RangeSettings settings = DriveConstants.PILOT_SETTINGS;
+  public RangeSettings settings;
 
-  public TeleopDriveSwerve() {
+  public TeleopDriveSwerve(RangeSettings settings) {
+    this.settings = settings;
     addRequirements(Subsystems.drive);
   }
 
@@ -26,7 +27,7 @@ public class TeleopDriveSwerve extends Command {
     var translateX  = control[0];
     var translateY  = control[1];
     var rotate      = control[2];
-
+    System.out.println(control[0]+" "+control[1]+" "+control[2]+" "+control[3]+" "+Subsystems.drive.getSpeedMS());
     if (updateShuffleCounter > DriveConstants.updateShuffleInterval) {
       ShuffleControl.driveTab.setControlAxis(translateX, translateY, rotate);
       updateShuffleCounter = 0;

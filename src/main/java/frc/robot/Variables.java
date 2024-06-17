@@ -21,6 +21,5 @@ public final class Variables {
   public static double ledBrightnessMod = 1;
   public static boolean driveSlow = false;
 
-  public static RangeSettings driveSettings = DriveConstants.PILOT_SETTINGS;
   public static boolean fieldRelative = true;
 }
