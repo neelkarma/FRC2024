@@ -114,12 +114,17 @@ public class DriveConstants {
   /**
    * Gear attached direct to the drive motor
    * The MAXSwerve module can be configured with several different gears.
-   * This changes the drive speed of the module (a pinion gear with
-   * more teeth will result in a robot that drives faster).
-   * []
+   * This changes the drive speed of the module
+   * [L:12,M:13,H:14,EH1:14,EH2:14,EH3:15,EH4:16,EH5:16]
    */
-  public static final int DRIVING_MOTOR_PINION_TEETH = 14;
-  public static final int DRIVING_MOTOR_SPUR_TEETH = 14;
+  public static final int DRIVING_MOTOR_PINION_TEETH = 15;
+  /**
+   * Gear driven by the motor spur
+   * The MAXSwerve module can be configured with several different gears.
+   * This changes the drive speed of the module
+   * [L:22,M:22,H:22,EH1:21,EH2:20,EH3:20,EH4:20,EH5:19]
+   */
+  public static final int DRIVING_MOTOR_SPUR_TEETH = 20;
 
   /** Drive motor inversion. */
   public static final InvertedValue DRIVE_MOTOR_INVERTED = InvertedValue.Clockwise_Positive;
@@ -144,13 +149,10 @@ public class DriveConstants {
       / (2048 * DRIVE_GEAR_RATIO); // TODO: Why is 2048 there? I think there's a reason, but idk
 
   /**
-   * TODO: Add proper docs for this constant. Right now all we have is the
-   * comments included with the MAXSwerve Template code:
-   * 
-   * 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
-   * teeth on the bevel pinion
+   * 45 teeth on the wheel's bevel gear, 15 teeth on the bevel pinion
    */
-  public static final double DRIVING_MOTOR_REDUCTION = (22.0/DRIVING_MOTOR_PINION_TEETH) * (45.0/15.0);
+  public static final double DRIVING_MOTOR_REDUCTION = 
+      ((double)DRIVING_MOTOR_SPUR_TEETH/DRIVING_MOTOR_PINION_TEETH) * (45.0/15.0);
 
   /** Free speed of the wheel in rps */
   public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS
