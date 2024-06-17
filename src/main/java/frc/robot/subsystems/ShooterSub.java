@@ -29,7 +29,7 @@ public class ShooterSub extends SubsystemBase {
     ShuffleControl.driveTab.updateShooterSpd();
     setSpeed(SpeakerSpd, speakerDiff);
   }
-
+  
   /** Stops the shooter. Call `setSpeed` to start again. */
   public void stop() {
     upperMotor.stopMotor();
