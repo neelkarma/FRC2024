@@ -189,8 +189,6 @@ public class SwerveModule {
         optimizedDesiredState.angle.getRadians() + Math.PI,
         ControlType.kPosition);
             
-    //System.out.println(optimizedDesiredState.speedMetersPerSecond+" "+driveMotor.getVelocity()); //TODO remove
-    //System.out.println(optimizedDesiredState.angle.getRadians() + Math.PI+" "+turnEncoder.getPosition()+ " " + desiredState.angle +" "+ correctedDesiredState.angle); //TODO remove
     this.desiredState = desiredState;
     
 

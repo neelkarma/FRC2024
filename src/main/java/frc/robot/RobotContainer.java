@@ -84,7 +84,7 @@ public class RobotContainer {
     // --- Manual Controls ---
 
     // Invert Drive
-    OI.pilot.start().onTrue(new InstantCommand(() -> Variables.invertDriveDirection = !Variables.invertDriveDirection));
+    //OI.pilot.start().onTrue(new InstantCommand(() -> Variables.invertDriveDirection = !Variables.invertDriveDirection));
 
     // intake reverse
     OI.pilot.leftBumper()
@@ -100,22 +100,36 @@ public class RobotContainer {
                 () -> Subsystems.intake.set(0.2),
                 Subsystems.intake::stop,
                 Subsystems.intake));
+    // intake reverse
+    OI.copilot.leftBumper()
+        .whileTrue(
+            new StartEndCommand(
+                () -> Subsystems.intake.set(-0.2),
+                Subsystems.intake::stop,
+                Subsystems.intake));
+    // intake
+    OI.copilot.leftTrigger()
+        .whileTrue(
+            new StartEndCommand(
+                () -> Subsystems.intake.set(0.2),
+                Subsystems.intake::stop,
+                Subsystems.intake));
     // intake rapid
-    OI.pilot.y()
+    OI.copilot.y()
         .whileTrue(
             new StartEndCommand(
                 () -> Subsystems.intake.set(1),
                 Subsystems.intake::stop,
                 Subsystems.intake));
     // shoot
-    OI.pilot.rightTrigger()
+    OI.copilot.rightTrigger()
         .whileTrue(
             new StartEndCommand(
                 () -> Subsystems.shooter.setAmp(),
                 Subsystems.shooter::stop,
                 Subsystems.shooter));
     // shoot
-    OI.pilot.rightBumper()
+    OI.copilot.rightBumper()
         .whileTrue(
             new StartEndCommand(
                 () -> Subsystems.shooter.setSpeed(.98, 0),
@@ -141,6 +155,19 @@ public class RobotContainer {
 
     // climber down
     OI.pilot.povUp().whileTrue(
+        new StartEndCommand(
+            () -> Subsystems.climber.set(-0.5),
+            Subsystems.climber::stop,
+            Subsystems.climber));
+    // climber up
+    OI.copilot.povDown().whileTrue(
+        new StartEndCommand(
+            () -> Subsystems.climber.set(1),
+            Subsystems.climber::stop,
+            Subsystems.climber));
+
+    // climber down
+    OI.copilot.povUp().whileTrue(
         new StartEndCommand(
             () -> Subsystems.climber.set(-0.5),
             Subsystems.climber::stop,
