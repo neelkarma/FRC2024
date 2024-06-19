@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ClimberConstants;
-import frc.robot.constants.IntakeConstants;
 
 public class ClimberSub extends SubsystemBase {
   private final WPI_VictorSPX motor = ClimberConstants.MOTOR_1_ID.get();
@@ -47,7 +46,6 @@ public class ClimberSub extends SubsystemBase {
   public void set(double speed) {
     if(targetSpeed == 0)
       initialize();
-
       targetSpeed = MathUtil.clamp(speed, -1, 1);
   }
 

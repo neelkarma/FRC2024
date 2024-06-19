@@ -20,7 +20,7 @@ public class TeleopDriveSwerve extends Command {
 
   @Override
   public void execute() {
-    double limiter = 1; //TODO enable this when everything else is tested
+    double limiter = (1-OI.pilot.getRightTriggerAxis()); //TODO enable this when everything else is tested
     // organise field relitive switch
     double[] control = CurveFit.fitDrive(new double[]{OI.pilot.getLeftX(), OI.pilot.getLeftY(), 
                                          OI.pilot.getRightX(), limiter}, settings);
@@ -34,8 +34,7 @@ public class TeleopDriveSwerve extends Command {
     } else {
       updateShuffleCounter++;
     }
-
-    Subsystems.drive.drive(translateX, translateY, rotate, true, false); // TODO fix rate limit
+    Subsystems.drive.drive(translateX, translateY, rotate, Variables.fieldRelative, false); // TODO fix rate limit
   }
 
   @Override

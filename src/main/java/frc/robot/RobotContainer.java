@@ -86,6 +86,10 @@ public class RobotContainer {
     // Invert Drive
     //OI.pilot.start().onTrue(new InstantCommand(() -> Variables.invertDriveDirection = !Variables.invertDriveDirection));
 
+    //set field relitive
+    OI.pilot.rightBumper().onTrue(new InstantCommand(() -> Variables.fieldRelative = !Variables.fieldRelative));
+
+
     // intake reverse
     OI.pilot.leftBumper()
         .whileTrue(
