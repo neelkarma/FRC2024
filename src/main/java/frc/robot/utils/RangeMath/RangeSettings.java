@@ -17,7 +17,10 @@ public class RangeSettings {
   
   protected double effectXonR = 0;
   protected double effectYonR = 0;
-
+  
+  protected double modCrtlMax = 0;
+  protected double modRFromX = 0;
+  protected double modRFromY = 0;
 
   public RangeSettings(){
 
@@ -37,11 +40,12 @@ public class RangeSettings {
    */
   public static RangeSettings InitTankBot(double minX, double maxX, double powX, double deadbandX, boolean invertX,
                                           double minR, double maxR, double powR, double deadbandR, boolean invertR,
-                                          double effectXonR){
+                                          double modRFromX, double controlMaxModifier){
     RangeSettings rangSets = new RangeSettings();
     rangSets.setX(minX, maxX, powX, deadbandX, invertX);
     rangSets.setY(0,0,0, 0, false);
-    rangSets.setR(minR, maxR, powR, deadbandR, invertR, effectXonR, 0);
+    rangSets.setR(minR, maxR, powR, deadbandR, invertR, modRFromX, 0);
+    rangSets.setControlModifiers(controlMaxModifier);
     return rangSets;
   }
 
@@ -60,11 +64,13 @@ public class RangeSettings {
    */
   public static RangeSettings InitSwerveBot(double minX, double maxX, double powX, double deadbandX, boolean invertX,
                                           double minY, double maxY, double powY, double deadbandY, boolean invertY,
-                                          double minR, double maxR, double powR, double deadbandR, boolean invertR){
+                                          double minR, double maxR, double powR, double deadbandR, boolean invertR,
+                                          double controlMaxModifier){
     RangeSettings rangSets = new RangeSettings();
     rangSets.setX(minX, maxX, powX, deadbandX, invertX);
     rangSets.setY(minY, maxY, powY, deadbandY, invertY);
     rangSets.setR(minR, maxR, powR, deadbandR, invertR, 0, 0);
+    rangSets.setControlModifiers(controlMaxModifier);
     return rangSets;
   }
 
@@ -96,10 +102,10 @@ public class RangeSettings {
    * @param Throttlecurve
    */
   public void setR(double minR, double maxR, double powR, double deadbandR, boolean invertR,
-                   double effectXonR, double effectYonR){
+                   double modRFromX, double modRFromY){
     if(minR > 1 || maxR < 0 || minR > maxR){
       throw new IllegalArgumentException("Min > 1, Max < 0, or Min > Max");
-    } else if(effectXonR < 0 || effectXonR > 1 || effectYonR < 0 || effectYonR > 1) {
+    } else if(modRFromX < 0 || modRFromX > 1 || modRFromY < 0 || modRFromY > 1) {
       throw new IllegalArgumentException("throttleEffect < 0 or > 1");
     }
     this.min[2] = minR;
@@ -107,7 +113,11 @@ public class RangeSettings {
     this.pow[2] = powR;
     this.deadband[2] = deadbandR;
     this.invert[2] = invertR;
-    this.effectXonR = effectXonR;
-    this.effectYonR = effectYonR;
+    this.effectXonR = modRFromX;
+    this.effectYonR = modRFromY;
+  }
+
+  public void setControlModifiers(double controlMaxModifier){
+    this.modCrtlMax = controlMaxModifier;
   }
 }

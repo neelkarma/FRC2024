@@ -3,10 +3,15 @@ package frc.robot.utils.RangeMath;
 import edu.wpi.first.math.MathUtil;
 
 public class CurveFit {
+  /**
+   * 
+   * @param input value to be curved
+   * @param settings [absMinIn, absMaxIn, absMinOut, absMaxOut, curvePower, deadband]
+   */
   public static double fit(double input, double[] settings){
-    input = MathUtil.applyDeadband(input, settings[4]);
+    input = MathUtil.applyDeadband(input, settings[5]);
     input = setInRange(input, settings[0], settings[1]);
-    input = applyCurve(input, settings[5]);
+    input = applyCurve(input, settings[4]);
     input = setOutRange(input, settings[2], settings[3]);
     return input;
   }
@@ -24,7 +29,7 @@ public class CurveFit {
    * sign of input respected
    * 
    * <pre>
-   * @param inputs [x Speed, y Speed, yaw Speed, Speed Modifier]
+   * @param inputs [X Speed(-1,1), Y Speed(-1,1), R Speed(-1,1), Speed Modifier(0,1)]
    * @param settings settings that define all factors of how the drive should be controlled
    */
   public static double[] fitDrive(double[] inputs, RangeSettings settings) {
@@ -43,7 +48,7 @@ public class CurveFit {
      *           |
      *        __/ ___ outAbsMin
      * ______|______
-     * __|
+     *  __|
      * /
      * |
      * 
@@ -87,21 +92,26 @@ public class CurveFit {
   }
 
   private static double[] setOutRangeAll(double[] inputs, RangeSettings settings){
-    double limiter = 1;
+    double turnLimiter = limitTurnByThrottle(inputs, settings);
+    double controlLimiter = limitControlByModifier(inputs, settings);
     for(int i = 0; i < 3; i++){
-      if(i == 2){
-        limiter = limitTurnByThrottle(inputs, settings);
-      } else {
-        limiter = 1;
-      }
-      inputs[i] = setOutRange(inputs[i], settings.min[i], settings.max[i]*(0.3+0.7*inputs[3])*limiter);
+      double limiter = settings.max[i] * controlLimiter;
+      if(i == 2)
+        limiter *= turnLimiter;
+      inputs[i] = setOutRange(inputs[i], settings.min[i], limiter);
     }
     return inputs;
   }
 
   private static double limitTurnByThrottle(double[] inputs, RangeSettings settings){
-    // reduce 
-    double turnModifier = Math.hypot(inputs[1]*settings.effectXonR, inputs[2]*settings.effectYonR);
-    return (1 - turnModifier) + turnModifier;
+    if(settings.modRFromX == 0 && settings.modRFromY == 0)
+      return 1;
+    double turnModifier = Math.hypot(inputs[1]*settings.modRFromX, inputs[2]*settings.modRFromY);
+    return (1 - settings.modRFromX*settings.modRFromY) + turnModifier;
+  }
+  private static double limitControlByModifier(double[] inputs, RangeSettings settings){
+    if(settings.modCrtlMax == 0)
+      return 1;
+    return (1-settings.modCrtlMax) + settings.modCrtlMax*inputs[3];
   }
 }
