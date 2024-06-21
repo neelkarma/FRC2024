@@ -14,6 +14,6 @@ public class ModilityAuto extends SequentialCommandGroup {
   public ModilityAuto() {
     addCommands(
         // Start driving the robot forwards
-        new DriveForDistanceCommand(0,-0.2,2));
+        new DriveForDistanceCommand(0,-0.2,3));
   }
 }
