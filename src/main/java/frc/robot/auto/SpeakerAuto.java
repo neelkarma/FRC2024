@@ -21,11 +21,11 @@ public class SpeakerAuto extends SequentialCommandGroup {
         new InstantCommand(() -> Subsystems.intake.set(1), Subsystems.shooter),
         new WaitCommand(1),
         new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter),
-        new InstantCommand(() -> Subsystems.shooter.setSpeed(0, 0), Subsystems.shooter)
+        new InstantCommand(() -> Subsystems.shooter.setSpeed(0, 0), Subsystems.shooter),
         
         
-        //new DriveForDistanceCommand(0, -0.6, 4),
-        //new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter)
+        new DriveForDistanceCommand(0, -0.6, 4),
+        new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter)
         );
   }
 }

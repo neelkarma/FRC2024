@@ -136,7 +136,7 @@ public class RobotContainer {
     OI.copilot.rightBumper()
         .whileTrue(
             new StartEndCommand(
-                () -> Subsystems.shooter.setSpeed(.98, 0),
+                () -> Subsystems.shooter.setSpeaker(),
                 Subsystems.shooter::stop,
                 Subsystems.shooter));
 
@@ -262,6 +262,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;//utoutoProvider.getSelected();
+    return autoProvider.getSelected();
   }
 }

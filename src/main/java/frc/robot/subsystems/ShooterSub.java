@@ -13,8 +13,8 @@ public class ShooterSub extends SubsystemBase {
 
   public double ampSpd = 0.6;
   public double ampDiff = -0.22;
-  public double SpeakerSpd = 1;
-  public double speakerDiff = 0.05;
+  public double SpeakerSpd = 0.75;
+  public double speakerDiff = 0.25;
 
   public ShooterSub() {
     addChild("Master Motor", upperMotor);
