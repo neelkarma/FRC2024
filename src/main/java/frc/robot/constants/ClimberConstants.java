@@ -7,7 +7,7 @@ import frc.robot.utils.motorsupplier.VictorMotorSupplier;
 
 public class ClimberConstants {
   // port needs to be set correctly
-  public static final MotorSupplier<WPI_VictorSPX> MOTOR_1_ID = new VictorMotorSupplier(11);
+  public static final MotorSupplier<WPI_VictorSPX> MOTOR_1_ID = new VictorMotorSupplier(11).withBrake();
 
   public static final int SERVO_PORT = 2;
   public static final int CLIMBER_STOP_PORT = 8;
