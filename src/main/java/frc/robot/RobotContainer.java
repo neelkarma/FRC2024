@@ -142,15 +142,14 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(() -> Subsystems.drive.zeroHeading(), Subsystems.drive));
 
+    // fully autonomous shoot speaker
     OI.pilot.a()
         .onTrue(new SequentialCommandGroup(
             new SequentialCommandGroup(
                 new InstantCommand(() -> Subsystems.shooter.setSpeaker(), Subsystems.shooter),
                 new WaitCommand(2),
                 new InstantCommand(() -> Subsystems.intake.set(1), Subsystems.shooter),
-                new WaitCommand(1),
-                new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter),
-                new InstantCommand(() -> Subsystems.shooter.setSpeed(0, 0), Subsystems.shooter))
+                new WaitCommand(1))
                 .onlyWhile(OI.pilot.getHID()::getAButton),
             new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter),
             new InstantCommand(() -> Subsystems.shooter.setSpeed(0, 0), Subsystems.shooter)));
