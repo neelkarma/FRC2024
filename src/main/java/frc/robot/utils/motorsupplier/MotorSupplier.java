@@ -10,6 +10,7 @@ public abstract class MotorSupplier<T extends MotorController> implements Suppli
   public boolean invert = false;
   public boolean brake = false;
   public boolean safety = false;
+  public boolean voltageComp = false;
 
   public MotorSupplier(int motorPort) {
     this.port = motorPort;
@@ -17,6 +18,11 @@ public abstract class MotorSupplier<T extends MotorController> implements Suppli
 
   public MotorSupplier<T> withBrake() {
     brake = true;
+    return this;
+  }
+
+  public MotorSupplier<T> withVoltageComp() {
+    voltageComp = true;
     return this;
   }
 

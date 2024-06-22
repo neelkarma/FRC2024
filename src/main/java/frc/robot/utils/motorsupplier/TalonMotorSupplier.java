@@ -25,6 +25,7 @@ public class TalonMotorSupplier extends MotorSupplier<WPI_TalonSRX> {
       talon.setNeutralMode(NeutralMode.Coast);
     }
     talon.setSafetyEnabled(safety);
+    talon.enableVoltageCompensation(voltageComp);
     return talon;
   }
 }

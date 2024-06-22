@@ -25,6 +25,7 @@ public class VictorMotorSupplier extends MotorSupplier<WPI_VictorSPX> {
       victor.setNeutralMode(NeutralMode.Coast);
     }
     victor.setSafetyEnabled(safety);
+    victor.enableVoltageCompensation(voltageComp);
     return victor;
   }
 }
