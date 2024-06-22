@@ -12,17 +12,14 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.auto.AutoProvider;
-import frc.robot.teleop.TeleopProvider;
-import frc.robot.commands.AlignClimbCommand;
 import frc.robot.commands.FlashLEDCommand;
 import frc.robot.commands.SolidLEDCommand;
+import frc.robot.teleop.TeleopProvider;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -84,11 +81,12 @@ public class RobotContainer {
     // --- Manual Controls ---
 
     // Invert Drive
-    //OI.pilot.start().onTrue(new InstantCommand(() -> Variables.invertDriveDirection = !Variables.invertDriveDirection));
+    // OI.pilot.start().onTrue(new InstantCommand(() ->
+    // Variables.invertDriveDirection = !Variables.invertDriveDirection));
 
-    //set field relitive
-    // OI.pilot.rightBumper().onTrue(new InstantCommand(() -> Variables.fieldRelative = !Variables.fieldRelative));
-
+    // set field relitive
+    // OI.pilot.rightBumper().onTrue(new InstantCommand(() ->
+    // Variables.fieldRelative = !Variables.fieldRelative));
 
     // intake reverse
     OI.pilot.leftBumper()
@@ -143,6 +141,19 @@ public class RobotContainer {
     OI.pilot.start()
         .onTrue(
             new InstantCommand(() -> Subsystems.drive.zeroHeading(), Subsystems.drive));
+
+    OI.pilot.a()
+        .onTrue(new SequentialCommandGroup(
+            new SequentialCommandGroup(
+                new InstantCommand(() -> Subsystems.shooter.setSpeaker(), Subsystems.shooter),
+                new WaitCommand(2),
+                new InstantCommand(() -> Subsystems.intake.set(1), Subsystems.shooter),
+                new WaitCommand(1),
+                new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter),
+                new InstantCommand(() -> Subsystems.shooter.setSpeed(0, 0), Subsystems.shooter))
+                .onlyWhile(OI.pilot.getHID()::getAButton),
+            new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter),
+            new InstantCommand(() -> Subsystems.shooter.setSpeed(0, 0), Subsystems.shooter)));
 
     // pivot up
     // OI.pilot.povRight().whileTrue(Subsystems.pivot.run(Subsystems.pivot::up));
