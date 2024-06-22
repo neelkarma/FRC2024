@@ -26,6 +26,7 @@ public class TalonMotorSupplier extends MotorSupplier<WPI_TalonSRX> {
     }
     talon.setSafetyEnabled(safety);
     talon.enableVoltageCompensation(voltageComp);
+    talon.configVoltageCompSaturation(12);
     return talon;
   }
 }

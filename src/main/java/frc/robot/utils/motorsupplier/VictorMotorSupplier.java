@@ -26,6 +26,7 @@ public class VictorMotorSupplier extends MotorSupplier<WPI_VictorSPX> {
     }
     victor.setSafetyEnabled(safety);
     victor.enableVoltageCompensation(voltageComp);
+    victor.configVoltageCompSaturation(12);
     return victor;
   }
 }
