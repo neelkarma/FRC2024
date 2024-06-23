@@ -70,6 +70,7 @@ public class SwerveModule {
     driveMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     driveMotorConfig.CurrentLimits.SupplyCurrentLimit = 40;
 
+    
     /* PID Config */
     driveMotorConfig.Slot0.kP = DriveConstants.DRIVE_P;
     driveMotorConfig.Slot0.kI = DriveConstants.DRIVE_I;

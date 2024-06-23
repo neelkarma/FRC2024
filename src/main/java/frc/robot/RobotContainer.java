@@ -9,9 +9,12 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -19,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.auto.AutoProvider;
 import frc.robot.commands.FlashLEDCommand;
 import frc.robot.commands.SolidLEDCommand;
+import frc.robot.commands.WaitProgressCommand;
 import frc.robot.teleop.TeleopProvider;
 
 /**
@@ -143,14 +147,13 @@ public class RobotContainer {
             new InstantCommand(() -> Subsystems.drive.zeroHeading(), Subsystems.drive));
 
     // fully autonomous shoot speaker
-    OI.pilot.a()
+    OI.copilot.a()
         .onTrue(new SequentialCommandGroup(
             new SequentialCommandGroup(
                 new InstantCommand(() -> Subsystems.shooter.setSpeaker(), Subsystems.shooter),
-                new WaitCommand(2),
-                new InstantCommand(() -> Subsystems.intake.set(1), Subsystems.shooter),
-                new WaitCommand(1))
-                .onlyWhile(OI.pilot.getHID()::getAButton),
+                new WaitProgressCommand("Shooter Warmup", 1),
+                new InstantCommand(() -> Subsystems.intake.set(1), Subsystems.intake),
+                new WaitCommand(1)).onlyWhile(() -> OI.copilot.getHID().getAButton()),
             new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter),
             new InstantCommand(() -> Subsystems.shooter.setSpeed(0, 0), Subsystems.shooter)));
 
@@ -163,27 +166,27 @@ public class RobotContainer {
     // climber up
     OI.pilot.povDown().whileTrue(
         new StartEndCommand(
-            () -> Subsystems.climber.set(1),
+            () -> Subsystems.climber.set(-1),
             Subsystems.climber::stop,
             Subsystems.climber));
 
     // climber down
     OI.pilot.povUp().whileTrue(
         new StartEndCommand(
-            () -> Subsystems.climber.set(-0.5),
+            () -> Subsystems.climber.set(0.5),
             Subsystems.climber::stop,
             Subsystems.climber));
     // climber up
     OI.copilot.povDown().whileTrue(
         new StartEndCommand(
-            () -> Subsystems.climber.set(1),
+            () -> Subsystems.climber.set(-1),
             Subsystems.climber::stop,
             Subsystems.climber));
 
     // climber down
     OI.copilot.povUp().whileTrue(
         new StartEndCommand(
-            () -> Subsystems.climber.set(-0.5),
+            () -> Subsystems.climber.set(0.5),
             Subsystems.climber::stop,
             Subsystems.climber));
 

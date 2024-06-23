@@ -34,7 +34,7 @@ public class TeleopDriveSwerve extends Command {
     } else {
       updateShuffleCounter++;
     }
-    Subsystems.drive.drive(translateX, translateY, rotate, Variables.fieldRelative, false); // TODO fix rate limit
+    Subsystems.drive.drive(translateX, translateY, rotate, Variables.fieldRelative, true); // TODO fix rate limit
   }
 
   @Override
