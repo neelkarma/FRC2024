@@ -31,8 +31,8 @@ public class Logger {
   public Logger(String fileName, String[] columns) {
     
     if(pathName.isEmpty() && !stopped)
-      findSavePath();
-    if (!stopped && !!pathName.isEmpty())
+      pathName = findSavePath();
+    if (!stopped && !pathName.isEmpty())
       this.fileName = pathName.get() + "//" + fileName;
     else
       stopped = true;
@@ -67,7 +67,7 @@ public class Logger {
                                                                                                     // try to find a drive
     try {
       for (String tmpDrivePath : FileConstants.PATH_USB) {
-        if (!new File(tmpDrivePath).exists()) {
+        if (new File(tmpDrivePath).exists()) {
           pathDrive = tmpDrivePath;
           break;
         }
@@ -80,8 +80,10 @@ public class Logger {
     try {
       if (pathDrive != ""){
         for (int i = 0; i < LoggerConstants.REPEAT_LIMIT_LOGGER_FOLDER_CREATION; i++){
-          if (!new File(pathDrive+"//LogFile_("+i+")").exists()) {
-            pathName = Optional.of(pathDrive+"//LogFile_("+i+")");
+          if (!new File(pathDrive+"LogFile_("+i+")").exists()) {
+            File folder = new File(pathDrive+"LogFile_("+i+")");
+            folder.mkdir();
+            return Optional.of(pathDrive+"LogFile_("+i+")");
           }
         }
       }
