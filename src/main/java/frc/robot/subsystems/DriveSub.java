@@ -220,14 +220,21 @@ public class DriveSub extends SubsystemBase {
       if (angleDif < 0.45 * Math.PI) {
         currentTranslationDir = SwerveUtils.StepTowardsCircular(currentTranslationDir, inputTranslationDir,
             directionSlewRate * elapsedTime);
-        currentTranslationMag = magLimiter.calculate(inputTranslationMag);
+        if(inputTranslationMag != 0)
+            currentTranslationMag = magLimiter.calculate(inputTranslationMag);
+        else
+            currentTranslationMag = 0;
       } else if (angleDif > 0.85 * Math.PI) {
         if (currentTranslationMag > 1e-4) { // some small number to avoid floating-point errors with equality checking
           // keep currentTranslationDir unchanged
           currentTranslationMag = magLimiter.calculate(0.0);
         } else {
           currentTranslationDir = SwerveUtils.WrapAngle(currentTranslationDir + Math.PI);
-          currentTranslationMag = magLimiter.calculate(inputTranslationMag);
+          
+          if(inputTranslationMag != 0)
+            currentTranslationMag = magLimiter.calculate(inputTranslationMag);
+          else
+            currentTranslationMag = 0;
         }
       } else {
         currentTranslationDir = SwerveUtils.StepTowardsCircular(currentTranslationDir, inputTranslationDir,

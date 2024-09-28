@@ -62,13 +62,13 @@ public class DriveTab {
 
   private GenericEntry ampS = drive.add("amp spd", Subsystems.shooter.ampSpd).getEntry();
   private GenericEntry ampD = drive.add("amp Dif", Subsystems.shooter.ampDiff).getEntry();
-  private GenericEntry SpeS = drive.add("Speaker spd", Subsystems.shooter.SpeakerSpd).getEntry();
+  private GenericEntry SpeS = drive.add("Speaker spd", Subsystems.shooter.speakerSpd).getEntry();
   private GenericEntry SpeD = drive.add("Speaker Dif", Subsystems.shooter.speakerDiff).getEntry();
 
   public void updateShooterSpd(){
     Subsystems.shooter.ampSpd = ampS.getDouble(Subsystems.shooter.ampSpd);
     Subsystems.shooter.ampDiff = ampD.getDouble(Subsystems.shooter.ampDiff);
-    Subsystems.shooter.SpeakerSpd = SpeS.getDouble(Subsystems.shooter.SpeakerSpd);
+    Subsystems.shooter.speakerSpd = SpeS.getDouble(Subsystems.shooter.speakerSpd);
     Subsystems.shooter.speakerDiff = SpeD.getDouble(Subsystems.shooter.speakerDiff);
   }
 

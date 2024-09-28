@@ -156,6 +156,15 @@ public class RobotContainer {
                 new WaitCommand(1)).onlyWhile(() -> OI.copilot.getHID().getAButton()),
             new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter),
             new InstantCommand(() -> Subsystems.shooter.setSpeed(0, 0), Subsystems.shooter)));
+    OI.copilot.b()
+        .onTrue(new SequentialCommandGroup(
+            new SequentialCommandGroup(
+                new InstantCommand(() -> Subsystems.shooter.setSpeed(0.85, 0.20), Subsystems.shooter),
+                new WaitProgressCommand("Shooter Warmup", 1),
+                new InstantCommand(() -> Subsystems.intake.set(1), Subsystems.intake),
+                new WaitCommand(1)).onlyWhile(() -> OI.copilot.getHID().getBButton()),
+            new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter),
+            new InstantCommand(() -> Subsystems.shooter.setSpeed(0, 0), Subsystems.shooter)));
 
     // pivot up
     // OI.pilot.povRight().whileTrue(Subsystems.pivot.run(Subsystems.pivot::up));

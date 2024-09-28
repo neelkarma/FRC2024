@@ -16,7 +16,7 @@ public class SpeakerAuto extends SequentialCommandGroup {
   public SpeakerAuto() {
     addCommands(
         new WaitCommand(2),
-        new InstantCommand(() -> Subsystems.shooter.setSpeaker(), Subsystems.shooter),
+        new InstantCommand(() -> Subsystems.shooter.setSpeed(0.85, 0.20), Subsystems.shooter),
         new WaitCommand(2),
         new InstantCommand(() -> Subsystems.intake.set(1), Subsystems.shooter),
         new WaitCommand(1),
@@ -24,7 +24,7 @@ public class SpeakerAuto extends SequentialCommandGroup {
         new InstantCommand(() -> Subsystems.shooter.setSpeed(0, 0), Subsystems.shooter),
         
         
-        new DriveForDistanceCommand(0, -0.6, 4),
+        new DriveForDistanceCommand(0, -0.6, 8),
         new InstantCommand(() -> Subsystems.intake.set(0), Subsystems.shooter)
         );
   }

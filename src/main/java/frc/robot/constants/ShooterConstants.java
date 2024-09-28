@@ -7,8 +7,8 @@ import frc.robot.utils.motorsupplier.MotorSupplier;
 import frc.robot.utils.motorsupplier.TalonMotorSupplier;
 
 public class ShooterConstants {
-  public static final MotorSupplier<WPI_TalonSRX> UPPER_MOTOR_ID = new TalonMotorSupplier(7).withInvert().withVoltageComp();
-  public static final MotorSupplier<WPI_TalonSRX> LOWER_MOTOR_ID = new TalonMotorSupplier(8).withInvert().withVoltageComp();
+  public static final MotorSupplier<WPI_TalonSRX> UPPER_MOTOR_ID = new TalonMotorSupplier(6).withInvert().withVoltageComp();
+  public static final MotorSupplier<WPI_TalonSRX> LOWER_MOTOR_ID = new TalonMotorSupplier(5).withInvert().withVoltageComp();
 
   public static final EncoderSupplier ENCODER_ID = new EncoderSupplier(new int[] { 21, 22 }, 1);
 

@@ -15,6 +15,6 @@ public class ModilityAutoDelayed extends SequentialCommandGroup {
     addCommands(
         // Start driving the robot forwards
         new WaitCommand(10),
-        new DriveForDistanceCommand(0,-0.2,3));
+        new DriveForDistanceCommand(0,-0.2,8));
   }
 }
